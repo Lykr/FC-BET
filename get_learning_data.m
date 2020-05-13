@@ -15,7 +15,7 @@ for i = 1 : timesteps_num
         beam_pair = raw_data.(timestep_name).(veh_name).beam_pair;
         
         [n_r, n_t] = size(h);
-        h = reshape(h, n_r * n_t, 1); % reshape h matrix to vector
+        h = reshape([real(h) imag(h)], n_r * n_t * 2, 1); % reshape h matrix to vector
         temp_x = [temp_x h];
         if size(temp_x, 2) == lstm_step + 1
             index = i - lstm_step;
