@@ -1,5 +1,6 @@
-function channel = get_channel(bs, veh)
+function channel = get_channel(bs, veh, info_vehs)
 % Generate channel matrix from parameters
+% angle: right,anti-clockwise; array: right, up
 
 vector_bs_to_veh = [veh.x, veh.y] - [bs.x, bs.y];
 vector_veh_to_bs = -vector_bs_to_veh;
@@ -10,7 +11,7 @@ aoa = aoa - angle_veh_turn;
 
 % generate array response vector
 e_t = get_eMatrix(bs.num_antenna, aod);
-e_r = get_eMatrix(16, aoa); % 16 is veh.num_antenna
+e_r = get_eMatrix(info_vehs.num_antenna, aoa); % 16 is veh.num_antenna
 
 % generate small scale fading gain
 carrier_length = physconst('LightSpeed') / bs.frequency_carrier;

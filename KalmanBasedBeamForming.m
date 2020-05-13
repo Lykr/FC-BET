@@ -15,7 +15,7 @@ var_v = nt * nr / 10 ^ (SNR / 10); % 噪声方差
 lenc = physconst('LightSpeed') / f; % 载波波长
 init_theta = rand(2 * L, 1) * pi; % 路径出发角和到达角 U(0, pi)
 alpha = sqrt(nt * nr / 2) * (randn(L, 1) + 1i * randn(L, 1)); % 路径增益 CN(0, nt * nr)
-beam_angle = [pi / (nt + 1) / 2 : pi / (nt + 1) : pi, pi / (nr + 1) / 2 : pi / (nr + 1) : pi]; % 波束角度集合
+beam_angle = [pi / nt / 2 : pi / nt : pi, pi / nr / 2 : pi / nr : pi]; % 波束角度集合
 
 % 论文中路径增益实际未采用下方方式，而是直接假设增益符合正态分布
 % dl = ;
