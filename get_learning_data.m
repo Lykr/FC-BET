@@ -1,4 +1,4 @@
-function [data_x, data_y] = get_train_data(raw_data, lstm_step)
+function [data_x, data_y] = get_learning_data(raw_data, lstm_step)
 
 timesteps_num = numel(fieldnames(raw_data));
 data_size = timesteps_num - lstm_step;
