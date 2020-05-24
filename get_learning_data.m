@@ -13,6 +13,8 @@ for i = 1 : timesteps_num
         veh_name = strcat('v', num2str(j - 1));
         h = raw_data.(timestep_name).(veh_name).h;
         beam_pair = raw_data.(timestep_name).(veh_name).beam_pair;
+        aoa = raw_data.(timestep_name).(veh_name).aoa;
+        aod = raw_data.(timestep_name).(veh_name).aod;
         
         [n_r, n_t] = size(h);
         h = reshape([real(h) imag(h)], n_r * n_t * 2, 1); % reshape h matrix to vector
@@ -20,12 +22,10 @@ for i = 1 : timesteps_num
         if size(temp_x, 2) == lstm_step + 1
             index = i - lstm_step;
             data_x{index} = temp_x(:, 1:lstm_step);
-            data_y(index) = beam_pair_to_index(n_t, beam_pair);
+            data_y(index) = aod; % beam_pair_to_index(n_t, beam_pair);
             temp_x(:,1) = [];
         end
     end
 end
-
-data_y = categorical(data_y);
 end
 
