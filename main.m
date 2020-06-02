@@ -1,11 +1,11 @@
 clear;
 
 %% Raw data generation
-info_bs.x = 120; % position of base station
-info_bs.y = 120;
-info_bs.num_antenna = 16; % number of base station antenna
+info_bs.x = 80; % position of base station
+info_bs.y = 80;
+info_bs.num_antenna = 64; % number of base station antenna
 info_bs.frequency_carrier = 28e9; % frequency of carrier
-info_vehs.num_antenna = 4;
+info_vehs.num_antenna = 16;
 
 training_raw_data = load('sumo_output_for_training.mat');
 training_raw_data = get_raw_data(info_bs, info_vehs, training_raw_data.sumo_output);
@@ -13,7 +13,7 @@ testing_raw_data = load('sumo_output_for_testing.mat');
 testing_raw_data = get_raw_data(info_bs, info_vehs, testing_raw_data.sumo_output);
 
 %% Learning data generation
-lstm_step = 10;
+lstm_step = 3;
 
 [train_x, train_y] = get_learning_data(training_raw_data, lstm_step);
 [test_x, test_y] = get_learning_data(testing_raw_data, lstm_step);
@@ -22,25 +22,25 @@ lstm_step = 10;
 mu = mean([train_x{:}], 2);
 sig = std([train_x{:}], 0, 2);
 
-for i = 1 : numel(train_x)
-    train_x{i} = (train_x{i} - mu) ./ sig;
-end
+train_x = normalize_data(train_x, mu, sig);
+test_x = normalize_data(test_x, mu, sig);
 
-for i = 1 : numel(test_x)
-    test_x{i} = (test_x{i} - mu) ./ sig;
-end
+% Remove invalid data
+remove_threshold = ceil(info_bs.num_antenna * 0.1);
+% [train_x, train_y] = remove_invalid_data(train_x, train_y, remove_threshold);
+% [test_x, test_y] = remove_invalid_data(test_x, test_y, remove_threshold);
 
 %% LSTM network training
 
 % Define LSTM network
-input_size = info_vehs.num_antenna * info_bs.num_antenna * 2; % real and imag parts
+input_size = size(train_x{1}, 1);
 num_hidden_units = 100;
-num_responses = 1;% numel(categories(train_y)); % info_vehs.num_antenna * info_bs.num_antenna;
+num_responses = 2;% numel(categories(train_y)); % info_vehs.num_antenna * info_bs.num_antenna;
 
 layers = [ ...
     sequenceInputLayer(input_size)
     lstmLayer(num_hidden_units, 'OutputMode', 'last')
-    fullyConnectedLayer(50)
+    fullyConnectedLayer(100)
     fullyConnectedLayer(num_responses)
     regressionLayer];
 
@@ -62,21 +62,16 @@ options = trainingOptions('adam' , ...
 net = trainNetwork(train_x, train_y, layers, options);
 
 %% LSTM network testing
-% Test network
-% pred_y = classify(net, test_x, ...
-%     'MiniBatchSize', mini_batchSize, ...
-%     'SequenceLength', 'longest');
-
-% Calculate accurracy
-% acc = sum(pred_y == test_y) ./ numel(test_y)
-
 pred_y = predict(net, test_x);
 
 %% Result
 figure(1);
 hold on;
 
-plot(pred_y, '.');
-plot(test_y, 'LineWidth', 2);
-legend('Pred', 'Act')
-nrmse = sqrt(mean((pred_y - test_y) .^ 2) / mean(test_y .^2));
+xlim([0 length(pred_y)]);
+plot(pred_y(:, 2), 'x');
+plot(test_y(:, 2), '.');
+plot(pred_y(:, 1), 'x');
+plot(test_y(:, 1), '.');
+legend('AOD: LSTM-Based Prediction', 'AOD: Exhausted Search', 'AOA: LSTM-Based Prediction', 'AOA: Exhausted Search')
+nrmse = sqrt(mean((pred_y(:, 2) - test_y(:, 2)) .^ 2) / mean(test_y(:, 2) .^2));
