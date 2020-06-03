@@ -26,8 +26,8 @@ for i = 1 : timesteps_num
         end
         
         [n_r, n_t] = size(h);
-        b_r = get_beam_book(n_r);
-        b_t = get_beam_book(n_t);
+        b_r = get_beam_list(n_r);
+        b_t = get_beam_list(n_t);
         angle_est = [b_r(beam_pair(1)) b_t(beam_pair(2))];
         
         x = reshape(angle_est, 2, 1);

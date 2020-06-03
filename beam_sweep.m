@@ -1,8 +1,8 @@
 function [optimal_beam_pair, h_est] = beam_sweep(channel)
 
 [n_r, n_t] = size(channel);
-bs_beam_book = get_beam_book(n_t);
-veh_beam_book = get_beam_book(n_r);
+bs_beam_book = get_beam_list(n_t);
+veh_beam_book = get_beam_list(n_r);
 
 optimal_beam_pair = [0, 0];
 best_siso_h = 0;

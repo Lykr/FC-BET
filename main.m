@@ -25,11 +25,6 @@ sig = std([train_x{:}], 0, 2);
 train_x = normalize_data(train_x, mu, sig);
 test_x = normalize_data(test_x, mu, sig);
 
-% Remove invalid data
-remove_threshold = ceil(info_bs.num_antenna * 0.1);
-% [train_x, train_y] = remove_invalid_data(train_x, train_y, remove_threshold);
-% [test_x, test_y] = remove_invalid_data(test_x, test_y, remove_threshold);
-
 %% LSTM network training
 
 % Define LSTM network
@@ -41,10 +36,11 @@ layers = [ ...
     sequenceInputLayer(input_size)
     lstmLayer(num_hidden_units, 'OutputMode', 'last')
     fullyConnectedLayer(100)
+    dropoutLayer(0.2)
     fullyConnectedLayer(num_responses)
     regressionLayer];
 
-max_epochs = 200;
+max_epochs = 500;
 mini_batch_size = numel(train_x);
 
 options = trainingOptions('adam' , ...
@@ -66,12 +62,14 @@ pred_y = predict(net, test_x);
 
 %% Result
 figure(1);
-hold on;
-
 xlim([0 length(pred_y)]);
+
+hold on;
 plot(pred_y(:, 2), 'x');
 plot(test_y(:, 2), '.');
 plot(pred_y(:, 1), 'x');
 plot(test_y(:, 1), '.');
+hold off;
+
 legend('AOD: LSTM-Based Prediction', 'AOD: Exhausted Search', 'AOA: LSTM-Based Prediction', 'AOA: Exhausted Search')
 nrmse = sqrt(mean((pred_y(:, 2) - test_y(:, 2)) .^ 2) / mean(test_y(:, 2) .^2));
