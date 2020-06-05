@@ -1,24 +1,19 @@
-function [optimal_beam_pair, h_est] = beam_sweep(channel)
+function [beam_pair, angles_est, h_est] = beam_sweep(channel, veh_beam_info, bs_beam_info)
 
-[n_r, n_t] = size(channel);
-bs_beam_book = get_beam_list(n_t);
-veh_beam_book = get_beam_list(n_r);
+veh_beam_book = veh_beam_info.beam_book;
+veh_beam_angles = veh_beam_info.beam_angles;
+bs_beam_book = bs_beam_info.beam_book;
+bs_beam_angles = bs_beam_info.beam_angles;
 
-optimal_beam_pair = [0, 0];
-best_siso_h = 0;
 
-for i = 1 : n_t
-    e_t = get_eMatrix(n_t, bs_beam_book(i));
-    for j = 1 : n_r
-        e_r = get_eMatrix(n_r, veh_beam_book(j));
-        siso_h = e_r' * channel * e_t;
-        if siso_h > best_siso_h
-            best_siso_h = siso_h;
-            optimal_beam_pair = [j, i];
-        end
-    end
-end
+y = veh_beam_book' * channel * bs_beam_book;
+target = abs(y);
+[i, j] = find(target == max(max(target)));
+aoa_est = veh_beam_angles(i);
+aod_est = bs_beam_angles(j);
 
-h_est = best_siso_h * e_r * e_t';
+beam_pair = [i, j];
+angles_est = [aoa_est, aod_est];
+h_est = y(i, j) * veh_beam_book(:, i) * bs_beam_book(:, j)';
 
 end

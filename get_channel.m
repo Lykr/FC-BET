@@ -1,4 +1,4 @@
-function channel = get_channel(bs, veh, info_vehs)
+function [angles, h] = get_channel(bs, veh, info_vehs)
 % Generate channel matrix from parameters
 % angle: right,anti-clockwise; array: right, up
 
@@ -11,7 +11,7 @@ aoa = aoa - angle_veh_turn;
 
 % generate array response vector
 e_t = get_eMatrix(bs.num_antenna, aod);
-e_r = get_eMatrix(info_vehs.num_antenna, aoa); % 16 is veh.num_antenna
+e_r = get_eMatrix(info_vehs.num_antenna, aoa);
 
 % generate small scale fading gain
 carrier_length = physconst('LightSpeed') / bs.frequency_carrier;
@@ -22,8 +22,16 @@ path_loss = 61.4 + 10 * 2 * log10(distance) + randn * 5.8;
 small_scale_fading_gain = sqrt(10 ^ (-0.1 * path_loss) / 2) * (randn + 1i * randn) * doppler_part;
 
 % channel struct
-channel.h = small_scale_fading_gain * e_r .* e_t';
-channel.aoa = aoa;
-channel.aod = aod;
+h = small_scale_fading_gain * e_r .* e_t';
+
+if aoa > pi
+    aoa = 2 * pi - aoa;
+end
+
+if aod > pi
+    aod = 2 * pi - aod;
+end
+
+angles = [aoa, aod];
 
 end

@@ -7,10 +7,8 @@ info_bs.num_antenna = 64; % number of base station antenna
 info_bs.frequency_carrier = 28e9; % frequency of carrier
 info_vehs.num_antenna = 16;
 
-training_raw_data = load('sumo_output_for_training.mat');
-training_raw_data = get_raw_data(info_bs, info_vehs, training_raw_data.sumo_output);
-testing_raw_data = load('sumo_output_for_testing.mat');
-testing_raw_data = get_raw_data(info_bs, info_vehs, testing_raw_data.sumo_output);
+training_raw_data = get_raw_data(info_bs, info_vehs, load('sumo_output_for_training.mat').sumo_output);
+testing_raw_data = get_raw_data(info_bs, info_vehs, load('sumo_output_for_testing.mat').sumo_output);
 
 %% Learning data generation
 lstm_step = 3;
@@ -25,6 +23,9 @@ sig = std([train_x{:}], 0, 2);
 train_x = normalize_data(train_x, mu, sig);
 test_x = normalize_data(test_x, mu, sig);
 
+% Remove invalid data
+% [train_x, train_y] = remove_invalid_data(train_x, train_y);
+
 %% LSTM network training
 
 % Define LSTM network
@@ -34,8 +35,7 @@ num_responses = 2;% numel(categories(train_y)); % info_vehs.num_antenna * info_b
 
 layers = [ ...
     sequenceInputLayer(input_size)
-    lstmLayer(num_hidden_units, 'OutputMode', 'last')
-    fullyConnectedLayer(100)
+    bilstmLayer(num_hidden_units, 'OutputMode', 'last')
     dropoutLayer(0.2)
     fullyConnectedLayer(num_responses)
     regressionLayer];
@@ -62,14 +62,20 @@ pred_y = predict(net, test_x);
 
 %% Result
 figure(1);
-xlim([0 length(pred_y)]);
-
 hold on;
 plot(pred_y(:, 2), 'x');
 plot(test_y(:, 2), '.');
 plot(pred_y(:, 1), 'x');
 plot(test_y(:, 1), '.');
 hold off;
-
+xlim([0 length(pred_y)]);
 legend('AOD: LSTM-Based Prediction', 'AOD: Exhausted Search', 'AOA: LSTM-Based Prediction', 'AOA: Exhausted Search')
-nrmse = sqrt(mean((pred_y(:, 2) - test_y(:, 2)) .^ 2) / mean(test_y(:, 2) .^2));
+
+h_pred = get_h_pred(pred_y);
+
+figure(2);
+hold on;
+plot(norm(h_pred - h_est) / norm(h_est), '.');
+hold off;
+
+% nrmse = sqrt(mean((pred_y(:, 2) - test_y(:, 2)) .^ 2) / mean(test_y(:, 2) .^2));

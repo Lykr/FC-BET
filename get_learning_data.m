@@ -11,26 +11,14 @@ for i = 1 : timesteps_num
     vehs_num = numel(fieldnames(raw_data.(timestep_name)));
     for j = 1 : vehs_num
         veh_name = strcat('v', num2str(j - 1));
-        h = raw_data.(timestep_name).(veh_name).h_est;
+        h = raw_data.(timestep_name).(veh_name).h;
+        h_est = raw_data.(timestep_name).(veh_name).h_est;
+        angles = raw_data.(timestep_name).(veh_name).angles;
+        angles_est = raw_data.(timestep_name).(veh_name).angles_est;
         beam_pair = raw_data.(timestep_name).(veh_name).beam_pair;
         speed = raw_data.(timestep_name).(veh_name).speed;
-        aoa = raw_data.(timestep_name).(veh_name).aoa;
-        aod = raw_data.(timestep_name).(veh_name).aod;
         
-        if aoa > pi
-            aoa = 2 * pi - aoa;
-        end
-        
-        if aod > pi
-            aod = 2 * pi - aod;
-        end
-        
-        [n_r, n_t] = size(h);
-        b_r = get_beam_list(n_r);
-        b_t = get_beam_list(n_t);
-        angle_est = [b_r(beam_pair(1)) b_t(beam_pair(2))];
-        
-        x = reshape(angle_est, 2, 1);
+        x = reshape(angles_est, 2, 1);
         % reshape(beam_pair, 2, 1);
         % reshape([real(h) imag(h)], n_r * n_t * 2, 1); % reshape h matrix to vector
         x = [x; speed];
@@ -39,7 +27,7 @@ for i = 1 : timesteps_num
         if size(temp_x, 2) == lstm_step + 1
             index = i - lstm_step;
             data_x{index} = temp_x(:, 1:lstm_step);
-            data_y(index, :) = angle_est;
+            data_y(index, :) = angles_est;
             temp_x(:,1) = [];
         end
     end
