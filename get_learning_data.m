@@ -1,10 +1,15 @@
-function [data_x, data_y] = get_learning_data(raw_data, lstm_step)
+function [data_x, data_y, others] = get_learning_data(raw_data, lstm_step)
 
 timesteps_num = numel(fieldnames(raw_data));
+[n_r, n_t] = size(raw_data.('t0').('v0').h);
 data_size = timesteps_num - lstm_step;
 data_x = cell(data_size, 1);
 temp_x = [];
 data_y = zeros(data_size, 2);
+others.h_list = zeros(data_size, n_r, n_t);
+others.h_est_list = zeros(data_size, n_r, n_t);
+others.angles_list = zeros(data_size, 2);
+others.angles_est_list = zeros(data_size, 2);
 
 for i = 1 : timesteps_num
     timestep_name = strcat('t', num2str(i - 1));
@@ -18,11 +23,15 @@ for i = 1 : timesteps_num
         beam_pair = raw_data.(timestep_name).(veh_name).beam_pair;
         speed = raw_data.(timestep_name).(veh_name).speed;
         
-        x = reshape(angles_est, 2, 1);
-        % reshape(beam_pair, 2, 1);
-        % reshape([real(h) imag(h)], n_r * n_t * 2, 1); % reshape h matrix to vector
-        x = [x; speed];
-        temp_x = [temp_x x];
+        % Store raw data into list
+        others.h_list(i, :, :) = h;
+        others.h_est_list(i, :, :) = h_est;
+        others.angles_list(i, :) = angles;
+        others.angles_est_list(i, :) = angles_est;
+        
+        x = reshape(angles_est, 2, 1);  % add AOA and AOD as input
+        x = [x; speed]; % add speed as input
+        temp_x = [temp_x x]; % append input
         
         if size(temp_x, 2) == lstm_step + 1
             index = i - lstm_step;
