@@ -6,8 +6,8 @@ data_size = timesteps_num - lstm_step;
 data_x = cell(data_size, 1);
 temp_x = [];
 data_y = zeros(data_size, 2);
-others.h_list = zeros(data_size, n_r, n_t);
-others.h_est_list = zeros(data_size, n_r, n_t);
+others.h_list = cell(data_size, 1);
+others.h_siso_est_list = zeros(data_size, 1);
 others.angles_list = zeros(data_size, 2);
 others.angles_est_list = zeros(data_size, 2);
 
@@ -17,20 +17,19 @@ for i = 1 : timesteps_num
     for j = 1 : vehs_num
         veh_name = strcat('v', num2str(j - 1));
         h = raw_data.(timestep_name).(veh_name).h;
-        h_est = raw_data.(timestep_name).(veh_name).h_est;
+        h_siso_est = raw_data.(timestep_name).(veh_name).h_siso_est;
         angles = raw_data.(timestep_name).(veh_name).angles;
         angles_est = raw_data.(timestep_name).(veh_name).angles_est;
         beam_pair = raw_data.(timestep_name).(veh_name).beam_pair;
         speed = raw_data.(timestep_name).(veh_name).speed;
         
         % Store raw data into list
-        others.h_list(i, :, :) = h;
-        others.h_est_list(i, :, :) = h_est;
+        others.h_list{i} = h;
+        others.h_siso_est_list(i) = h_siso_est;
         others.angles_list(i, :) = angles;
         others.angles_est_list(i, :) = angles_est;
         
         x = reshape(angles_est, 2, 1);  % add AOA and AOD as input
-        x = [x; speed]; % add speed as input
         temp_x = [temp_x x]; % append input
         
         if size(temp_x, 2) == lstm_step + 1

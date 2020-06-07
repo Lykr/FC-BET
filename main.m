@@ -4,10 +4,10 @@ clear;
 param.bs.x = 80; % position of base station
 param.bs.y = 80;
 param.bs.frequency_carrier = 28e9; % frequency of carrier
-param.bs.num_antenna = 64; % number of base station antenna
+param.bs.num_antenna = 16; % number of base station antenna
 param.bs.beam_info = get_beam_info(param.bs.num_antenna, 2 * param.bs.num_antenna); % get beam codebook for bs
 
-param.veh.num_antenna = 16; % number of veh's antenna
+param.veh.num_antenna = 4; % number of veh's antenna
 param.veh.beam_info = get_beam_info(param.veh.num_antenna, 2 * param.veh.num_antenna); % get beam codebook for veh
 param.veh.beam_info.SNR = 30; % receiver's SNR in dB
 
@@ -15,8 +15,8 @@ param.channel.L = 20;
 param.channel.lambda = 1.8;
 param.channel.r_tau = 2.8;
 param.channel.zeta = 4.0;
-param.channel.spread_t = 10.2 / 180 * pi; % 10.2 degree
-param.channel.spread_r = 15.5 / 180 * pi; % 15.5 degree
+param.channel.spread_e_t = 10.2 / 180 * pi; % 10.2 degree
+param.channel.spread_e_r = 15.5 / 180 * pi; % 15.5 degree
 
 training_raw_data = get_raw_data(param, load('sumo_output_for_training.mat').sumo_output);
 testing_raw_data = get_raw_data(param, load('sumo_output_for_testing.mat').sumo_output);
@@ -47,10 +47,12 @@ num_responses = 2;% numel(categories(train_y)); % info_vehs.num_antenna * info_b
 layers = [ ...
     sequenceInputLayer(input_size)
     bilstmLayer(num_hidden_units, 'OutputMode', 'last')
+    dropoutLayer(0.2);
+    fullyConnectedLayer(50)
     fullyConnectedLayer(num_responses)
     regressionLayer];
 
-max_epochs = 2000;
+max_epochs = 200;
 mini_batch_size = numel(train_x);
 
 options = trainingOptions('adam' , ...
@@ -73,19 +75,22 @@ pred_y = predict(net, test_x);
 %% Result
 figure(1);
 hold on;
-plot(test_y(:, 2), '.');
 plot(test_y(:, 1), '.');
-plot(pred_y(:, 2), 'x');
+plot(test_y(:, 2), '.');
 plot(pred_y(:, 1), 'x');
+plot(pred_y(:, 2), 'x');
 hold off;
 xlim([0 length(pred_y)]);
-legend('AOD: Exhausted Search', 'AOA: Exhausted Search', 'AOD: LSTM-Based Prediction', 'AOA: LSTM-Based Prediction')
+legend('AOA: Exhausted Search', 'AOD: Exhausted Search', 'AOA: LSTM-Based Prediction', 'AOD: LSTM-Based Prediction');
 
-% h_pred = get_h_pred(pred_y);
-% 
-% figure(2);
-% hold on;
-% plot(norm(h_pred - h_est) / norm(h_est), '.');
-% hold off;
+h_siso_pred = get_h_siso(param, test_others, pred_y);
+h_siso_est = test_others.h_siso_est_list(end - length(h_siso_pred) + 1 : end);
+
+figure(2);
+hold on;
+plot((abs(h_siso_pred) - abs(h_siso_est)) ./ abs(h_siso_est), '.');
+hold off;
+xlim([0 length(pred_y)]);
+ylim([-1 0]);
 
 nrmse = sqrt(mean((pred_y(:, 2) - test_y(:, 2)) .^ 2) / mean(test_y(:, 2) .^2));
