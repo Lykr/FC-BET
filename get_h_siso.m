@@ -8,6 +8,7 @@ veh_beam_angles = param.veh.beam_info.beam_angles;
 bs_beam_book = param.bs.beam_info.beam_book;
 bs_beam_angles = param.bs.beam_info.beam_angles;
 h_list = others.h_list(end - n + 1 : end);
+noise_list = others.noise_list(end - n + 1 : end);
 
 for i = 1 : n
     [~, beam_veh] = min(abs(veh_beam_angles - angles(i, 1)));
@@ -15,7 +16,7 @@ for i = 1 : n
     e_r = veh_beam_book(:, beam_veh);
     e_t = bs_beam_book(:, beam_bs);
     
-    h_siso(i) = e_r' * h_list{i} * e_t;
+    h_siso(i) = e_r' * (h_list{i} * e_t + noise_list{i});
 end
 end
 

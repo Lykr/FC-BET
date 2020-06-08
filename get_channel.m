@@ -26,8 +26,8 @@ gamma = kron(gamma, ones(1, L));
 % generate subpath parameters
 spread_r = exprnd(spread_e_r);
 spread_t = exprnd(spread_e_t);
-aoas = angle(exp(1i * (aoa + randn(K * L, 1) * spread_r / 2)));
-aods = angle(exp(1i * (aod + randn(K * L, 1) * spread_t / 2)));
+aoas = angle(exp(1i * (aoa + (-1 + 2 * rand(K * L, 1)) * spread_r / 2)));
+aods = angle(exp(1i * (aod + (-1 + 2 * rand(K * L, 1)) * spread_t / 2)));
 
 % generate array response vector
 e_r = get_e(param.veh.num_antenna, aoas);

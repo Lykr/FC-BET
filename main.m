@@ -9,14 +9,14 @@ param.bs.beam_info = get_beam_info(param.bs.num_antenna, 2 * param.bs.num_antenn
 
 param.veh.num_antenna = 4; % number of veh's antenna
 param.veh.beam_info = get_beam_info(param.veh.num_antenna, 2 * param.veh.num_antenna); % get beam codebook for veh
-param.veh.beam_info.SNR = 30; % receiver's SNR in dB
+param.veh.beam_info.SNR = 90; % receiver's SNR in dB
 
 param.channel.L = 20;
 param.channel.lambda = 1.8;
 param.channel.r_tau = 2.8;
 param.channel.zeta = 4.0;
-param.channel.spread_e_t = 10.2 / 180 * pi; % 10.2 degree
-param.channel.spread_e_r = 15.5 / 180 * pi; % 15.5 degree
+param.channel.spread_e_t = 1 / 180 * pi; % 10.2 degree
+param.channel.spread_e_r = 1 / 180 * pi; % 15.5 degree
 
 training_raw_data = get_raw_data(param, load('sumo_output_for_training.mat').sumo_output);
 testing_raw_data = get_raw_data(param, load('sumo_output_for_testing.mat').sumo_output);
@@ -73,6 +73,7 @@ net = trainNetwork(train_x, train_y, layers, options);
 pred_y = predict(net, test_x);
 
 %% Result
+% AOA and AOD
 figure(1);
 hold on;
 plot(test_y(:, 1), '.');
@@ -83,6 +84,7 @@ hold off;
 xlim([0 length(pred_y)]);
 legend('AOA: Exhausted Search', 'AOD: Exhausted Search', 'AOA: LSTM-Based Prediction', 'AOD: LSTM-Based Prediction');
 
+% h_siso
 h_siso_pred = get_h_siso(param, test_others, pred_y);
 h_siso_est = test_others.h_siso_est_list(end - length(h_siso_pred) + 1 : end);
 
@@ -91,6 +93,14 @@ hold on;
 plot((abs(h_siso_pred) - abs(h_siso_est)) ./ abs(h_siso_est), '.');
 hold off;
 xlim([0 length(pred_y)]);
-ylim([-1 0]);
+ylim([-1 1]);
 
+% SNR
+figure(3);
+hold on;
+plot(10 * log(test_others.SNR_act_list), '.');
+plot([0 length(pred_y)], [param.veh.beam_info.SNR param.veh.beam_info.SNR], 'LineWidth', 2);
+hold off;
+
+%
 nrmse = sqrt(mean((pred_y(:, 2) - test_y(:, 2)) .^ 2) / mean(test_y(:, 2) .^2));

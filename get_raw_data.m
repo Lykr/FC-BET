@@ -14,10 +14,12 @@ for i = 1 : timesteps_num
         data.(timestep_name).(veh_name).angles = angles;
         data.(timestep_name).(veh_name).h = h;
         
-        [beam_pair, angles_est, h_siso_est] = beam_sweep(h, param);
-        data.(timestep_name).(veh_name).beam_pair = beam_pair;
-        data.(timestep_name).(veh_name).angles_est = angles_est;
-        data.(timestep_name).(veh_name).h_siso_est = h_siso_est;
+        CSI = beam_sweep(h, param);
+        data.(timestep_name).(veh_name).beam_pair = CSI.beam_pair;
+        data.(timestep_name).(veh_name).angles_est = CSI.angles_est;
+        data.(timestep_name).(veh_name).h_siso_est = CSI.h_siso_est;
+        data.(timestep_name).(veh_name).SNR_act = CSI.SNR_act;
+        data.(timestep_name).(veh_name).noise = CSI.noise;
     end
 end
 end
