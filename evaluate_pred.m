@@ -1,7 +1,8 @@
-function h_siso = get_h_siso(param, others, angles)
+function [h_siso, SNR] = evaluate_pred(param, others, angles)
 
 n = length(angles);
 h_siso = zeros(n, 1);
+SNR = zeros(n, 1);
 
 veh_beam_book = param.veh.beam_info.beam_book;
 veh_beam_angles = param.veh.beam_info.beam_angles;
@@ -17,6 +18,7 @@ for i = 1 : n
     e_t = bs_beam_book(:, beam_bs);
     
     h_siso(i) = e_r' * (h_list{i} * e_t + noise_list{i});
+    SNR(i) = abs(e_r' * h_list{i} * e_t)^2 / abs(e_r' * noise_list{i})^2;
 end
 end
 

@@ -9,7 +9,7 @@ others.h_list = cell(data_size, 1);
 others.h_siso_est_list = zeros(data_size, 1);
 others.angles_list = zeros(data_size, 2);
 others.angles_est_list = zeros(data_size, 2);
-others.SNR_act_list = zeros(data_size, 1);
+others.SNR_est_list = zeros(data_size, 1);
 others.noise_list = cell(data_size, 1);
 
 for i = 1 : timesteps_num
@@ -23,7 +23,7 @@ for i = 1 : timesteps_num
         angles_est = raw_data.(timestep_name).(veh_name).angles_est;
         beam_pair = raw_data.(timestep_name).(veh_name).beam_pair;
         speed = raw_data.(timestep_name).(veh_name).speed;
-        SNR_act = raw_data.(timestep_name).(veh_name).SNR_act;
+        SNR_est = raw_data.(timestep_name).(veh_name).SNR_act;
         noise = raw_data.(timestep_name).(veh_name).noise;
         
         % Store raw data into list
@@ -31,7 +31,7 @@ for i = 1 : timesteps_num
         others.h_siso_est_list(i) = h_siso_est;
         others.angles_list(i, :) = angles;
         others.angles_est_list(i, :) = angles_est;
-        others.SNR_act_list(i, :) = SNR_act;
+        others.SNR_est_list(i, :) = SNR_est;
         others.noise_list{i} = noise;
         
         x = reshape(angles_est, 2, 1);  % add AOA and AOD as input

@@ -4,12 +4,11 @@ clear;
 param.bs.x = 80; % position of base station
 param.bs.y = 80;
 param.bs.frequency_carrier = 28e9; % frequency of carrier
-param.bs.num_antenna = 16; % number of base station antenna
+param.bs.num_antenna = 64; % number of base station antenna
 param.bs.beam_info = get_beam_info(param.bs.num_antenna, 2 * param.bs.num_antenna); % get beam codebook for bs
 
-param.veh.num_antenna = 4; % number of veh's antenna
+param.veh.num_antenna = 16; % number of veh's antenna
 param.veh.beam_info = get_beam_info(param.veh.num_antenna, 2 * param.veh.num_antenna); % get beam codebook for veh
-param.veh.beam_info.SNR = 90; % receiver's SNR in dB
 
 param.channel.L = 20;
 param.channel.lambda = 1.8;
@@ -17,6 +16,7 @@ param.channel.r_tau = 2.8;
 param.channel.zeta = 4.0;
 param.channel.spread_e_t = 1 / 180 * pi; % 10.2 degree
 param.channel.spread_e_r = 1 / 180 * pi; % 15.5 degree
+param.channel.var_n = 1 / (10 ^ 13);
 
 training_raw_data = get_raw_data(param, load('sumo_output_for_training.mat').sumo_output);
 testing_raw_data = get_raw_data(param, load('sumo_output_for_testing.mat').sumo_output);
@@ -73,6 +73,8 @@ net = trainNetwork(train_x, train_y, layers, options);
 pred_y = predict(net, test_x);
 
 %% Result
+t_p = length(pred_y);
+
 % AOA and AOD
 figure(1);
 hold on;
@@ -81,26 +83,39 @@ plot(test_y(:, 2), '.');
 plot(pred_y(:, 1), 'x');
 plot(pred_y(:, 2), 'x');
 hold off;
-xlim([0 length(pred_y)]);
-legend('AOA: Exhausted Search', 'AOD: Exhausted Search', 'AOA: LSTM-Based Prediction', 'AOD: LSTM-Based Prediction');
+xlim([0 t_p]);
+legend('AOA: Exhausted Search', 'AOD: Exhausted Search', 'AOA: LSTM-based Prediction', 'AOD: LSTM-based Prediction');
+
+[h_siso_pred, SNR_pred] = evaluate_pred(param, test_others, pred_y);
 
 % h_siso
-h_siso_pred = get_h_siso(param, test_others, pred_y);
-h_siso_est = test_others.h_siso_est_list(end - length(h_siso_pred) + 1 : end);
+h_siso_est = test_others.h_siso_est_list(end - t_p + 1 : end);
 
 figure(2);
 hold on;
 plot((abs(h_siso_pred) - abs(h_siso_est)) ./ abs(h_siso_est), '.');
 hold off;
-xlim([0 length(pred_y)]);
-ylim([-1 1]);
+xlim([0 t_p]);
+ylim([-1 0]);
 
 % SNR
+SNR_threshold = -5; % in dB
+SNR_est = 10 * log(test_others.SNR_est_list(end - t_p + 1 : end));
+SNR_pred = 10 * log(SNR_pred);
+SNR_est_mean = mean(SNR_est);
+SNR_pred_mean = mean(SNR_pred);
 figure(3);
 hold on;
-plot(10 * log(test_others.SNR_act_list), '.');
-plot([0 length(pred_y)], [param.veh.beam_info.SNR param.veh.beam_info.SNR], 'LineWidth', 2);
+plot(SNR_est, '.');
+plot(SNR_pred, '.');
+plot([0 length(pred_y)], [SNR_est_mean SNR_est_mean], 'LineWidth', 2);
+plot([0 length(pred_y)], [SNR_pred_mean SNR_pred_mean], 'LineWidth', 2);
+plot([0 length(pred_y)], [SNR_threshold SNR_threshold], 'LineWidth', 2);
 hold off;
+xlim([0 t_p]);
+legend('SNR of Exhausted Search', 'SNR of LSTM-based Prediction', ...
+    'Average SNR of Exhausted Search', 'Average SNR of LSTM-based Prediction', ...
+    'SNR Threshold');
 
 %
 nrmse = sqrt(mean((pred_y(:, 2) - test_y(:, 2)) .^ 2) / mean(test_y(:, 2) .^2));
