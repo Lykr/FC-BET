@@ -14,9 +14,9 @@ param.channel.L = 20;
 param.channel.lambda = 1.8;
 param.channel.r_tau = 2.8;
 param.channel.zeta = 4.0;
-param.channel.spread_e_t = 1 / 180 * pi; % 10.2 degree
-param.channel.spread_e_r = 1 / 180 * pi; % 15.5 degree
-param.channel.var_n = 1 / (10 ^ 13);
+param.channel.spread_e_t = 10.2 / 180 * pi; % 10.2 degree
+param.channel.spread_e_r = 15.5 / 180 * pi; % 15.5 degree
+param.channel.var_n = 10 ^ (-13);
 
 training_raw_data = get_raw_data(param, load('sumo_output_for_training.mat').sumo_output);
 testing_raw_data = get_raw_data(param, load('sumo_output_for_testing.mat').sumo_output);
