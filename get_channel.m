@@ -7,7 +7,7 @@ vector_bs_to_veh = [veh_data.x, veh_data.y] - [param.bs.x, param.bs.y];
 vector_veh_to_bs = -vector_bs_to_veh;
 aod = vector_to_angle(vector_bs_to_veh);
 aoa = vector_to_angle(vector_veh_to_bs);
-angle_veh_turn = pi / 2 - veh_data.angle;
+angle_veh_turn = veh_data.angle - pi / 2;
 aoa = aoa - angle_veh_turn;
 
 % Get channel parameters

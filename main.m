@@ -4,10 +4,10 @@ clear;
 param.bs.x = 80; % position of base station
 param.bs.y = 80;
 param.bs.frequency_carrier = 28e9; % frequency of carrier
-param.bs.num_antenna = 64; % number of base station antenna
+param.bs.num_antenna = 16; % number of base station antenna
 param.bs.beam_info = get_beam_info(param.bs.num_antenna, 2 * param.bs.num_antenna); % get beam codebook for bs
 
-param.veh.num_antenna = 16; % number of veh's antenna
+param.veh.num_antenna = 4; % number of veh's antenna
 param.veh.beam_info = get_beam_info(param.veh.num_antenna, 2 * param.veh.num_antenna); % get beam codebook for veh
 
 param.channel.L = 20;
