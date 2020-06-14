@@ -1,6 +1,6 @@
 clear;
 
-theta = [0: 0.001 * pi: 2 * pi];
+theta = [0: 0.001 * pi: pi];
 n_a = 4;
 n_p = n_a * 2;
 beam_list = acos([1 : -2/n_p : -1 + 2/n_p]);
