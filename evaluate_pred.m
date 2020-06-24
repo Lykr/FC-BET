@@ -1,24 +1,55 @@
-function [h_siso, SNR] = evaluate_pred(param, others, angles)
+function [y_pred, SNR_pred, n_o, n_m] = evaluate_pred(param, others, net, x_test, y_test, SNR_threshold)
 
-n = length(angles);
-h_siso = zeros(n, 1);
-SNR = zeros(n, 1);
+n = length(x_test);
+lstm_step = size(x_test{1}, 2);
+
+SNR_pred = zeros(n, 1);
+y_pred = zeros(n, 2);
+y_pred(1 : lstm_step, :) = x_test{1}';
+
+n_o = 0;
+n_m = lstm_step;
+hasOutage = 0;
+mao = 0;
 
 veh_beam_book = param.veh.beam_info.beam_book;
 veh_beam_angles = param.veh.beam_info.beam_angles;
 bs_beam_book = param.bs.beam_info.beam_book;
 bs_beam_angles = param.bs.beam_info.beam_angles;
-h_list = others.h_list(end - n + 1 : end);
-noise_list = others.noise_list(end - n + 1 : end);
+h_list = others.h_list;
+noise_list = others.noise_list;
 
-for i = 1 : n
-    [~, beam_veh] = min(abs(veh_beam_angles - angles(i, 1)));
-    [~, beam_bs] = min(abs(bs_beam_angles - angles(i, 2)));
+for i = lstm_step + 1 : n + lstm_step
+    % prediction
+    if hasOutage == 1
+        y_pred(i, :) = y_test(i - lstm_step, :);
+        mao = mao + 1;
+        if mao >= lstm_step
+            hasOutage = 0;
+            n_m = n_m + mao;
+            mao = 0;
+        end
+    else
+        y_pred(i, :) = predict(net, num2cell(y_pred(i - lstm_step : i - 1, :)', [1 2]));
+    end
+    
+    % array response
+    [~, beam_veh] = min(abs(veh_beam_angles - y_pred(i, 1)));
+    [~, beam_bs] = min(abs(bs_beam_angles - y_pred(i, 2)));
     e_r = veh_beam_book(:, beam_veh);
     e_t = bs_beam_book(:, beam_bs);
     
-    h_siso(i) = e_r' * (h_list{i} * e_t + noise_list{i});
-    SNR(i) = abs(e_r' * h_list{i} * e_t)^2 / abs(e_r' * noise_list{i})^2;
+    % calculate SNR
+    SNR_pred(i) = abs(e_r' * h_list{i} * e_t)^2 / abs(e_r' * noise_list{i})^2;
+    
+    if 10*log10(SNR_pred(i)) <= SNR_threshold
+        hasOutage = 1;
+        n_o = n_o + 1;
+        mao = 0;
+    end
 end
+
+SNR_pred = SNR_pred(lstm_step + 1 : end, :);
+y_pred = y_pred(lstm_step + 1 : end, :);
 end
 

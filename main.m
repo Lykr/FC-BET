@@ -1,13 +1,14 @@
 clear;
 
 %% Raw data generation
+param.interval = 5;
 param.bs.x = 80; % position of base station
 param.bs.y = 80;
 param.bs.frequency_carrier = 28e9; % frequency of carrier
-param.bs.num_antenna = 64; % number of base station antenna
+param.bs.num_antenna = 16; % number of base station antenna
 param.bs.beam_info = get_beam_info(param.bs.num_antenna, 2 * param.bs.num_antenna); % get beam codebook for bs
 
-param.veh.num_antenna = 16; % number of veh's antenna
+param.veh.num_antenna = 4; % number of veh's antenna
 param.veh.beam_info = get_beam_info(param.veh.num_antenna, 2 * param.veh.num_antenna); % get beam codebook for veh
 
 param.channel.L = 20;
@@ -24,8 +25,8 @@ testing_raw_data = get_raw_data(param, load('sumo_output_for_testing.mat').sumo_
 %% Learning data generation
 lstm_step = 10;
 
-[train_x, train_y, train_others] = get_learning_data(training_raw_data, lstm_step);
-[test_x, test_y, test_others] = get_learning_data(testing_raw_data, lstm_step);
+[x_train, y_train, others_train] = get_learning_data(training_raw_data, lstm_step);
+[x_test, y_test, others_test] = get_learning_data(testing_raw_data, lstm_step);
 
 % Remove invalid data
 % [train_x, train_y] = remove_invalid_data(train_x, train_y, pi / 4);
@@ -39,7 +40,7 @@ lstm_step = 10;
 %% LSTM network training
 
 % Define LSTM network
-input_size = size(train_x{1}, 1);
+input_size = size(x_train{1}, 1);
 num_hidden_units = 50;
 num_responses = 2;% numel(categories(train_y)); % info_vehs.num_antenna * info_bs.num_antenna;
 
@@ -55,13 +56,15 @@ layers = [ ...
     fullyConnectedLayer(num_responses)
     regressionLayer];
 
-max_epochs = 200;
-mini_batch_size = numel(train_x);
+max_epochs = 1000;
+mini_batch_size = numel(x_train);
 
 options = trainingOptions('adam' , ...
     'ExecutionEnvironment', 'cpu', ...
     'GradientThreshold', 1, ...
-    'InitialLearnRate', 0.01, ...
+    'LearnRateDropPeriod',100, ...
+    'LearnRateDropFactor',0.2, ...
+    'InitialLearnRate', 0.005, ...
     'MaxEpochs', max_epochs, ...
     'MiniBatchSize', mini_batch_size, ...
     'SequenceLength', 'longest', ...
@@ -70,44 +73,46 @@ options = trainingOptions('adam' , ...
     'Plots', 'training-progress');
 
 % Train network
-net = trainNetwork(train_x, train_y, layers, options);
+net = trainNetwork(x_train, y_train, layers, options);
 
 %% LSTM network testing
-pred_y = predict(net, test_x);
+SNR_threshold = -5; % in dB
+% pred_y = predict(net, test_x);
+
+[y_pred, SNR_pred_n, n_o, n_m] = evaluate_pred(param, others_test, net, x_test, y_test, SNR_threshold);
+
+[y_kf, SNR_kf, n_o_kf, n_m_kf] = evaluate_kf(param, others_test, x_test, y_test, SNR_threshold);
 
 %% Result
-t_p = length(pred_y);
+t_p = length(y_pred);
 
 % AOA and AOD
 figure(1);
 hold on;
-plot(test_y(:, 1), '.');
-plot(test_y(:, 2), '.');
-plot(pred_y(:, 1), 'x');
-plot(pred_y(:, 2), 'x');
+plot(y_test(:, 1), '.');
+plot(y_test(:, 2), '.');
+plot(y_pred(:, 1), 'x');
+plot(y_pred(:, 2), 'x');
 hold off;
 xlim([0 t_p]);
 ylim([0 pi]);
 legend('AOA: Exhausted Search', 'AOD: Exhausted Search', 'AOA: LSTM-based', 'AOD: LSTM-based');
 
-[h_siso_pred, SNR_pred] = evaluate_pred(param, test_others, pred_y);
-
-% h_siso
-h_siso_est = test_others.h_siso_est_list(end - t_p + 1 : end);
-
-figure(2);
-hold on;
-plot((abs(h_siso_pred) - abs(h_siso_est)) ./ abs(h_siso_est), '.');
-hold off;
-xlim([0 t_p]);
-ylim([-1 0]);
+% % h_siso
+% h_siso_est = test_others.h_siso_est_list(end - t_p + 1 : end);
+% 
+% figure(2);
+% hold on;
+% plot((abs(h_siso_pred) - abs(h_siso_est)) ./ abs(h_siso_est), '.');
+% hold off;
+% xlim([0 t_p]);
+% ylim([-1 0]);
 
 % SNR
-SNR_threshold = -5; % in dB
-SNR_est = 10 * log(test_others.SNR_est_list(end - t_p + 1 : end));
-SNR_pred = 10 * log(SNR_pred);
-SNR_est_mean = mean(SNR_est);
-SNR_pred_mean = mean(SNR_pred);
+SNR_est = 10 * log10(others_test.SNR_est_list(end - t_p + 1 : end));
+SNR_est_mean = 10 * log10(mean(others_test.SNR_est_list(end - t_p + 1 : end)));
+SNR_pred = 10 * log10(SNR_pred_n);
+SNR_pred_mean = 10 * log10(mean(SNR_pred_n));
 figure(3);
 hold on;
 plot(SNR_est, '.');
@@ -133,4 +138,4 @@ hold off;
 legend('Exhausted Search', 'LSTM-based', 'Threshold');
 
 %
-nrmse = sqrt(mean((pred_y(:, 2) - test_y(:, 2)) .^ 2) / mean(test_y(:, 2) .^2));
+nrmse = sqrt(mean((y_pred(:, 2) - y_test(:, 2)) .^ 2) / mean(y_test(:, 2) .^2));
