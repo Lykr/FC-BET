@@ -1,13 +1,13 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.23)  24 JUN 2020 17:45
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.23)  26 JUN 2020 14:20
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**"/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.tex"
-(/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.tex
+**/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.tex
+(/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.tex
 LaTeX2e <2018-04-01> patch level 2
 Babel <3.18> and hyphenation patterns for 84 language(s) loaded.
-(/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/IEEEtran.cls
+(/Users/lykr/Documents/Learning/Research/Beamforming/Script/IEEEtran.cls
 Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
 -- See the "IEEEtran_HOWTO" manual for usage information.
 -- http://www.michaelshell.org/tex/ieeetran/
@@ -368,7 +368,7 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
-) (/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.aux)
+) (/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.aux)
 \openout1 = `conference_041818.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
@@ -445,157 +445,74 @@ Package grfext Info: Graphics extension search list:
  (/usr/local/texlive/2018/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-LaTeX Font Info:    Calculating math sizes for size <11> on input line 55.
-LaTeX Font Info:    Try loading font information for U+msa on input line 55.
- (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsa.fd
+Overfull \hbox (9.47563pt too wide) in paragraph at lines 23--23
+ [] 
+ []
+
+
+Overfull \hbox (9.47563pt too wide) in paragraph at lines 23--23
+ [] 
+ []
+
+
+Overfull \hbox (9.47563pt too wide) in paragraph at lines 23--23
+ [] 
+ []
+
+LaTeX Font Info:    Try loading font information for U+msa on input line 75.
+(/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 55.
+LaTeX Font Info:    Try loading font information for U+msb on input line 75.
  (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-
-LaTeX Warning: Citation `Zhang2016' on page 1 undefined on input line 82.
-
-/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.tex:100: Argument of \mathaccentV has an extra }.
-<inserted text> 
-                \par 
-l.100 $({\dot}
-              )^{T}$ denote transpose and  $(\bullet)^H$ denote conjugate tr...
-I've run across a `}' that doesn't seem to match anything.
-For example, `\def\a#1{...}' and `\a}' would produce
-this error. If you simply proceed now, the `\par' that
-I've just inserted will cause me to report a runaway
-argument that might be the root of the problem. But if
-your `}' was spurious, just type `2' and it will go away.
-
-Runaway argument?
-/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.tex:100: Paragraph ended before \mathaccentV was complete.
-<to be read again> 
-                   \par 
-l.100 $({\dot}
-              )^{T}$ denote transpose and  $(\bullet)^H$ denote conjugate tr...
-I suspect you've forgotten a `}', causing me to apply this
-control sequence to too much text. How can we recover?
-My plan is to forget the whole thing and hope for the best.
-
-/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.tex:100: Missing $ inserted.
-<inserted text> 
-                $
-l.100 $({\dot}
-              )^{T}$ denote transpose and  $(\bullet)^H$ denote conjugate tr...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.tex:100: Missing } inserted.
-<inserted text> 
-                }
-l.100 $({\dot}
-              )^{T}$ denote transpose and  $(\bullet)^H$ denote conjugate tr...
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.tex:100: Too many }'s.
-<recently read> }
-                 
-l.100 $({\dot}
-              )^{T}$ denote transpose and  $(\bullet)^H$ denote conjugate tr...
-You've closed more groups than you opened.
-Such booboos are generally harmless, so keep going.
-
-/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.tex:100: Missing $ inserted.
-<inserted text> 
-                $
-l.100 $({\dot})^
-                {T}$ denote transpose and  $(\bullet)^H$ denote conjugate tr...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-
-LaTeX Warning: Reference `AA' on page 1 undefined on input line 127.
-
-
-LaTeX Warning: Reference `SCM' on page 1 undefined on input line 127.
-
-[1{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+) [1{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
-
-LaTeX Warning: Reference `eq' on page 2 undefined on input line 161.
-
-
-LaTeX Warning: Reference `eq' on page 2 undefined on input line 161.
-
-
-LaTeX Warning: Reference `eq' on page 2 undefined on input line 161.
-
-
-LaTeX Warning: Reference `eq' on page 2 undefined on input line 162.
-
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 166.
-(/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/ot1pcr.fd
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 134.
+ (/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 
-LaTeX Warning: Citation `b7' on page 2 undefined on input line 215.
+LaTeX Warning: Citation `b7' on page 2 undefined on input line 183.
 
 [2]
-
-LaTeX Warning: Reference `fig' on page 3 undefined on input line 251.
-
-
-LaTeX Warning: File `fig1.png' not found on input line 271.
-
-
-/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.tex:271: Package pdftex.def Error: File `fig1.png' not found: using draft setting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.271 \centerline{\includegraphics{fig1.png}}
-                                             
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 282.
-(/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/omsptm.fd
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 250.
+ (/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 282.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 250.
 
 
-LaTeX Warning: Citation `b1' on page 3 undefined on input line 295.
+LaTeX Warning: Citation `b1' on page 3 undefined on input line 263.
 
 
-LaTeX Warning: Citation `b2' on page 3 undefined on input line 296.
+LaTeX Warning: Citation `b2' on page 3 undefined on input line 264.
 
 
-LaTeX Warning: Citation `b3' on page 3 undefined on input line 297.
+LaTeX Warning: Citation `b3' on page 3 undefined on input line 265.
 
 
-LaTeX Warning: Citation `b3' on page 3 undefined on input line 297.
+LaTeX Warning: Citation `b3' on page 3 undefined on input line 265.
 
 
-LaTeX Warning: Citation `b3' on page 3 undefined on input line 297.
+LaTeX Warning: Citation `b3' on page 3 undefined on input line 265.
 
 
-LaTeX Warning: Citation `b3' on page 3 undefined on input line 298.
+LaTeX Warning: Citation `b3' on page 3 undefined on input line 266.
 
 
-LaTeX Warning: Citation `b4' on page 3 undefined on input line 306.
+LaTeX Warning: Citation `b4' on page 3 undefined on input line 274.
 
 
-LaTeX Warning: Citation `b5' on page 3 undefined on input line 307.
+LaTeX Warning: Citation `b5' on page 3 undefined on input line 275.
 
 
-LaTeX Warning: Citation `b6' on page 3 undefined on input line 312.
+LaTeX Warning: Citation `b7' on page 3 undefined on input line 280.
 
+(/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -607,27 +524,24 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[3] (/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.aux)
+[3] (/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.aux)
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 4490 strings out of 492649
- 65837 string characters out of 6129621
- 138077 words of memory out of 5000000
- 8288 multiletter control sequences out of 15000+600000
- 51537 words of font info for 110 fonts, out of 8000000 for 9000
+ 4475 strings out of 492649
+ 65601 string characters out of 6129621
+ 138127 words of memory out of 5000000
+ 8272 multiletter control sequences out of 15000+600000
+ 48253 words of font info for 97 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,11n,35p,664b,302s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "/Users/lykr/Documents/Learning/Research/MyPapers/LSTM-based Beam Tracking/conference_041818.pdf" (3 pages, 149931 bytes).
+ 41i,11n,35p,859b,277s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on /Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.pdf (3 pages, 173595 bytes).
 PDF statistics:
- 71 PDF objects out of 1000 (max. 8388607)
- 51 compressed objects within 1 object stream
+ 79 PDF objects out of 1000 (max. 8388607)
+ 57 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

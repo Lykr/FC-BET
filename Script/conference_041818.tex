@@ -11,84 +11,61 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{LSTM-based Beam Tracking for mmWave Vehicular Networks\\
-\thanks{Identify applicable funding agency here. If none, delete this.}
+\title{LSTM based Beam Tracking for mmWave Vehicular Networks\\
 }
 
-\author{\IEEEauthorblockN{1\textsuperscript{st} Chen Wang}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address}
-\and
-\IEEEauthorblockN{2\textsuperscript{nd} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address}
-\and
-\IEEEauthorblockN{3\textsuperscript{rd} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address}
-\and
-\IEEEauthorblockN{4\textsuperscript{th} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address}
-\and
-\IEEEauthorblockN{5\textsuperscript{th} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address}
-\and
-\IEEEauthorblockN{6\textsuperscript{th} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address}
+\author{\IEEEauthorblockN{Chen Wang, XXX, XXX, XXX}
+\IEEEauthorblockA{\textit{Beijing Key Laboratory of Network System Architecture and Convergence, Beijing University of Posts and Telecommunications} \\
+Beijing, China \\
+wangchen@bupt.edu.cn}
 }
 
 \maketitle
 
 \begin{abstract}
-The use of millimeter wave frequency bands for transmission can improve data rate with the help of beamforming technology to overcome the high path and penetration losses.
-However for vehicle, when high resolution beam codebook are used, the high mobility of vehicle results in extremely frequent beam alignment and significant overhead.
+The use of millimeter wave (mmWave) frequency bands for transmission can improve data rate with the help of beamforming technology to overcome the high path and penetration losses.
+However for vehicle, the high mobility of vehicle results in extremely frequent beam alignment and significant overhead.
 In this paper, a Long Short Time Memory (LSTM) based beam tracking method was proposed for reducing overhead brought by beam alignment in mmWave Vehicular Networks, by predicting angles of beam pair at next time step through known angles of beam pairs at a certain number of consecutive time steps as features.
-To train this network, an time series array antenna channel data was set up by statistical channel model using time series vehicle information generated from road traffic simulation software named "Simulation of Urban MObility (SUMO)".
-% In addition, a extended Kalman filter (EKF) based method using vehicle information to estimate predicted beam angle was adopted as comparison method.
-Simulation results show that proposed LSTM-based method outpreforms EKF based method, and can prevent frequent beam alignment to reduce overhead while ensuring acceptable signal-to-noise ratio (SNR).
+To train this network, an time series array antenna channel data was set up by statistical channel model using time series vehicle information generated from road traffic simulation software named ``Simulation of Urban MObility (SUMO)''.
+%% In addition, a extended Kalman filter (EKF) based method using vehicle information to estimate predicted beam angle was adopted as comparison method.
+Simulation results show that proposed LSTM based method outpreforms Kalman filter based method, and can prevent frequent beam alignment to reduce overhead while ensuring acceptable signal-to-noise ratio (SNR).
 \end{abstract}
 
 \begin{IEEEkeywords}
-beam tracking, mmWave vehicular networks, LSTM, extended Kalman filter
+beam tracking, mmWave vehicular networks, LSTM, Kalman filter
 \end{IEEEkeywords}
 
 \section{Introduction}
-% 人们对传输速率的要求越来越高 *。
 % 毫米波可以有效提高传输速率，是通信未来发展的重要技术 *。
 % 为了应用更好的毫米波，需要克服毫米波高频导致的极高的路径和穿透损耗 *。
 % 得益于毫米波毫米级的波长，可能将阵列天线集成进终端，并使用阵列天线的波束赋形技术，将天线能量约束在指定方向，获取高增益 *。
 % 论文 * 提出了数字波束赋形技术，然而由于射频链的高价格和高能耗，给天线阵列中的每一根天线都配置射频链的成本是不可接受的 *。
 % 目前较多的研究主要集中在基于量化相移器的单射频链模拟波束赋形 *，和使用较少射频链的混合波束赋形 * 折中方案上。
 
-% 不同于传统全向天线的信道，阵列天线的信道具有极强的方向性 *，这意味着若想形成较高的波束增益，必须保证接收端和发送端的波束之间相互对准，否则波束对的失准将会带来严重的增益下降，降低通信性能 *。
+% 不同于传统全向天线的信道，阵列天线的信道具有方向性 *，这意味着若想形成较高的波束增益，必须保证接收端和发送端的波束之间相互对准，否则波束对的失准将会带来严重的增益下降，降低通信性能 *。
+Unlike the channel of conventional omni-directional antennas, the channel of array antennas are directional *, which means that if higher antenna gain needs to be achieved, it is important to ensure that the beams at the receiver and transmitter are aligned with each other. Otherwise the misalignment of the beam pairs will result in serious gain reduction, degrading communications performance *.
 % 研究 * 提出了一种分级码本的设计，本质是采用了二分查找的方式，在不同阶段使用不同宽度的波束进行波束扫描并获得最佳波束对，以此减少开支。
+A hierarchical codebook design was proposed in * , which essentially use a dichotomous lookup to reduce overhead by using different widths of beams at different stages to perform beam search.
 % 然而，这种算法需要量化相移器具有较高的量化水平，并且有可能需要多个射频链来实现，这导致采用这种算法方案的成本极高。
+However, this algorithm requires a high quantization level phase shifter and potentially multiple RF chains to implement, which results in high cost.
 % 对此，* 提出了一种基于卡尔曼滤波器使用穷尽扫描进行波束追踪的方案，以减少系统的开支，然而穷尽扫描所需要的测量次数和协议开支会随着天线数的增加而增加。
 In \cite{Zhang2016}, Zhang et al. proposed a Kalman filter based method to 
 % * 在此基础上加以改进采用 EKF，并且只需要单次测量，更适用于在快速变换环境下的信道追踪。
 
-% 相较于低速的用户终端，为高速车辆提供可靠的波束对准更具挑战性，因为较高的速度将会导致车辆更快驶出波束的覆盖范围，为了保证车辆始终处于较高的波束增益范围，需要进行高频率的对准，而高频的波束会进一步加大系统的开支，尤其是当采用高分辨率码本的时候。
-% 幸运的是，由于毫米波信道的稀疏性 *，毫米波信道的 AOA、AOD 与收发端位置的具有一定的相关性 *，在 LOS 信号下沿固定道路行驶的车辆的信道信息应该能被很好的预测出来。
+% 相较于低速的用户终端，为高速车辆提供可靠的波束对准更具挑战性，因为车辆较高的速度将会导致车辆更快驶出波束的覆盖范围。
+Providing reliable beam alignment for high speed vehicles is more challenging than for low speed terminals because higher speeds cause vehicles to move out of the beam coverage faster. 
+%为了保证车辆始终被较高增益的波束覆盖，需要进行高频率的对准，而高频的波束会进一步加大系统的开支，尤其是当采用高分辨率码本的时候。
+To ensure that the vehicle is always covered by high gain beams, high frequency beam alignment is required, and it can further increase system overhead, especially when high resolution code books are used.
+% 幸运的是，由于毫米波信道的稀疏性 *，且毫米波信道的 AoA、AoD 与收发端位置的具有一定的相关性 *，在 LOS 信号下沿固定道路行驶的车辆的 AoA 和 AoD 应该能被很好的预测出来。
+Fortunately, due to the sparsity of mmWave channel * and the correlation between the AoA and AoD of a millimeter-wave channel and the location of the receiver and transmitter *, the channel information of a vehicle traveling along a fixed road under an LOS signal should be well predicted.
 
-% 本文提出了一种基于 LSTM 网络的波束追踪方法，使用 LSTM 网络，通过对历史车辆穷尽扫描所获得的历史信道信息进行学习，根据当前车辆在一定时间步的信道信息，预测在下一时刻的 AOA 和 AOD，以达到减少系统开支的效果。
+% 本文提出了一种基于 LSTM 网络的波束追踪方法，使用 LSTM 网络，通过对历史车辆穷尽扫描所获得的历史信道信息进行学习，根据当前车辆在一定时间步的信道信息，预测在下一时刻的 AoA 和 AoD，以达到减少系统开支的效果。
+In this paper, a LSTM based beam tracking method is proposed. By using LSTM network to learn the historical channel information which was obtained from exhausted beam search, AoA and AoD of current channel between vehicle and BS can be predicted to reduce system overhead.
 % 同时，为了获取信道数据用以训练神经网络，交通流仿真软件 SUMO 被用来生成时序车辆信息，结合统计信道模型与生成的时序车辆信息，生成了时序的信道信息。
-% 此外，提出了快速中断恢复算法，在追踪失效后能够减少波束扫描的次数，尽快恢复连接。
-% 相比较于 *，本论文有以下几点不同：1）采用了更加完善的信道模型；2）同时预测 AOA 与 AOD；3）中断判断根据接收端的 SNR 而非角度差进行判断；4）在一个追踪周期中平均需要更少的波束测量。此外，与 * 相比使用了更实际的基于量化相移器的波束码本进行波束扫描。
+Meanwhile, a road traffic simulation software is use to generate time seires vehicle information (e.g. position, speed, etc.) to set up time seires channel information with a statistical channel model for training the network.
+%% 此外，提出了快速中断恢复算法，在追踪失效后能够减少波束扫描的次数，尽快恢复连接。
+% 相比较于 *，本论文有以下几点不同：1）采用了更加完善的信道模型；2）同时预测 AoA 与 AoD；3）中断判断根据接收端的 SNR 而非角度差进行判断；4）在一个追踪周期中平均需要更少的波束测量。此外，与 * 相比使用了更实际的基于量化相移器的波束码本进行波束扫描。
+Compared to \cite{Zhang2016, Va2017}, this paper differs in the following ways: 1) More realistic channel model; 2) Simultaneous prediction of AoA and AoD; 3) The outage judgment is based on the SNR of the receiver instead of the angle difference; 4) Fewer beam measurements required on average in a tracking cycle. In addition, beam search is performed more realistic than \cite{Va2017}, by using a quantized phase shifter based beam codebook.
 
 % 内容安排
 
@@ -97,53 +74,44 @@ The following notation will be used in this paper.
 % 矩阵，向量，标量
 Matrices, vectors and scalars are denoted by bold uppercase letters (e.g. $\mathbf{A}$), bold lowercase letters (e.g. $\mathbf{a}$) and lowercase letters (e.g. $a$), respectively.
 % 转置，共轭转置
-$({\dot})^{T}$ denote transpose and  $(\bullet)^H$ denote conjugate transpose (Hermitian).
+$(\cdot)^{T}$ denote transpose and  $(\cdot)^H$ denote conjugate transpose (Hermitian).
 % 矩阵指定行、列、元素
 $[\mathbf{A}]_{m,:}$, $[\mathbf{A}]_{:,n}$ and $[\mathbf{A}_{m,n}]$ denote the $m$th row, $n$th column and the $m$th row $n$th column entry of $\mathbf{A}$, respectively.
 % 向量指定元素
 $[mathbf{a}]_n$ denote the $n$th entry of $\mathbf{a}$.
 % 2 范数
-Beside, $\Vert_pair{\bullet}_2$ denote $\mathcal{l}_2$-norm of a vector.
+Beside, $\Vert{\cdot}\Vert_2$ denote $\ell_2$-norm of a vector.
 % 复数、实数集合
 $\mathbb{C}$ denote the set of complex number and $\mathbb{R}^+$ denote the set of real positive number.
 % 复高斯、包络高斯、指数分布
 Complex Gaussian distribution, wrapped Gaussian distribution and exponential distribution are denoted by $\mathcal{CN}$, $\mathcal{WN}$ and $\mathcal{E}$, respectively.
 
-\section{Ease of Use}
+\section{System Model}
 
-\subsection{Maintaining the Integrity of the Specifications}
+% 场景和天线数
+A mmWave vehicular scenario including a vehicle with $M_r$ antenna as receiver and a Base Station (BS) with $M_t$ antenna as transmitter are considered. 
+% 天线结构、阵元间距、赋形技术
+Both of them equips with uniform linear array (ULA) of half wave interval antenna as shown in Fig.1, and adopted analog beamforming used quantitative phase shifter which connect with single analog radio frequency (RF) chain.
+% 阵列响应矢量
+The array response vector of a uniform linear array with $M$ half wave interval antenna is given by:
+\begin{equation}
+    \mathbf{a}( M,\theta ) =\frac{1}{\sqrt{M}}\left[ 1,e^{j\pi cos( \varphi )} ,...,e^{j\pi ( M-1) cos( \varphi )}\right]^{T}
+    \end{equation}
+where $\varphi$ is the arrival angle of the signal. So the array response vectors of the vehicle and BS are $\mathbf{a}_{r}( \phi ) =\mathbf{a}( M_{r} ,\phi )$ and $\mathbf{a}_{t}( \theta ) =\mathbf{a}( M_{t} ,\theta )$, respectively.
 
-The IEEEtran class file is used to format your paper and style the text. All margins, 
-column widths, line spaces, and text fonts are prescribed; please do not 
-alter them. You may note peculiarities. For example, the head margin
-measures proportionately more than is customary. This measurement 
-and others are deliberate, using specifications that anticipate your paper 
-as one part of the entire proceedings, and not as an independent document. 
-Please do not revise any of the current designations.
+% 码本设计
+The codebook matrix of vehicle is $\mathbf{W}$, and the codebook matrix of BS is $\mathbf{F}$. Each column of the codebook matrix represents a beam pattern, each entry in the column is phase rotation for corresponding antenna element to generate directional beam.
+A discrete resolution $2log_2 M$-bit codebook is adopted, in other words, there are $2M_r$ beam patterns for the vehicle, and $M_t$ beam patterns for the BS.
 
-\section{Prepare Your Paper Before Styling}
-Before you begin to format your paper, first write and save the content as a 
-separate text file. Complete all content and organizational editing before 
-formatting. Please note sections \ref{AA}--\ref{SCM} below for more information on 
-proofreading, spelling and grammar.
+% 信道模型
+A statistical 28 GHz mmWave channel model in \cite{Akdeniz2014} is used, which is modeled by real experimental data collected in New York City.
+The channel matrix for a $L$ subpaths at $n$th time step $\mathbf{H}_{n} \in \mathbb{C}^{M_{r} \times M_{t}}$ can be expressed as
+\begin{equation}
+    \mathbf{H}_{n} =\sum\limits ^{L}_{l=1} g_{ln}\mathbf{a}_{r}( \phi _{ln})\mathbf{a}^{H}_{t}( \theta _{ln})
+    \end{equation}
+where $g_{ln} \in \mathbb{C}$ is complex small-scale fading gain on subpath $l$ at $n$th time step, $\mathbf{a}_{r}( \phi _{ln}) \in \mathbb{C}^{M_r}$ and $\mathbf{a}_{t}( \theta _{ln}) \in \mathbb{C}^{M_t}$ are array response vectors of the vehicle and BS, respectively. $\phi_{ln}$ is AoA of the $l$th subpath signal received by the vehicle at $n$th time step, and $\theta_{ln}$ is AoD of the $l$th subpath signal transmitted by the BS at $n$th time step. The specific parameters can be refered to \cite{Akdeniz2014} and will not be repeated in this paper. It should be noted that in this paper, only the case of single cluster under LOS condition is considered. In addition, the cluster angle depends on the geometric position of the vehicle and base station.
 
-Keep your text and graphic files separate until after the text has been 
-formatted and styled. Do not number text heads---{\LaTeX} will do that 
-for you.
-
-\subsection{Abbreviations and Acronyms}\label{AA}
-Define abbreviations and acronyms the first time they are used in the text, 
-even after they have been defined in the abstract. Abbreviations such as 
-IEEE, SI, MKS, CGS, ac, dc, and rms do not have to be defined. Do not use 
-abbreviations in the title or heads unless they are unavoidable.
-
-\subsection{Units}
-\begin{itemize}
-\item Use either SI (MKS) or CGS as primary units. (SI units are encouraged.) English units may be used as secondary units (in parentheses). An exception would be the use of English units as identifiers in trade, such as ``3.5-inch disk drive''.
-\item Avoid combining SI and CGS units, such as current in amperes and magnetic field in oersteds. This often leads to confusion because equations do not balance dimensionally. If you must use mixed units, clearly state the units for each quantity that you use in an equation.
-\item Do not mix complete spellings and abbreviations of units: ``Wb/m\textsuperscript{2}'' or ``webers per square meter'', not ``webers/m\textsuperscript{2}''. Spell out units when they appear in text: ``. . . a few henries'', not ``. . . a few H''.
-\item Use a zero before decimal points: ``0.25'', not ``.25''. Use ``cm\textsuperscript{3}'', not ``cc''.)
-\end{itemize}
+\section{Beam Tracking Solution}
 
 \subsection{Equations}
 Number equations consecutively. To make your 
@@ -268,7 +236,7 @@ copy& More table copy$^{\mathrm{a}}$& &  \\
 \end{table}
 
 \begin{figure}[htbp]
-\centerline{\includegraphics{fig1.png}}
+% \centerline{\includegraphics{}}
 \caption{Example of a figure caption.}
 \label{fig}
 \end{figure}
@@ -309,19 +277,13 @@ Capitalize only the first word in a paper title, except for proper nouns and
 element symbols.
 
 For papers published in translation journals, please give the English 
-citation first, followed by the original foreign-language citation \cite{b6}.
+citation first, followed by the original foreign-language citation \cite{b7}.
 
-\begin{thebibliography}{00}
-\bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
-\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
-\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
-\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
-\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
-\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
-\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
-\end{thebibliography}
-\vspace{12pt}
-\color{red}
-IEEE conference templates contain guidance text for composing and formatting conference papers. Please ensure that all template text is removed from your conference paper prior to submission to the conference. Failure to remove the template text from your paper may result in your paper not being published.
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+% \begin{thebibliography}{00}
+% \bibitem{b1}
+% \end{thebibliography}
 
 \end{document}
