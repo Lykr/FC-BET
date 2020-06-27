@@ -32,7 +32,7 @@ for i = 1 : bn
     M(:, i) = get_eMatrix(nt, beam_angles(i));
 end
 
-u = randi(2, bn, 1) - 1;
+u = kron(randi(2, bn / 2, 1) - 1, ones(2, 1));
 v = inv(M*M')*M*u;
 vv = inv(M*M')*M*(u-1)*(-1);
 
