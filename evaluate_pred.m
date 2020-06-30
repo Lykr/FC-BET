@@ -40,7 +40,7 @@ for i = lstm_step + 1 : n + lstm_step
     e_t = bs_beam_book(:, beam_bs);
     
     % calculate SNR
-    SNR_pred(i) = abs(e_r' * h_list{i} * e_t)^2 / abs(e_r' * noise_list{i})^2;
+    SNR_pred(i) = abs(e_r' * h_list{i} * e_t)^2 / abs(noise_list{i}(beam_veh, beam_bs))^2;
     
     if 10*log10(SNR_pred(i)) <= SNR_threshold
         hasOutage = 1;

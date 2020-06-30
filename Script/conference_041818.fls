@@ -328,8 +328,6 @@ INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/adobe/times/ptmrc7t.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmbx7.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmbx5.tfm
-INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/geo.tex
-INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/geo.tex
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/vf/adobe/times/ptmr7t.vf
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/adobe/times/ptmr8r.tfm
 INPUT /usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map
@@ -345,13 +343,15 @@ INPUT /usr/local/texlive/2018/texmf-dist/fonts/vf/adobe/times/ptmb7t.vf
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/adobe/times/ptmb8r.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/vf/adobe/times/ptmrc7t.vf
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/adobe/times/ptmr8r.tfm
+INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/geo.tex
+INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/geo.tex
 INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/scene.tex
 INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/scene.tex
-INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/lstm.tex
-INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/lstm.tex
-INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.bbl
-INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.bbl
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/vf/adobe/times/ptmr7t.vf
+INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/lstm.tex
+INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/lstm.tex
+INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.bbl
+INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.bbl
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/vf/adobe/times/ptmri7t.vf
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/adobe/times/ptmri8r.tfm
 INPUT /Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.aux
@@ -364,6 +364,7 @@ INPUT /usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pf
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+INPUT /usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmb8a.pfb

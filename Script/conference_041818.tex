@@ -46,7 +46,7 @@ wangchen@bupt.edu.cn}
 \begin{abstract}
 The use of millimeter wave (mmWave) frequency bands for transmission can improve data rate with the help of beamforming technology to overcome the high path and penetration losses.
 However for vehicle, the high mobility of vehicle results in extremely frequent beam alignment and significant overhead.
-In this paper, a Long Short Time Memory (LSTM)-based beam tracking method was proposed for reducing overhead brought by beam alignment in mmWave Vehicular Networks, by predicting angles of beam pair at next time step through known angles of beam pairs at a certain number of consecutive time steps as features.
+In this paper, a long short-term memory (LSTM)-based beam tracking method was proposed for reducing overhead brought by beam alignment in mmWave Vehicular Networks, by predicting angles of beam pair at next time step through known angles of beam pairs at a certain number of consecutive time steps as features.
 To train this network, an time series array antenna channel data was set up by statistical channel model using time series vehicle information generated from road traffic simulation software named ``Simulation of Urban MObility (SUMO)''.
 %% In addition, a extended Kalman filter (EKF) based method using vehicle information to estimate predicted beam angle was adopted as comparison method.
 Simulation results show that proposed LSTM-based method outpreforms Kalman filter based method, and can prevent frequent beam alignment to reduce overhead while ensuring acceptable signal-to-noise ratio (SNR).
@@ -62,7 +62,7 @@ MmWave is one of the important technology for the future development of communic
 % 为了更好地应用的毫米波，需要克服毫米波高频导致的极高的路径和穿透损耗 *。
 In order to apply mmWave better, the high path and penetration loss caused by high frequency of mmWave need to be overcome \cite{Zhao2013}.
 % 得益于毫米波毫米级的波长，可能将阵列天线集成进终端，并使用阵列天线的波束赋形技术，将天线能量约束在指定方向，获取高增益 *。
-Thanks to the small wavelength of mmWave, it is possible to integrate the array antenna into the terminal and use the beamforming technique to constrained signal power in specified direction for high gain \cite{Heath2016}.
+Thanks to the small wavelength of mmWave, it is possible to integrate array antennas into small chip and use beamforming technique to constrained signal power in specified direction for high gain \cite{Heath2016}.
 % 论文 * 提出了数字波束赋形技术，然而由于射频链的高价格和高能耗，给天线阵列中的每一根天线都配置射频链的成本是不可接受的 *。
 % 目前较多的研究主要集中在基于量化相移器的单射频链模拟波束赋形 *，和使用较少射频链的混合波束赋形 * 折中方案上。
 
@@ -73,7 +73,7 @@ A hierarchical codebook design was proposed in \cite{Noh2017}, which essentially
 % 然而，这种算法需要量化相移器具有较高的量化水平，并且有可能需要多个射频链来实现，这导致采用这种算法方案的成本极高。
 However, this algorithm requires a high quantization level phase shifter and potentially multiple RF chains to implement, which results in high cost.
 % 对此，* 提出了一种基于卡尔曼滤波器使用穷尽扫描进行波束追踪的方案，以减少系统的开支，然而穷尽扫描所需要的测量次数和协议开支会随着天线数的增加而增加。
-In \cite{Zhang2016}, Zhang et al. proposed a Kalman filter based method for beam tracking using exhaustive search. However, the number of measurements and protocol overhead for exhaustive search required increases with the number of antennas.
+In \cite{Zhang2016}, Zhang et al. proposed a Kalman filter based method for beam tracking using exhaustive search. However, the number of measurements and protocol overhead for exhaustive search required increases with the number of elements in antenna.
 % * 在此基础上加以改进采用 EKF，并且只需要单次测量，更适用于在快速变换环境下的信道追踪。
 On the other hand, \cite{Va2017} exploits extended Kalman filter and requires only a single measurement, making it more suitable for beam tracking in fast-changing environments.
 
@@ -85,12 +85,12 @@ To ensure that the vehicles are always covered by high gain beams, high frequenc
 Fortunately, due to the sparsity of mmWave channel \cite{Lee2014} and the correlation between the angle of arrival (AoA) and angle of departure (AoD) of a millimeter-wave channel and the location of the receiver and transmitter \cite{Aviles2016}, the angle of beam pair of a vehicle traveling along a fixed road under LOS condition should be well predicted.
 
 % 本文提出了一种基于 LSTM 网络的波束追踪方法，使用 LSTM 网络，通过对历史车辆穷尽扫描所获得的历史信道信息进行学习，根据当前车辆在一定时间步的信道信息，预测在下一时刻的 AoA 和 AoD，以达到减少系统开支的效果。
-In this paper, a LSTM-based beam tracking method is proposed. By using LSTM network to learn the historical channel state information (CSI) which was obtained from exhausted beam search, AoA and AoD of current channel between vehicle and BS can be predicted to reduce system overhead.
+In this paper, a LSTM-based beam tracking method is proposed. By using LSTM network to learn the historical channel state information (CSI) which was obtained from exhaustive beam search, AoA and AoD of current channel between vehicle and BS can be predicted to reduce system overhead.
 % 同时，为了获取信道数据用以训练神经网络，交通流仿真软件 SUMO 被用来生成时序车辆信息，结合统计信道模型与生成的时序车辆信息，生成了时序的信道信息。
 Meanwhile, a road traffic simulation software is use to generate time seires vehicle information (e.g. position, speed, etc.) to set up time seires CSI with a statistical channel model for training the network.
 %% 此外，提出了快速中断恢复算法，在追踪失效后能够减少波束扫描的次数，尽快恢复连接。
 % 相比较于 *，本论文有以下几点不同：1）采用了更加完善的信道模型；2）同时预测 AoA 与 AoD；3）中断判断根据接收端的 SNR 而非角度差进行判断；4）在一个追踪周期中平均需要更少的波束测量。此外，与 * 相比使用了更实际的基于量化相移器的波束码本进行波束扫描。
-Compared to \cite{Zhang2016, Va2017}, this paper differs in the following ways: 1) More realistic channel model; 2) Simultaneous prediction of AoA and AoD; 3) The outage judgment is based on the SNR of the receiver instead of the angle difference; 4) Fewer beam measurements required on average in a tracking cycle. In addition, beam search is performed more realistic than \cite{Va2017}, by using a quantized phase shifter based beam codebook.
+Compared to \cite{Zhang2016, Va2017}, this paper differs in the following ways: 1) More realistic channel model; 2) Simultaneous prediction of AoA and AoD; 3) The outage judgment is based on the SNR of the receiver instead of the angle difference; 4) Fewer beam measurements required on average in a tracking cycle. In addition, beam search is performed more realistic than \cite{Va2017}, by using a quantized phase shifter based beamforming.
 
 % 内容安排
 
@@ -107,22 +107,16 @@ $[\mathbf{a}]_n$ denote the $n$th entry of $\mathbf{a}$.
 % 2 范数
 Besides, $\Vert{\cdot}\Vert_2$ denote $\ell_2$-norm of a vector.
 % 复数、实数集合
-$\mathbb{C}$ denote the set of complex number and $\mathbb{R}^+$ denote the set of real positive number.
+$\mathbb{C}$ denote the set of complex number and $\mathbb{R}$ denote the set of real number.
 % 复高斯、包络高斯、指数分布
-Complex Gaussian distribution, wrapped Gaussian distribution and exponential distribution are denoted by $\mathcal{CN}$, $\mathcal{WN}$ and $\mathcal{E}$, respectively.
-
-\begin{figure}[htbp]
-    \centerline{\input{geo}}
-    \caption{Channel geometry}
-    \label{geo}
-\end{figure}
+Gaussian, complex Gaussian, wrapped Gaussian and exponential distribution are denoted by $\mathcal{N}$, $\mathcal{CN}$, $\mathcal{WN}$ and $\mathcal{E}$, respectively.
 
 \section{System Model}\label{S2}
 
 % 场景和天线数
 A mmWave vehicular networks scenario including a vehicle with $M_r$ antenna as receiver and a Base Station (BS) with $M_t$ antenna as transmitter are considered. 
 % 天线结构、阵元间距、赋形技术
-Both of them equips with uniform linear array (ULA) of half wave interval antenna as shown in Fig.1, and adopted analog beamforming used quantitative phase shifter which connect with single analog radio frequency (RF) chain.
+Both of them equips with uniform linear array (ULA) of half wave interval antenna as shown in Fig.~\ref{geo}, and adopted analog beamforming used quantitative phase shifter which connect with single analog radio frequency (RF) chain.
 % 阵列响应矢量
 The array response vector of a uniform linear array with $M$ half wave interval antenna is given by:
 \begin{equation}
@@ -142,10 +136,15 @@ where $g_{ln} \in \mathbb{C}$ is complex small-scale fading gain on subpath $l$ 
 $\phi_{ln} = \phi_n + \Delta \phi_{ln}$ and $\theta _{ln} =\theta _{n} +\Delta \theta _{ln}$, where $\phi_{n}$ and $\theta_{n}$ is the AoA and AoD of the cluster at $n$th time step, $\Delta \phi _{ln} \sim \mathcal{WN}( \delta ^{2}_{rn})$, and $\Delta \theta _{ln} \sim \mathcal{WN}( \delta ^{2}_{tn})$.
 The complex small-scale fading gain is given by:
 \begin{equation}
-    g_{ln} =\overline{g}_{ln} e^{j2\pi t_{n} f_{D,max} cos( \omega _{ln})}, \overline{g}_{ln} \sim \mathcal{CN}\left( 0,10^{-0.1PL}\right)
+    g_{ln} =\overline{g}_{ln} e^{j2\pi t_{n} f_{D,max} cos( \omega _{ln})}, \overline{g}_{ln} \sim \mathcal{CN}\left( 0,10^{-0.1PL_n}\right)
     \label{ssfg}
 \end{equation}
-where $t_{n}$ is the signal transmission time at $n$th time step, $f_{D,max} ={v_{n}}/{\lambda _{c}}$ is maximum doppler shift, $v_{n}$ is the speed of vehicle at $n$th time step, $\lambda _{c}$ is the carrier wavelength, $\omega _{ln} = \phi_{ln} - \pi / 2$ is the AoA of subpath $l$ relative to the direction of vehicle at time step $n$, and $PL$ is omnidirectional path loss given in \cite{Akdeniz2014}.
+where $t_{n}$ is the signal transmission time at $n$th time step, $f_{D,max} ={v_{n}}/{\lambda _{c}}$ is maximum doppler shift, $v_{n}$ is the speed of vehicle at $n$th time step, $\lambda _{c}$ is the carrier wavelength, $\omega _{ln} = \phi_{ln} - \pi / 2$ is the AoA of subpath $l$ relative to the direction of vehicle at time step $n$, and $PL_n$ is omnidirectional path loss at $n$th time step, which is defined as:
+\begin{equation}
+    PL_n = 61.4 + 20 \log(d_n) + \xi~[dB]
+    \label{pl}
+\end{equation}
+where $d_n$ is distance between the vehicle and BS at $n$th time step, and $\xi \sim \mathcal{N}(0, \sigma_p^2)$.
 Note that only the case of single cluster under line-of-sight (LOS) condition is considered in this paper.
 In addition, the cluster angle depends on the geometric position of the vehicle and base station.
 
@@ -157,20 +156,26 @@ For a transmitted signal $x_n$ from the BS, received signal $y_n$ in the vehicle
 \end{equation}
 where $\mathbf{w}_n$ and $\mathbf{f}_n$ are combining vector and beamforming vector at $n$th time step, respectively. $\mathbf{v}_n$ is Gaussian noise at time step $n$ and $\mathbf{v}_n \sim \mathcal{CN}(0, \sigma^2_v \mathbf{I}_{M_r})$. 
 
+\begin{figure}[htbp]
+    \centerline{\input{geo}}
+    \caption{Channel geometry}
+    \label{geo}
+\end{figure}
+
 \section{Data Generation}
 
 % 信道矩阵
 \subsection{Channel Matrix}
 % 场景介绍
-A road traffic simulation software named ``SUMO'' was used to generate time series information of the vehicle in the scene mentioned in Section \ref{S2}, which including a vehicle, a BS and a road with a curve as shown in Fig. \ref{scene}.
+A road traffic simulation software named ``SUMO'' was used to generate time series information of the vehicle in the scene mentioned in Section \ref{S2}, which including a vehicle, a BS and a road with a curve as shown in Fig.~\ref{scene}.
 The vehicle departs from $(0, 100)$ at first time step, and arrives $(100, 0)$ at final time step.
 Note that the speed of vehicle is different at each time step, that means the variation of vehicle position and beam angles is non-linear.
 
 % 几何信息
-The generated vehicle time series information is composed with position, $v_n$ and directional angle $\beta_n$ of the vehicle at each time step.
+The generated vehicle time series information is composed of position, $v_n$ and directional angle $\beta_n$ of the vehicle at each time step.
 For $n$th time step, the position of vehicle is given by $(x_{rn}, y_{rn})$, $v_n$ is used to determine maximum doppler shift in \eqref{ssfg}, and $\beta_n$ is used to calculate $\phi_{ln}$ and $\omega_{ln}$.
 
-Once the position of vehicle and BS are obtained, $\theta_n$ and $\phi_n$ can be calculated by simple geometric methods as following:
+Once the position of the vehicle and the BS are obtained, $\theta_n$ and $\phi_n$ can be calculated by simple geometric methods as following:
 \begin{equation}
     \begin{cases}
     \theta _{n} =\arg( \Gamma _{xn} +j\Gamma _{yn})\\
@@ -179,18 +184,15 @@ Once the position of vehicle and BS are obtained, $\theta_n$ and $\phi_n$ can be
     \label{ba}
 \end{equation}
 where $\Gamma _{xn} =x_{rn} -x_{tn}$, $\Gamma _{yn} =y_{rn} -y_{tn} $, $(x_{tn}, y_{tn})$ are coordinates of the BS, $\beta _{n}$ is directional angle of the vehicle. 
-Furthermore, $t_n = d_n / c$, $d_n = \sqrt{\Gamma_{xn}^2 + \Gamma_{yn}^2}$ is distance between the vehicle and BS at $n$th time step, and $c$ is light speed.
-Now the channel matrix at each time step can be obtained from \eqref{cm}, \eqref{ssfg} and \eqref{ba}.
+Furthermore, $t_n = d_n / c$, $d_n = \sqrt{\Gamma_{xn}^2 + \Gamma_{yn}^2}$, and $c$ is light speed.
+Now the channel matrix at each time step can be obtained from \eqref{cm}, \eqref{ssfg}, \eqref{pl} and \eqref{ba}.
 
 % 波束角度
-\subsection{Beam Angles}
+\subsection{AoAs and AoDs}
 
-
-
-% 码本设计
-The codebook matrix of vehicle is $\mathbf{W}$, and the codebook matrix of BS is $\mathbf{F}$. Each column of the codebook matrix represents a beam pattern, each entry in the column is phase rotation for corresponding antenna element to generate directional beam.
-A discrete resolution $2log_2 M$-bit codebook is adopted, in other words, there are $2M_r$ beam patterns for the vehicle, and $M_t$ beam patterns for the BS.
-% 
+% 管理方式
+In this paper, Downlink (SA-DL) configuration scheme is considered for beam management.
+The beam management procedure is as follows. The reference signals are sent to the vehicle from the BS, the vehicle measures and determines the optimal beam for communication, then transmits beam reporting back to the BS.
 
 \begin{figure}[htbp]
     \centerline{\input{scene}}
@@ -198,7 +200,71 @@ A discrete resolution $2log_2 M$-bit codebook is adopted, in other words, there 
     \label{scene}
 \end{figure}
 
+% 码本设计
+AoAs and AoDs measured from exhaustive beam search method is used to train the network, rather than using the generated CSI directly.
+The advantage of training with radian value instead of the codeword index is that it allows the proposed beam tracking solution to be generalized under terminals with different antenna configuration and beamforming techniques, without increase computation load and transimtted data.
+To reduce the overhead of beamforming, a discrete resolution $b$-bit codebook is adopted to perform beam search, where $b$ is the number of bits for quantized phase shifters, which is assumed to be $2log_2 M$ for a $M$-element antenna terminal.
+Assume the number of beam patterns of a codebook is equal to its quantized bits in this paper.
+So, for a terminal with $M$-element antenna, the candidate beam angles vector $\mathbf{b}_M$ is given by:
+\begin{equation}
+    \mathbf{b}_M = \left[\frac{1}{2M}\pi, \frac{2}{2M}\pi, ..., \pi\right]
+\end{equation}
+In other words, there are $2M_r$ beam patterns for the vehicle, and $2M_t$ beam patterns for the BS.
+Note that another codebook which achieves uniform maximum gain in all direction is not used, beacause its low spatial resolution near $0$ and $\pi$ radians resulting in network underfitting.
+The beam codebooks of the vehicle and the BS are:
+\begin{gather}
+    \begin{aligned}
+        \mathbf{W} =&\left[\mathbf{a}_{r}([\mathbf{b}_{M_r}]_1) ,\mathbf{a}_{r}\left([\mathbf{b}_{M_r}]_2 \right) ,...,\mathbf{a}_{r}\left([\mathbf{b}_{M_r}]_{2M_r} \right)\right] \\
+        \mathbf{F} =&\left[\mathbf{a}_{t}([\mathbf{b}_{M_t}]_1) ,\mathbf{a}_{t}\left([\mathbf{b}_{M_t}]_2 \right) ,...,\mathbf{a}_{t}\left([\mathbf{b}_{M_t}]_{2M_t} \right)\right]
+    \end{aligned}
+\end{gather}
+where $\mathbf{W} \in \mathbb{C}^{M_{r} \times 2M_{r}}$ is the codebook matrix of vehicle, and $\mathbf{F} \in \mathbb{C}^{M_{t} \times 2M_{t}}$ is the codebook matrix of BS. Each column of the codebook matrix represents a beam pattern, each entry in the column is phase rotation for corresponding antenna element to generate directional beam.
+
+% 观察信号
+Assume $x_n = 1$ is sent as refernece signal, the observation matrix comprises all measurement of exhaustive search now can be given by:
+\begin{equation}
+    \mathbf{Y}_{n} =\mathbf{W}^{H}\mathbf{H}_{n}\mathbf{F} +\mathbf{V}_{n}
+\end{equation}
+where $\mathbf{V}_n \in \mathbb{C}^{2M_r \times 2M_t}$ is Guassian noise matrix composed of independent identically distribution (i.i.d.) elements, which are the noise part of \eqref{rs}. $\mathbf{Y}_n \in \mathbb{C}^{2M_r \times 2M_t}$, $[\mathbf{Y}_n]_{i,j}$ is the received signal of using $[\mathbf{W}]_{:,i}$ as combining vector and $[\mathbf{F}]_{:,j}$ as beamforming vector.
+
+% 最优波束
+For each time step, both of the vehicle and the BS use their beam codebook to perform exhaustive beam search to find the optimal beam pair.
+The indexs of optimal beam pair can be obtained by solving a optimization problems as following:
+\begin{equation}
+    \begin{aligned}
+        ( i_{n}^* ,j_{n}^*) =~&\underset{i_{n} ,j_{n}}{\operatorname{argmax}}\Vert [\mathbf{Y}_{n}]_{i_{n} ,j_{n}}\Vert _{2} \\
+        s.t.~&i_{n} \in [ 1,2M_{r}], \\
+        &j_{n} \in [ 1,2M_{t}]
+    \end{aligned}
+\end{equation}
+A simple nested loop algorithm can be expolited to solve this problem . Then, at $n$th time step, the optimal combining vector $\mathbf{w}^{*}_{n}$ and the optimal beamforming vector $\mathbf{f}^{*}_{n}$ are $\mathbf{w}^{*}_{n}=[\mathbf{W}]_{:,i_{n}^*}$ and $\mathbf{f}^{*}_{n}=[\mathbf{F}]_{:,j_{n}^*}$, respectively. And the estimated AoA $\phi ^{e}_{n}$ and AoD $\theta ^{e}_{n}$ used to training network are given by:
+\begin{equation}
+    \begin{cases}
+        \phi ^{e}_{n} = i_{n}^* \pi / (2M_{r})\\
+        \theta ^{e}_{n} = j_{n}^* \pi / (2M_{t})
+    \end{cases}
+\end{equation}
+
 \section{LSTM-based Beam Tracking Solution}
+
+% 网络
+\subsection{LSTM Network}
+
+% 输入输出
+\subsection{Features and Responses}
+
+Proposed LSTM network takes the generated estimated AoAs and AoDs of $n_{LSTM}$ consecutive time steps as features, and the AoA and AoD at next time step as responses.
+
+% 结构
+Fig.~\ref{lstm} show the structure of LSTM network, which is a sequential model comprises LSTM layer with 50 hidden units, a dropout layer with 0.2 probability, a LSTM layer with 50 hidden units, a dropout layer with 0.2 probability and a fully connected layer with 2 nodes.
+The output of the first LSTM layer is a sequence of length $n_{LSTM}$, which used as the input of the second LSTM layer.
+And two dropout layers are set to prevent overfitting. 
+
+% 损失函数？
+\subsection{Loss Function}
+
+% 快速中断恢复算法？
+\subsection{Fast Outage Recovery}
 
 \begin{figure}[htbp]
     \centerline{\input{lstm}}
@@ -207,6 +273,18 @@ A discrete resolution $2log_2 M$-bit codebook is adopted, in other words, there 
 \end{figure}
 
 \section{Simulation Results and Discussion}
+
+% 仿真参数
+
+% 收敛性能？
+
+% 16 * 4 天线，不同噪声方差下的 SNR 累积分布函数，中断次数和观测次数
+
+% 不同规格天线，10^(-14) 噪声方差的比较
+
+% 16 * 4 天线，10^(-14) 噪声方差，不同步长下的比较
+
+% 16 * 4 天线，10^(-14) 噪声方差，10 步长下的与对比算法的比较
 
 \section*{Acknowledgment}
 

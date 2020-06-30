@@ -17,7 +17,7 @@ param.channel.r_tau = 2.8;
 param.channel.zeta = 4.0;
 param.channel.spread_e_t = 10.2 / 180 * pi; % 10.2 degree
 param.channel.spread_e_r = 15.5 / 180 * pi; % 15.5 degree
-param.channel.var_n = 10 ^ (-13);
+param.channel.var_n = 10 ^ (-14);
 
 training_raw_data = get_raw_data(param, load('sumo_output_for_training.mat').sumo_output);
 testing_raw_data = get_raw_data(param, load('sumo_output_for_testing.mat').sumo_output);
@@ -50,9 +50,9 @@ num_responses = 2;% numel(categories(train_y)); % info_vehs.num_antenna * info_b
 
 layers = [ ...
     sequenceInputLayer(input_size)
-    lstmLayer(num_hidden_units, 'OutputMode', 'sequence')
+    bilstmLayer(num_hidden_units, 'OutputMode', 'sequence')
     dropoutLayer(0.2)
-    lstmLayer(num_hidden_units, 'OutputMode', 'last')
+    bilstmLayer(num_hidden_units, 'OutputMode', 'last')
     fullyConnectedLayer(num_responses)
     regressionLayer];
 
@@ -81,7 +81,7 @@ SNR_threshold = -5; % in dB
 
 [y_pred, SNR_pred_n, n_o, n_m] = evaluate_pred(param, others_test, net, x_test, y_test, SNR_threshold);
 
-[y_kf, SNR_kf, n_o_kf, n_m_kf] = evaluate_kf(param, others_test, x_test, y_test, SNR_threshold);
+% [y_kf, SNR_kf, n_o_kf, n_m_kf] = evaluate_kf(param, others_test, x_test, y_test, SNR_threshold);
 
 %% Result
 t_p = length(y_pred);
