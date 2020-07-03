@@ -1,7 +1,7 @@
 clear;
 
 %% Raw data generation
-param.interval = 5;
+param.interval = 1;
 param.bs.x = 80; % position of base station
 param.bs.y = 80;
 param.bs.frequency_carrier = 28e9; % frequency of carrier
@@ -28,15 +28,6 @@ lstm_step = 10;
 [x_train, y_train, others_train] = get_learning_data(training_raw_data, lstm_step);
 [x_test, y_test, others_test] = get_learning_data(testing_raw_data, lstm_step);
 
-% Remove invalid data
-% [train_x, train_y] = remove_invalid_data(train_x, train_y, pi / 4);
-
-% % Normalization
-% mu = mean([train_x{:}], 2);
-% sig = std([train_x{:}], 0, 2);
-% train_x = normalize_data(train_x, mu, sig);
-% test_x = normalize_data(test_x, mu, sig);
-
 %% LSTM network training
 
 % Define LSTM network
@@ -52,7 +43,7 @@ layers = [ ...
     sequenceInputLayer(input_size)
     bilstmLayer(num_hidden_units, 'OutputMode', 'sequence')
     dropoutLayer(0.2)
-    bilstmLayer(num_hidden_units, 'OutputMode', 'last')
+    lstmLayer(num_hidden_units, 'OutputMode', 'last')
     fullyConnectedLayer(num_responses)
     regressionLayer];
 
@@ -76,7 +67,7 @@ options = trainingOptions('adam' , ...
 net = trainNetwork(x_train, y_train, layers, options);
 
 %% LSTM network testing
-SNR_threshold = -5; % in dB
+SNR_threshold = 5; % in dB
 % pred_y = predict(net, test_x);
 
 [y_pred, SNR_pred_n, n_o, n_m] = evaluate_pred(param, others_test, net, x_test, y_test, SNR_threshold);
@@ -96,7 +87,7 @@ plot(y_pred(:, 2), 'x');
 hold off;
 xlim([0 t_p]);
 ylim([0 pi]);
-legend('AOA: Exhausted Search', 'AOD: Exhausted Search', 'AOA: LSTM-based', 'AOD: LSTM-based');
+legend('AOA: Exhaustive Search', 'AOD: Exhaustive Search', 'AOA: LSTM-based', 'AOD: LSTM-based');
 
 % % h_siso
 % h_siso_est = test_others.h_siso_est_list(end - t_p + 1 : end);
@@ -122,8 +113,8 @@ plot([0 t_p], [SNR_pred_mean SNR_pred_mean], 'LineWidth', 1.5);
 plot([0 t_p], [SNR_threshold SNR_threshold], 'LineWidth', 1.5);
 hold off;
 xlim([0 t_p]);
-legend('Exhausted Search', 'LSTM-based', ...
-    'Average SNR of Exhausted Search', 'Average SNR of LSTM-based', ...
+legend('Exhaustive Search', 'LSTM-based', ...
+    'Average SNR of Exhaustive Search', 'Average SNR of LSTM-based', ...
     'SNR Threshold');
 
 % CDF of SNR
@@ -135,7 +126,7 @@ set(cdf_h1, 'LineWidth', 1.5);
 set(cdf_h2, 'LineWidth', 1.5);
 plot([SNR_threshold SNR_threshold], [0 1], 'LineWidth', 1.5);
 hold off;
-legend('Exhausted Search', 'LSTM-based', 'Threshold');
+legend('Exhaustive Search', 'LSTM-based', 'Threshold');
 
 %
 nrmse = sqrt(mean((y_pred(:, 2) - y_test(:, 2)) .^ 2) / mean(y_test(:, 2) .^2));

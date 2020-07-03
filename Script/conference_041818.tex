@@ -82,7 +82,7 @@ Providing reliable beam alignment for high speed vehicles is more challenging th
 %为了保证车辆始终被较高增益的波束覆盖，需要进行高频率的对准，而高频的波束会进一步加大系统的开支，尤其是当采用高分辨率码本的时候。
 To ensure that the vehicles are always covered by high gain beams, high frequency beam alignment is required, and it can further increase system overhead, especially when high resolution code books are used.
 % 幸运的是，由于毫米波信道的稀疏性 *，且毫米波信道的 AoA、AoD 与收发端位置的具有一定的相关性 *，在 LOS 信号下沿固定道路行驶的车辆的 AoA 和 AoD 应该能被很好的预测出来。
-Fortunately, due to the sparsity of mmWave channel \cite{Lee2014} and the correlation between the angle of arrival (AoA) and angle of departure (AoD) of a millimeter-wave channel and the location of the receiver and transmitter \cite{Aviles2016}, the angle of beam pair of a vehicle traveling along a fixed road under LOS condition should be well predicted.
+Fortunately, due to the sparsity of mmWave channel \cite{Lee2014} and the correlation between the angle of arrival (AoA) and angle of departure (AoD) of a millimeter-wave channel and the location of the receiver and transmitter \cite{Aviles2016}, the angle of beam pair of a vehicle traveling along a road under LOS condition should be well predicted.
 
 % 本文提出了一种基于 LSTM 网络的波束追踪方法，使用 LSTM 网络，通过对历史车辆穷尽扫描所获得的历史信道信息进行学习，根据当前车辆在一定时间步的信道信息，预测在下一时刻的 AoA 和 AoD，以达到减少系统开支的效果。
 In this paper, a LSTM-based beam tracking method is proposed. By using LSTM network to learn the historical channel state information (CSI) which was obtained from exhaustive beam search, AoA and AoD of current channel between vehicle and BS can be predicted to reduce system overhead.
@@ -126,7 +126,7 @@ The array response vector of a uniform linear array with $M$ half wave interval 
 where $\varphi$ is the arrival angle of the signal. When AoA of the vehicle is $\phi$ and AoD of the BS is $\theta$, the array response vectors of both are $\mathbf{a}_{r}( \phi ) =\mathbf{a}( M_{r} ,\phi )$ and $\mathbf{a}_{t}( \theta ) =\mathbf{a}( M_{t} ,\theta )$, respectively.
 
 % 信道模型
-The statistical 28 GHz mmWave channel model in \cite{Akdeniz2014} is used, which is modeled by real experimental data collected in New York City.
+The statistical 28 GHz mmWave channel model in \cite{Akdeniz2014} was used, which is modeled by real experimental data collected in New York City.
 The narrowband time-varying $L$ subpaths channel matrix between the vehicle and BS at $n$th time step is $\mathbf{H}_{n} \in \mathbb{C}^{M_{r} \times M_{t}}$, which is given as:
 \begin{equation}
     \mathbf{H}_{n} =\frac{1}{\sqrt{L}} \sum\limits ^{L}_{l=1} g_{ln}\mathbf{a}_{r}( \phi _{ln})\mathbf{a}^{H}_{t}( \theta _{ln})
@@ -191,7 +191,7 @@ Now the channel matrix at each time step can be obtained from \eqref{cm}, \eqref
 \subsection{AoAs and AoDs}
 
 % 管理方式
-In this paper, Downlink (SA-DL) configuration scheme is considered for beam management.
+In this paper, Downlink (DL) configuration scheme is considered for beam management.
 The beam management procedure is as follows. The reference signals are sent to the vehicle from the BS, the vehicle measures and determines the optimal beam for communication, then transmits beam reporting back to the BS.
 
 \begin{figure}[htbp]
@@ -202,7 +202,7 @@ The beam management procedure is as follows. The reference signals are sent to t
 
 % 码本设计
 AoAs and AoDs measured from exhaustive beam search method is used to train the network, rather than using the generated CSI directly.
-The advantage of training with radian value instead of the codeword index is that it allows the proposed beam tracking solution to be generalized under terminals with different antenna configuration and beamforming techniques, without increase computation load and transimtted data.
+The advantage of training with radian value instead of the codeword index is that it allows the proposed beam tracking solution to be generalized under terminals with different antenna configuration and beamforming techniques, without increasing computation load and transimtted data.
 To reduce the overhead of beamforming, a discrete resolution $b$-bit codebook is adopted to perform beam search, where $b$ is the number of bits for quantized phase shifters, which is assumed to be $2log_2 M$ for a $M$-element antenna terminal.
 Assume the number of beam patterns of a codebook is equal to its quantized bits in this paper.
 So, for a terminal with $M$-element antenna, the candidate beam angles vector $\mathbf{b}_M$ is given by:
@@ -237,7 +237,7 @@ The indexs of optimal beam pair can be obtained by solving a optimization proble
         &j_{n} \in [ 1,2M_{t}]
     \end{aligned}
 \end{equation}
-A simple nested loop algorithm can be expolited to solve this problem . Then, at $n$th time step, the optimal combining vector $\mathbf{w}^{*}_{n}$ and the optimal beamforming vector $\mathbf{f}^{*}_{n}$ are $\mathbf{w}^{*}_{n}=[\mathbf{W}]_{:,i_{n}^*}$ and $\mathbf{f}^{*}_{n}=[\mathbf{F}]_{:,j_{n}^*}$, respectively. And the estimated AoA $\phi ^{e}_{n}$ and AoD $\theta ^{e}_{n}$ used to training network are given by:
+A simple nested loop algorithm can be expolited to solve this problem. Then, at $n$th time step, the optimal combining vector $\mathbf{w}^{*}_{n}$ and the optimal beamforming vector $\mathbf{f}^{*}_{n}$ are $\mathbf{w}^{*}_{n}=[\mathbf{W}]_{:,i_{n}^*}$ and $\mathbf{f}^{*}_{n}=[\mathbf{F}]_{:,j_{n}^*}$, respectively. And the estimated AoA $\phi ^{e}_{n}$ and AoD $\theta ^{e}_{n}$ used to training network are given by:
 \begin{equation}
     \begin{cases}
         \phi ^{e}_{n} = i_{n}^* \pi / (2M_{r})\\
@@ -245,26 +245,44 @@ A simple nested loop algorithm can be expolited to solve this problem . Then, at
     \end{cases}
 \end{equation}
 
+% 数据平滑
+Note that due to limitation of the resolution of the beam codebook and the noise received at the vehicle, there will be some errors in the estimation of the AoAs and AoDs, which is reflected in fluctuations in the estimated time series AoAs and AoDs.
+To reduce the fluctuations due to errors, a first order Savitzky-Golay filter \cite{Savitzky1964}, with frame length 11 (corresponding to a time window of 1 second) was used to smooth the estimated AoAs and AoDs.
+
+%% 角度范围
+%\subsection{Range of AoAs and AoDs}
+
+%After getting the AoAs and AoDs for all time step, we use a time windows of 1 second to get the range of them for a total of 11 time steps, including the current time step and 10 future time steps.
+
 \section{LSTM-based Beam Tracking Solution}
 
 % 网络
-\subsection{LSTM Network}
+\subsection{The LSTM Network}
+
+The purpose of beam tracking is to obtain current precise beam angles with as few channel estimates as possible for reducing overhead.
+Since the vehicle must travel in a particular direction on the road and the beam of the mmWave is correlated with the position of the vehicle, the problem of obtaining the current beam angle can be viewed as a time series regression problem when the CSI of historical vehicles is known.
+
+An artificial neural network named LSTMs network was used to solve this regression problem.
+LSTMs have been implemented successfully in several fields such as machine translation, image captioning, speech recognition, and even stock prices prediction in economy.
+As one of the recurrent neural networks (RNNs), LSTMs are generally considered to be more robust to long time series than simpler vanilla RNN implementations \cite{Hochreiter1997}.
+LSTMs are powerful for handling time series data, beacase relying on three gates which are forget, input and output gate composed of NNs in LSTM cells, it can learn long-term relations between features.
+
+% 结构
+Fig.~\ref{lstm} show the structure of the network, which is a sequential model comprises LSTM layer with 50 hidden units, a dropout layer with 0.2 probability, a LSTM layer with 50 hidden units, a dropout layer with 0.2 probability and a fully connected layer with 2 nodes.
+The output of the first LSTM layer is a sequence of length $n_{LSTM}$, which used as the input of the second LSTM layer.
+And two dropout layers are set to prevent overfitting. 
 
 % 输入输出
 \subsection{Features and Responses}
 
-Proposed LSTM network takes the generated estimated AoAs and AoDs of $n_{LSTM}$ consecutive time steps as features, and the AoA and AoD at next time step as responses.
-
-% 结构
-Fig.~\ref{lstm} show the structure of LSTM network, which is a sequential model comprises LSTM layer with 50 hidden units, a dropout layer with 0.2 probability, a LSTM layer with 50 hidden units, a dropout layer with 0.2 probability and a fully connected layer with 2 nodes.
-The output of the first LSTM layer is a sequence of length $n_{LSTM}$, which used as the input of the second LSTM layer.
-And two dropout layers are set to prevent overfitting. 
+The LSTM network takes the generated estimated AoAs and AoDs of $n_{LSTM}$ consecutive time steps as features, and the AoA and AoD at next time step as responses.
+In other words, the network will use the AoAs and AoDs from $(n - n_{LSTM})$th to $(n - 1)$th time steps to predict the AoA and AoD at $n$ time step.
 
 % 损失函数？
 \subsection{Loss Function}
 
-% 快速中断恢复算法？
-\subsection{Fast Outage Recovery}
+%% 快速中断恢复算法？
+%\subsection{Fast Outage Recovery}
 
 \begin{figure}[htbp]
     \centerline{\input{lstm}}

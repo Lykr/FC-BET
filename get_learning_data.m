@@ -11,7 +11,9 @@ others.angles_list = zeros(data_size, 2);
 others.angles_est_list = zeros(data_size, 2);
 others.SNR_est_list = zeros(data_size, 1);
 others.noise_list = cell(data_size, 1);
+others.original_y = zeros(data_size, 2);
 
+% Get data
 for i = 1 : timesteps_num
     timestep_name = strcat('t', num2str(i - 1));
     vehs_num = numel(fieldnames(raw_data.(timestep_name)));
@@ -33,8 +35,16 @@ for i = 1 : timesteps_num
         others.angles_est_list(i, :) = angles_est;
         others.SNR_est_list(i, :) = SNR_est;
         others.noise_list{i} = noise;
-        
-        x = reshape(angles_est, 2, 1);  % add AOA and AOD as input
+    end
+end
+
+% Preprocessing
+smooth_angles_est_list = sgolayfilt(others.angles_est_list, 1, 11);
+
+for i = 1 : timesteps_num
+    for j = 1 : vehs_num
+        angles_est = smooth_angles_est_list(i, :);
+        x = angles_est';  % add AOA and AOD as input
         temp_x = [temp_x x]; % append input
         
         if size(temp_x, 2) == lstm_step + 1
