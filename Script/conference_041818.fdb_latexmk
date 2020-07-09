@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex conference_041818"] 1593606493 "conference_041818.aux" "conference_041818.bbl" "conference_041818" 1593747005
+["bibtex conference_041818"] 1594273706 "conference_041818.aux" "conference_041818.bbl" "conference_041818" 1594306192
   "/usr/local/texlive/2018/texmf-dist/bibtex/bst/IEEEtran/IEEEtran.bst" 1480098433 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
-  "conference_041818.aux" 1593662098 2206 2f1bdb0f0a57d5a5b8a00a3d324c978e ""
+  "conference_041818.aux" 1594306192 2214 4c23b59836f3573be65a80b47df51aaa ""
   "references.bib" 1593606153 71676 c4262314109eb3d6d7d5a25e8aa18664 ""
   (generated)
   "conference_041818.bbl"
   "conference_041818.blg"
-["pdflatex"] 1593662097 "/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.tex" "/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.pdf" "conference_041818" 1593747005
-  "/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.aux" 1593662098 2206 2f1bdb0f0a57d5a5b8a00a3d324c978e ""
-  "/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.tex" 1593747004 23784 342b9108fd340571b460e9e9dc9ce97f ""
+["pdflatex"] 1594306187 "/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.tex" "/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.pdf" "conference_041818" 1594306192
+  "/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.aux" 1594306192 2214 4c23b59836f3573be65a80b47df51aaa ""
+  "/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.tex" 1594306186 24275 9f169b483fceaa14fd8de990d7904451 ""
   "/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc" 1480098666 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2018/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/local/texlive/2018/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1480098689 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -204,15 +204,15 @@
   "/usr/local/texlive/2018/texmf-var/web2c/pdftex/pdflatex.fmt" 1542950303 4220281 1aea2de070915611eaaec41b21092cbb ""
   "/usr/local/texlive/2018/texmf.cnf" 1523934483 577 0b39adfd7c93507ff20c9c14c2f1a33f ""
   "IEEEtran.cls" 1440654524 288304 b67b6fc6c2abb39f9b461923f5199343 ""
-  "conference_041818.aux" 1593662098 2206 2f1bdb0f0a57d5a5b8a00a3d324c978e ""
-  "conference_041818.bbl" 1593606494 3895 e8d2e5a18cba83c5b6e7eb5cc419f07e "bibtex conference_041818"
-  "conference_041818.tex" 1593747004 23784 342b9108fd340571b460e9e9dc9ce97f ""
+  "conference_041818.aux" 1594306192 2214 4c23b59836f3573be65a80b47df51aaa ""
+  "conference_041818.bbl" 1594273706 3895 e8d2e5a18cba83c5b6e7eb5cc419f07e "bibtex conference_041818"
+  "conference_041818.tex" 1594306186 24275 9f169b483fceaa14fd8de990d7904451 ""
   "geo.tex" 1593258707 15928 ebc1e6e39ecc1e5020334e3ae5103c93 ""
   "lstm.tex" 1593423043 6067 68a05257f1c7f2d8e0f8b6c4c981b86c ""
   "scene.tex" 1593176698 6767 7d222c25d5f39e3d7722aae41ebf98d6 ""
   (generated)
-  "/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.log"
   "conference_041818.pdf"
-  "conference_041818.log"
   "/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.pdf"
+  "conference_041818.log"
+  "/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.log"
   "conference_041818.aux"
