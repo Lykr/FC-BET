@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.23)  9 JUL 2020 22:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.23)  10 JUL 2020 20:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -2062,7 +2062,7 @@ Overfull \hbox (9.47563pt too wide) in paragraph at lines 44--44
 [1{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
-] (/Users/lykr/Documents/Learning/Research/Beamforming/Script/geo.tex) (/Users/lykr/Documents/Learning/Research/Beamforming/Script/scene.tex) [2] [3] (/Users/lykr/Documents/Learning/Research/Beamforming/Script/lstm.tex) (/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.bbl)
+] (/Users/lykr/Documents/Learning/Research/Beamforming/Script/geo.tex) (/Users/lykr/Documents/Learning/Research/Beamforming/Script/scene.tex) [2] (/Users/lykr/Documents/Learning/Research/Beamforming/Script/lstm.tex) [3] (/Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -2082,9 +2082,9 @@ Here is how much of TeX's memory you used:
  30972 multiletter control sequences out of 15000+600000
  566149 words of font info for 92 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,16n,67p,10472b,731s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,16n,67p,10472b,729s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.pdf (4 pages, 195500 bytes).
+Output written on /Users/lykr/Documents/Learning/Research/Beamforming/Script/conference_041818.pdf (4 pages, 195733 bytes).
 PDF statistics:
  109 PDF objects out of 1000 (max. 8388607)
  69 compressed objects within 1 object stream
