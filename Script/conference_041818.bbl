@@ -88,4 +88,10 @@ A.~Savitzky and M.~J. Golay, ``{Smoothing and Differentiation of Data by
 S.~Hochreiter and J.~Schmidhuber, ``{Long Short-Term Memory},'' \emph{Neural
   Computation}, 1997.
 
+\bibitem{Burghal2019}
+D.~Burghal, N.~A. Abbasi, and A.~F. Molisch, ``{A Machine Learning Solution for
+  Beam Tracking in mmWave Systems},'' \emph{Conference Record - Asilomar
+  Conference on Signals, Systems and Computers}, vol. 2019-Novem, pp. 173--177,
+  2019.
+
 \end{thebibliography}

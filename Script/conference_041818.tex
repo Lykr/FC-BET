@@ -114,11 +114,11 @@ Gaussian, complex Gaussian, wrapped Gaussian and exponential distribution are de
 \section{System Model}\label{S2}
 
 % 场景和天线数
-A mmWave vehicular networks scenario including a vehicle with $M_r$ antenna as receiver and a Base Station (BS) with $M_t$ antenna as transmitter are considered. 
+A mmWave vehicular networks scenario including a vehicle with $M_r$ antenna as receiver and a base station (BS) with $M_t$ antenna as transmitter are considered. 
 % 天线结构、阵元间距、赋形技术
 Both of them equips with uniform linear array (ULA) of half wave interval antenna as shown in Fig.~\ref{geo}, and adopted analog beamforming used quantitative phase shifter which connect with single analog radio frequency (RF) chain.
 % 阵列响应矢量
-The array response vector of a uniform linear array with $M$ half wave interval antenna is given by:
+The array response vector of a uniform linear array with $M$ half wave interval antenna elements is given by:
 \begin{equation}
     \mathbf{a}( M,\varphi ) =\frac{1}{\sqrt{M}}\left[ 1,e^{j\pi cos( \varphi )} ,...,e^{j\pi ( M-1) cos( \varphi )}\right]^{T}
     \label{arv}
@@ -202,7 +202,7 @@ The beam management procedure is as follows. The reference signals are sent to t
 
 % 码本设计
 AoAs and AoDs measured from exhaustive beam search method is used to train the network, rather than using the generated CSI directly.
-The advantage of training with radian value instead of the codeword index is that it allows the proposed beam tracking solution to be generalized under terminals with different antenna configuration and beamforming techniques, without increasing computation load and transimtted data.
+Although AoAs and AoDs are in range $[0, 2\pi]$, only the angles in range $[0,\pi]$ are considered, since the cosine function of the angles is symmetric around $\pi$.
 To reduce the overhead of beamforming, a discrete resolution $b$-bit codebook is adopted to perform beam search, where $b$ is the number of bits for quantized phase shifters, which is assumed to be $2log_2 M$ for a $M$-element antenna terminal.
 Assume the number of beam patterns of a codebook is equal to its quantized bits in this paper.
 So, for a terminal with $M$-element antenna, the candidate beam angles vector $\mathbf{b}_M$ is given by:
@@ -210,7 +210,7 @@ So, for a terminal with $M$-element antenna, the candidate beam angles vector $\
     \mathbf{b}_M = \left[\frac{1}{2M}\pi, \frac{2}{2M}\pi, ..., \pi\right]
 \end{equation}
 In other words, there are $2M_r$ beam patterns for the vehicle, and $2M_t$ beam patterns for the BS.
-Note that another codebook which achieves uniform maximum gain in all direction is not used for this solution, beacause its low spatial resolution near $0$ and $\pi$ radians resulting in network underfitting.
+Note that another codebook which achieves uniform maximum gain in all direction is not used for this solution, beacause its low spatial resolution near $0~\mathrm{rad}$ and $\pi~\mathrm{rad}$ resulting in network underfitting.
 The beam codebooks of the vehicle and the BS are:
 \begin{gather}
     \begin{aligned}
@@ -240,10 +240,11 @@ The indexs of optimal beam pair can be obtained by solving a optimization proble
 A simple nested loop algorithm can be expolited to solve this problem. Then, at $n$th time step, the optimal combining vector $\mathbf{w}^{*}_{n}$ and the optimal beamforming vector $\mathbf{f}^{*}_{n}$ are $\mathbf{w}^{*}_{n}=[\mathbf{W}]_{:,i_{n}^*}$ and $\mathbf{f}^{*}_{n}=[\mathbf{F}]_{:,j_{n}^*}$, respectively. And the estimated AoA $\phi ^{e}_{n}$ and AoD $\theta ^{e}_{n}$ used to training network are given by:
 \begin{equation}
     \begin{cases}
-        \phi ^{e}_{n} = i_{n}^* \pi / (2M_{r})\\
-        \theta ^{e}_{n} = j_{n}^* \pi / (2M_{t})
+        \phi ^{e}_{n} = \frac{i_{n}^* \pi}{2M_{r}}\\
+        \theta ^{e}_{n} = \frac{j_{n}^* \pi}{2M_{t}}
     \end{cases}
 \end{equation}
+The advantage of training with radian value instead of the codeword index is that it allows the proposed beam tracking solution to be generalized under terminals with different antenna configuration and beamforming techniques, without increasing computation load and transimtted data.
 
 % 数据平滑
 Note that due to limitation of the resolution of the beam codebook and the noise received at the vehicle, there will be some errors in the estimation of the AoAs and AoDs, which is reflected in fluctuations in the estimated time series AoAs and AoDs.
@@ -280,6 +281,24 @@ Fig.~\ref{lstm} show the structure of the network, which is a sequential model c
 The output of the first LSTM layer is a sequence of length $n_{LSTM}$, which is used as the input of the second LSTM layer.
 And two dropout layers are set to prevent overfitting. 
 
+% 损失函数？
+\subsection{Loss Function}
+
+Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
+In \cite{Burghal2019}, considering the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
+After solving the problem of the angle ambiguity, another problem is that the codewords whose beam angle near $0~\mathrm{rad}$ or $\pi~\mathrm{rad}$ have close gains at two different angles, resulting in unnecessary loss in some cases.
+For instance, in the case of the codeword whose beam angle is $\pi~\mathrm{rad}$, there are same gains at $0~\mathrm{rad}$ and $\pi~\mathrm{rad}$. 
+The loss should be small, even zero, if estimated angle is $0~\mathrm{rad}$ and predicted angle is $\pi~\mathrm{rad}$, although the absolute difference of them is $\pi~\mathrm{rad}$.
+
+To solve this problem, a straightforward idea is to take the negative of the dot product of the array response vector of estimated angle and predicted angle plus a positive constant as the loss function.
+Calculating this loss, however, requires array response vectors of estimated angle and predicted angle at the corresponding time step, which will increase the computational cost when training network.
+
+% \begin{figure}[htbp]
+%     \centerline{\includegraphics[scale=0.65]{beams}}
+%     \caption{Uniform angle codebook}
+%     \label{beams}
+% \end{figure}
+
 % 预测过程
 \subsection{Procedure of the Beam Tracking}
 
@@ -289,12 +308,6 @@ In other words, the network will use the AoAs and AoDs from $(n - n_{LSTM})$th t
 Then, the predicted AoA and AoD at $n$th time steps will be used to compose new feature which from $(n - n_{LSTM} + 1)$th to $n$th time steps to predict the AoA and AoD at $(n + 1)$ time step.
 For every time step, SNR under current predicted AoA and AoD will be calculated and compares with a threshold $T_{SNR}$.
 When the calculated SNR is less than the threshold, a new round of estimation and prediction will be repeated.
-
-% 损失函数？
-\subsection{Loss Function}
-
-A straightforward idea is to take the negative of the dot product of the estimated angle and predicted angle array response vectors plus a positive constant as the loss function.
-Calculating this function, however, requires array response vectors of estimated angle and predicted angle at the corresponding time step, which will increase the computational cost when training network.
 
 %% 快速中断恢复算法？
 %\subsection{Fast Outage Recovery}
