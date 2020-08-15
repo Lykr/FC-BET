@@ -16,7 +16,7 @@ for j = 1:n_p
         e_x = e_t' * e_l_i;
         e_l(i) = e_x;
     end
-    plot(theta, abs(e_l));
+    polarplot(theta, abs(e_l));
     hold on;
 end
 hold off;
@@ -35,6 +35,7 @@ end
 r = 2;
 u = kron(randi(2, bn / r, 1) - 1, ones(r, 1));
 v = inv(M*M')*M*u;
+v(9:end) = 0;
 vv = inv(M*M')*M*(u-1)*(-1);
 
 for i = 1 : numel(theta)

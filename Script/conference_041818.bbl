@@ -80,10 +80,6 @@ M.~R. Akdeniz, Y.~Liu, M.~K. Samimi, S.~Sun, S.~Rangan, T.~S. Rappaport, and
   evaluation},'' \emph{IEEE Journal on Selected Areas in Communications},
   vol.~32, no.~6, pp. 1164--1179, 2014.
 
-\bibitem{Savitzky1964}
-A.~Savitzky and M.~J. Golay, ``{Smoothing and Differentiation of Data by
-  Simplified Least Squares Procedures},'' \emph{Analytical Chemistry}, 1964.
-
 \bibitem{Hochreiter1997}
 S.~Hochreiter and J.~Schmidhuber, ``{Long Short-Term Memory},'' \emph{Neural
   Computation}, 1997.
@@ -93,5 +89,9 @@ D.~Burghal, N.~A. Abbasi, and A.~F. Molisch, ``{A Machine Learning Solution for
   Beam Tracking in mmWave Systems},'' \emph{Conference Record - Asilomar
   Conference on Signals, Systems and Computers}, vol. 2019-Novem, pp. 173--177,
   2019.
+
+\bibitem{Savitzky1964}
+A.~Savitzky and M.~J. Golay, ``{Smoothing and Differentiation of Data by
+  Simplified Least Squares Procedures},'' \emph{Analytical Chemistry}, 1964.
 
 \end{thebibliography}

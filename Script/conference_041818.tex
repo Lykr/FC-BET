@@ -47,7 +47,7 @@ wangchen@bupt.edu.cn}
 The use of millimeter wave (mmWave) frequency bands for transmission can improve data rate with the help of beamforming technology to overcome the high path and penetration losses.
 However for vehicle, the high mobility of vehicle results in extremely frequent beam alignment and significant overhead.
 In this paper, a long short-term memory (LSTM)-based beam tracking method was proposed for reducing overhead brought by beam alignment in mmWave Vehicular Networks, by predicting angles of beam pair at next time step through known angles of beam pairs at a certain number of consecutive time steps as features.
-To train this network, an time series array antenna channel data was set up by statistical channel model using time series vehicle information generated from road traffic simulation software named ``Simulation of Urban MObility (SUMO)''.
+To train this network, a time series array antenna channel data was set up by statistical channel model using time series vehicle information generated from road traffic simulation software named ``Simulation of Urban MObility (SUMO)''.
 %% In addition, a extended Kalman filter (EKF) based method using vehicle information to estimate predicted beam angle was adopted as comparison method.
 Simulation results show that proposed LSTM-based method outpreforms Kalman filter based method, and can prevent frequent beam alignment to reduce overhead while ensuring acceptable signal-to-noise ratio (SNR).
 \end{abstract}
@@ -62,7 +62,7 @@ MmWave is one of the important technology for the future development of communic
 % 为了更好地应用的毫米波，需要克服毫米波高频导致的极高的路径和穿透损耗 *。
 In order to apply mmWave better, the high path and penetration loss caused by high frequency of mmWave need to be overcome \cite{Zhao2013}.
 % 得益于毫米波毫米级的波长，可能将阵列天线集成进终端，并使用阵列天线的波束赋形技术，将天线能量约束在指定方向，获取高增益 *。
-Thanks to the small wavelength of mmWave, it is possible to integrate array antennas into small chip and use beamforming technique to constrained signal power in specified direction for high gain \cite{Heath2016}.
+Thanks to the short wavelength of mmWave, it is possible to integrate array antennas into small chip and use beamforming technique to constrained signal power in specified direction for high gain \cite{Heath2016}.
 % 论文 * 提出了数字波束赋形技术，然而由于射频链的高价格和高能耗，给天线阵列中的每一根天线都配置射频链的成本是不可接受的 *。
 % 目前较多的研究主要集中在基于量化相移器的单射频链模拟波束赋形 *，和使用较少射频链的混合波束赋形 * 折中方案上。
 
@@ -111,12 +111,12 @@ $\mathbb{C}$ denote the set of complex number and $\mathbb{R}$ denote the set of
 % 复高斯、包络高斯、指数分布
 Gaussian, complex Gaussian, wrapped Gaussian and exponential distribution are denoted by $\mathcal{N}$, $\mathcal{CN}$, $\mathcal{WN}$ and $\mathcal{E}$, respectively.
 
-\section{System Model}\label{S2}
+\section{System Model}\label{SM}
 
 % 场景和天线数
 A mmWave vehicular networks scenario including a vehicle with $M_r$ antenna as receiver and a base station (BS) with $M_t$ antenna as transmitter are considered. 
 % 天线结构、阵元间距、赋形技术
-Both of them equips with uniform linear array (ULA) of half wave interval antenna as shown in Fig.~\ref{geo}, and adopted analog beamforming used quantitative phase shifter which connect with single analog radio frequency (RF) chain.
+Both of them equips with uniform linear array (ULA) of half wave interval antenna as shown in Fig.~\ref{geo}, and adopted analog beamforming used quantized phase shifter which connect with single analog radio frequency (RF) chain.
 % 阵列响应矢量
 The array response vector of a uniform linear array with $M$ half wave interval antenna elements is given by:
 \begin{equation}
@@ -136,10 +136,10 @@ where $g_{ln} \in \mathbb{C}$ is complex small-scale fading gain on subpath $l$ 
 $\phi_{ln} = \phi_n + \Delta \phi_{ln}$ and $\theta _{ln} =\theta _{n} +\Delta \theta _{ln}$, where $\phi_{n}$ and $\theta_{n}$ is the AoA and AoD of the cluster at $n$th time step, $\Delta \phi _{ln} \sim \mathcal{WN}( \delta ^{2}_{rn})$, and $\Delta \theta _{ln} \sim \mathcal{WN}( \delta ^{2}_{tn})$.
 The complex small-scale fading gain is given by:
 \begin{equation}
-    g_{ln} =\overline{g}_{ln} e^{j2\pi t_{n} f_{D,max} cos( \omega _{ln})}, \overline{g}_{ln} \sim \mathcal{CN}\left( 0,10^{-0.1PL_n}\right)
+    g_{ln} =\overline{g}_{ln} e^{j2\pi t_{n} f_{Dn,max} cos( \omega _{ln})}, \overline{g}_{ln} \sim \mathcal{CN}\left( 0,10^{-0.1PL_n}\right)
     \label{ssfg}
 \end{equation}
-where $t_{n}$ is the signal transmission time at $n$th time step, $f_{D,max} ={v_{n}}/{\lambda _{c}}$ is maximum doppler shift, $v_{n}$ is the speed of vehicle at $n$th time step, $\lambda _{c}$ is the carrier wavelength, $\omega _{ln} = \phi_{ln} - \pi / 2$ is the AoA of subpath $l$ relative to the direction of vehicle at time step $n$, and $PL_n$ is omnidirectional path loss at $n$th time step, which is defined as:
+where $t_{n}$ is the signal transmission time at $n$th time step, $f_{Dn,max} ={v_{n}}/{\lambda _{c}}$ is maximum doppler shift at $n$th time step, $v_{n}$ is the speed of vehicle at $n$th time step, $\lambda _{c}$ is the carrier wavelength, $\omega _{ln} = \phi_{ln} - \pi / 2$ is the AoA of subpath $l$ relative to the direction of vehicle at $n$th time step, and $PL_n$ is omnidirectional path loss at $n$th time step, which is defined as:
 \begin{equation}
     PL_n = 61.4 + 20 \log(d_n) + \xi~[dB]
     \label{pl}
@@ -162,12 +162,74 @@ where $\mathbf{w}_n$ and $\mathbf{f}_n$ are combining vector and beamforming vec
     \label{geo}
 \end{figure}
 
+\section{LSTM-based Beam Tracking Solution}
+
+% 网络
+\subsection{The LSTM Network}
+
+% 问题定义
+The purpose of beam tracking is to obtain beam angles ($\phi_{ln}$ and $\theta_{ln}$) with as few channel estimates as possible for reducing overhead brought by beam alignment.
+Since the vehicle must travel in a particular direction on the road and the mmWave beams are correlated with the position of vehicles, the problem of obtaining beam angles can be formulated as a time series regression problem after the historical CSI of vehicles is collected.
+
+% LSTM 方案
+An artificial neural network named LSTMs network was used to solve this regression problem.
+LSTMs have been implemented successfully in several fields such as machine translation, image captioning, speech recognition, and even stock prices prediction in economy.
+As one of the recurrent neural networks (RNNs), LSTMs are generally considered to be more robust to long time series than simpler vanilla RNN implementations \cite{Hochreiter1997}.
+LSTMs are powerful for handling time series data, beacase relying on three gates which are forget, input and output gate composed of NNs in LSTM cells, it can learn long-term relations between features.
+
+\begin{figure}[htbp]
+    \centerline{\input{lstm}}
+    \caption{Structure of network}
+    \label{lstm}
+\end{figure}
+
+% 结构
+Fig.~\ref{lstm} show the structure of the network, which is a sequential model comprises LSTM layer with 50 hidden units, a dropout layer with 0.2 probability, a LSTM layer with 50 hidden units, a dropout layer with 0.2 probability and a fully connected layer with 2 nodes.
+The output of the first LSTM layer is a sequence of length $n_{LSTM}$, which is used as the input of the second LSTM layer.
+And two dropout layers are set to prevent overfitting. 
+
+% 损失函数？
+\subsection{Loss Function}
+
+Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
+In \cite{Burghal2019}, considering the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
+After solving the problem of the angle ambiguity, another problem is that the codewords whose beam angle near $0$ or $\pi$ have close gains at two different angles, resulting in unnecessary loss in some cases.
+For instance, in the case of the codeword whose beam angle is $\pi$, there are same gains at $0$ and $\pi$. 
+The loss should be small, even zero, if estimated angle is $0$ and predicted angle is $\pi$, although the absolute difference of them is $\pi$.
+
+A straightforward idea is taking the negative of the dot product of the array response vector of estimated angle and predicted angle plus a positive constant as the loss function.
+Calculating this loss, however, requires array response vectors of estimated angle and predicted angle at the corresponding time step, which will increase the computational cost when training network.
+
+
+
+% \begin{figure}[htbp]
+%     \centerline{\includegraphics[scale=0.65]{beams}}
+%     \caption{Uniform angle codebook}
+%     \label{beams}
+% \end{figure}
+
+% 预测过程
+\subsection{Procedure of Beam Tracking}
+
+Before the beam tracking, the BS demands to collect historical CSI, which are estimated by the vehicles using exhaustive beam search, for training the LSTM network.
+for time step $k$, the network takes the AoAs and AoDs from time step $(k - n_{LSTM})$ to $(k - 1)$ as features and the AoA and AoD at time step $k$ as responses.
+The dataset is consisted of time series AoAs and AoDs from initial access to disconnection of the vehicles.
+
+After the LSTM network has been trained, at the beginning of a round of beam tracking, a vehicle takes $n_{LSTM}$ consecutive exhaustive beam search to obtain initial estimated AoAs and AoDs, and the network will take the estimated AoAs and AoDs to predict AoA and AoD at next time step. 
+Then, the predicted AoA and AoD at $k$th time steps will be used to compose new feature which from $(k - n_{LSTM} + 1)$th to $k$th time steps to predict the AoA and AoD at $(k + 1)$ time step.
+For every time step, SNR under current predicted AoA and AoD will be calculated and compares with a threshold $T_{SNR}$.
+The network will repeat to use predicted result to compose new features to predict AoA and AoD, when the calculated SNR is greater than the threshold.
+Otherwise, a new round of estimation and prediction will be repeated.
+
+%% 快速中断恢复算法？
+%\subsection{Fast Outage Recovery}
+
 \section{Data Generation}
 
 % 信道矩阵
 \subsection{Channel Matrix}
 % 场景介绍
-A road traffic simulation software named ``SUMO'' was used to generate time series information of the vehicle in the scene mentioned in Section \ref{S2}, which including a vehicle, a BS and a road with a curve as shown in Fig.~\ref{scene}.
+A road traffic simulation software named ``SUMO'' was used to generate time series information of the vehicle in the scene mentioned in Section \ref{SM}, which including a BS and a vehicle driving on curve road as shown in Fig.~\ref{scene}.
 The vehicle departs from $(0, 100)$ at first time step, and arrives $(100, 0)$ at final time step.
 Note that the speed of vehicle is different at each time step, that means the variation of vehicle position and beam angles is non-linear.
 
@@ -188,7 +250,7 @@ Furthermore, $t_n = d_n / c$, $d_n = \sqrt{\Gamma_{xn}^2 + \Gamma_{yn}^2}$, and 
 Now the channel matrix at each time step can be obtained from \eqref{cm}, \eqref{ssfg}, \eqref{pl} and \eqref{ba}.
 
 % 波束角度
-\subsection{AoAs and AoDs}
+\subsection{Beam Search}
 
 % 管理方式
 In this paper, Downlink (DL) configuration scheme is considered for beam management.
@@ -210,7 +272,7 @@ So, for a terminal with $M$-element antenna, the candidate beam angles vector $\
     \mathbf{b}_M = \left[\frac{1}{2M}\pi, \frac{2}{2M}\pi, ..., \pi\right]
 \end{equation}
 In other words, there are $2M_r$ beam patterns for the vehicle, and $2M_t$ beam patterns for the BS.
-Note that another codebook which achieves uniform maximum gain in all direction is not used for this solution, beacause its low spatial resolution near $0~\mathrm{rad}$ and $\pi~\mathrm{rad}$ resulting in network underfitting.
+Note that another codebook which achieves uniform maximum gain in all direction is not used for this solution, beacause its low spatial resolution near $0$ and $\pi$ resulting in network underfitting.
 The beam codebooks of the vehicle and the BS are:
 \begin{gather}
     \begin{aligned}
@@ -244,73 +306,16 @@ A simple nested loop algorithm can be expolited to solve this problem. Then, at 
         \theta ^{e}_{n} = \frac{j_{n}^* \pi}{2M_{t}}
     \end{cases}
 \end{equation}
-The advantage of training with radian value instead of the codeword index is that it allows the proposed beam tracking solution to be generalized under terminals with different antenna configuration and beamforming techniques, without increasing computation load and transimtted data.
+The advantage of training with radian value instead of the codeword index is that it allows the proposed beam tracking solution to be generalized under terminals with different antenna configuration and beamforming techniques, without additional computation and transimtted data.
 
 % 数据平滑
 Note that due to limitation of the resolution of the beam codebook and the noise received at the vehicle, there will be some errors in the estimation of the AoAs and AoDs, which is reflected in fluctuations in the estimated time series AoAs and AoDs.
-To reduce the fluctuations due to errors, a first order Savitzky-Golay filter \cite{Savitzky1964}, with frame length 11 (corresponding to a time window of 1 second) was used to smooth the estimated AoAs and AoDs.
+To reduce the fluctuations due to errors, a first order Savitzky-Golay filter \cite{Savitzky1964}, with frame length 11 (corresponding to a time window of $100~\mathrm{ms}$) was used to smooth the estimated AoAs and AoDs.
 
 %% 角度范围
 %\subsection{Range of AoAs and AoDs}
 
 %After getting the AoAs and AoDs for all time step, we use a time windows of 1 second to get the range of them for a total of 11 time steps, including the current time step and 10 future time steps.
-
-\section{LSTM-based Beam Tracking Solution}
-
-% 网络
-\subsection{The LSTM Network}
-
-% 问题定义
-The purpose of beam tracking is to obtain current precise beam angles with as few channel estimates as possible for reducing overhead.
-Since the vehicle must travel in a particular direction on the road and the beam of the mmWave is correlated with the position of the vehicle, the problem of obtaining the current beam angle can be viewed as a time series regression problem when the CSI of historical vehicles is known.
-
-% LSTM 方案
-An artificial neural network named LSTMs network was used to solve this regression problem.
-LSTMs have been implemented successfully in several fields such as machine translation, image captioning, speech recognition, and even stock prices prediction in economy.
-As one of the recurrent neural networks (RNNs), LSTMs are generally considered to be more robust to long time series than simpler vanilla RNN implementations \cite{Hochreiter1997}.
-LSTMs are powerful for handling time series data, beacase relying on three gates which are forget, input and output gate composed of NNs in LSTM cells, it can learn long-term relations between features.
-
-\begin{figure}[htbp]
-    \centerline{\input{lstm}}
-    \caption{Structure of network}
-    \label{lstm}
-\end{figure}
-
-% 结构
-Fig.~\ref{lstm} show the structure of the network, which is a sequential model comprises LSTM layer with 50 hidden units, a dropout layer with 0.2 probability, a LSTM layer with 50 hidden units, a dropout layer with 0.2 probability and a fully connected layer with 2 nodes.
-The output of the first LSTM layer is a sequence of length $n_{LSTM}$, which is used as the input of the second LSTM layer.
-And two dropout layers are set to prevent overfitting. 
-
-% 损失函数？
-\subsection{Loss Function}
-
-Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
-In \cite{Burghal2019}, considering the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
-After solving the problem of the angle ambiguity, another problem is that the codewords whose beam angle near $0~\mathrm{rad}$ or $\pi~\mathrm{rad}$ have close gains at two different angles, resulting in unnecessary loss in some cases.
-For instance, in the case of the codeword whose beam angle is $\pi~\mathrm{rad}$, there are same gains at $0~\mathrm{rad}$ and $\pi~\mathrm{rad}$. 
-The loss should be small, even zero, if estimated angle is $0~\mathrm{rad}$ and predicted angle is $\pi~\mathrm{rad}$, although the absolute difference of them is $\pi~\mathrm{rad}$.
-
-To solve this problem, a straightforward idea is to take the negative of the dot product of the array response vector of estimated angle and predicted angle plus a positive constant as the loss function.
-Calculating this loss, however, requires array response vectors of estimated angle and predicted angle at the corresponding time step, which will increase the computational cost when training network.
-
-% \begin{figure}[htbp]
-%     \centerline{\includegraphics[scale=0.65]{beams}}
-%     \caption{Uniform angle codebook}
-%     \label{beams}
-% \end{figure}
-
-% 预测过程
-\subsection{Procedure of the Beam Tracking}
-
-At the begining of the beam tracking, the LSTM network takes the estimated AoAs and AoDs of $n_{LSTM}$ consecutive time steps as features, and the AoA and AoD at next time step as responses.
-In other words, the network will use the AoAs and AoDs from $(n - n_{LSTM})$th to $(n - 1)$th time steps to predict the AoA and AoD at $n$ time step.
-
-Then, the predicted AoA and AoD at $n$th time steps will be used to compose new feature which from $(n - n_{LSTM} + 1)$th to $n$th time steps to predict the AoA and AoD at $(n + 1)$ time step.
-For every time step, SNR under current predicted AoA and AoD will be calculated and compares with a threshold $T_{SNR}$.
-When the calculated SNR is less than the threshold, a new round of estimation and prediction will be repeated.
-
-%% 快速中断恢复算法？
-%\subsection{Fast Outage Recovery}
 
 \section{Simulation Results and Discussion}
 
@@ -328,7 +333,7 @@ When the calculated SNR is less than the threshold, a new round of estimation an
 
 \section*{Acknowledgment}
 
-Thanks, guys.
+Thanks, guy.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

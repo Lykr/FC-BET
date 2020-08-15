@@ -1,7 +1,7 @@
 clear;
 
 %% Raw data generation
-param.interval = 1;
+param.interval = 5;
 param.bs.x = 80; % position of base station
 param.bs.y = 80;
 param.bs.frequency_carrier = 28e9; % frequency of carrier
@@ -23,7 +23,7 @@ training_raw_data = get_raw_data(param, load('sumo_output_for_training.mat').sum
 testing_raw_data = get_raw_data(param, load('sumo_output_for_testing.mat').sumo_output);
 
 %% Learning data generation
-lstm_step = 10;
+lstm_step = 5;
 
 [x_train, y_train, others_train] = get_learning_data(training_raw_data, lstm_step);
 [x_test, y_test, others_test] = get_learning_data(testing_raw_data, lstm_step);
@@ -33,7 +33,8 @@ lstm_step = 10;
 % Define LSTM network
 input_size = size(x_train{1}, 1);
 num_hidden_units = 50;
-num_responses = 2;% numel(categories(train_y)); % info_vehs.num_antenna * info_bs.num_antenna;
+num_responses = 2;% numel(categories(train_y));
+% info_vehs.num_antenna * info_bs.num_antenna;
 
 % crl = custom_regression_layer;
 % crl.bs_beam_info = param.bs.beam_info;
@@ -47,7 +48,7 @@ layers = [ ...
     fullyConnectedLayer(num_responses)
     regressionLayer];
 
-max_epochs = 1000;
+max_epochs = 200;
 mini_batch_size = numel(x_train);
 
 options = trainingOptions('adam' , ...
