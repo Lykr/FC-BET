@@ -46,7 +46,7 @@ layers = [ ...
     dropoutLayer(0.2)
     lstmLayer(num_hidden_units, 'OutputMode', 'last')
     fullyConnectedLayer(num_responses)
-    regressionLayer];
+    regressionLayer]; % custom_regression
 
 max_epochs = 200;
 mini_batch_size = numel(x_train);

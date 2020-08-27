@@ -48,3 +48,18 @@ hold on;
 polarplot(theta, abs(e_ll));
 polarplot(beam_angles, u, 'o');
 hold off;
+
+%% loss º¯ÊýµÄ±Æ½ü
+
+for j = 4 %1:n_p
+    e_t = get_eMatrix(n_a, beam_list(j));
+    for i = 1 : n
+        e_l_i = get_eMatrix(n_a, theta(i));
+        e_x = e_t' * e_l_i;
+        e_l(i) = e_x;
+    end
+    plot(theta, abs(e_l));
+    hold on;
+    plot(theta, interp1(e_l));
+end
+hold off;
