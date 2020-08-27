@@ -48,7 +48,6 @@ The use of millimeter wave (mmWave) frequency bands for transmission can improve
 However for vehicle, the high mobility of vehicle results in extremely frequent beam alignment and significant overhead.
 In this paper, a long short-term memory (LSTM)-based beam tracking method was proposed for reducing overhead brought by beam alignment in mmWave Vehicular Networks, by predicting angles of beam pair at next time step through known angles of beam pairs at a certain number of consecutive time steps as features.
 To train this network, a time series array antenna channel data was set up by statistical channel model using time series vehicle information generated from road traffic simulation software named ``Simulation of Urban MObility (SUMO)''.
-%% In addition, a extended Kalman filter (EKF) based method using vehicle information to estimate predicted beam angle was adopted as comparison method.
 Simulation results show that proposed LSTM-based method outpreforms Kalman filter based method, and can prevent frequent beam alignment to reduce overhead while ensuring acceptable signal-to-noise ratio (SNR).
 \end{abstract}
 
@@ -133,7 +132,7 @@ The narrowband time-varying $L$ subpaths channel matrix between the vehicle and 
     \label{cm}
 \end{equation}
 where $g_{ln} \in \mathbb{C}$ is complex small-scale fading gain on subpath $l$ at $n$th time step, $\phi_{ln}$ is AoA of the $l$th subpath signal received by the vehicle at $n$th time step, and $\theta_{ln}$ is AoD of the $l$th subpath signal transmitted by the BS at $n$th time step. 
-$\phi_{ln} = \phi_n + \Delta \phi_{ln}$ and $\theta _{ln} =\theta _{n} +\Delta \theta _{ln}$, where $\phi_{n}$ and $\theta_{n}$ is the AoA and AoD of the cluster at $n$th time step, $\Delta \phi _{ln} \sim \mathcal{WN}( \delta ^{2}_{rn})$, and $\Delta \theta _{ln} \sim \mathcal{WN}( \delta ^{2}_{tn})$.
+$\phi_{ln} = \phi_n + \Delta \phi_{ln}$ and $\theta _{ln} =\theta _{n} +\Delta \theta _{ln}$, where $\phi_{n}$ and $\theta_{n}$ is the AoA and AoD of the cluster center at $n$th time step, $\Delta \phi _{ln} \sim \mathcal{WN}( \delta ^{2}_{rn})$, and $\Delta \theta _{ln} \sim \mathcal{WN}( \delta ^{2}_{tn})$.
 The complex small-scale fading gain is given by:
 \begin{equation}
     g_{ln} =\overline{g}_{ln} e^{j2\pi t_{n} f_{Dn,max} cos( \omega _{ln})}, \overline{g}_{ln} \sim \mathcal{CN}\left( 0,10^{-0.1PL_n}\right)
@@ -212,8 +211,8 @@ On the other hand, considering this function is not differetiable, it will be im
 \subsection{Procedure of Beam Tracking}
 
 Before the beam tracking, the BS demands to collect historical CSI, which are estimated by the vehicles using exhaustive beam search, for training the LSTM network.
-for time step $k$, the network takes the AoAs and AoDs from time step $(k - n_{LSTM})$ to $(k - 1)$ as features and the AoA and AoD at time step $k$ as responses.
-The dataset is consisted of time series AoAs and AoDs from initial access to disconnection of the vehicles.
+For time step $k$, the network takes the AoAs and AoDs from time step $(k - n_{LSTM})$ to $(k - 1)$ as features and the AoA and AoD at time step $k$ as responses.
+The dataset is consisted of time series AoAs and AoDs of the vehicles from initial access to disconnection.
 
 After the LSTM network has been trained, at the beginning of a round of beam tracking, a vehicle takes $n_{LSTM}$ consecutive exhaustive beam search to obtain initial estimated AoAs and AoDs, and the network will take the estimated AoAs and AoDs to predict AoA and AoD at next time step. 
 Then, the predicted AoA and AoD at $k$th time steps will be used to compose new feature which from $(k - n_{LSTM} + 1)$th to $k$th time steps to predict the AoA and AoD at $(k + 1)$ time step.
@@ -310,7 +309,7 @@ The advantage of training with radian value instead of the codeword index is tha
 
 % 数据平滑
 Note that due to limitation of the resolution of the beam codebook and the noise received at the vehicle, there will be some errors in the estimation of the AoAs and AoDs, which is reflected in fluctuations in the estimated time series AoAs and AoDs.
-To reduce the fluctuations due to errors, a first order Savitzky-Golay filter \cite{Savitzky1964}, with frame length 11 (corresponding to a time window of $100~\mathrm{ms}$) was used to smooth the estimated AoAs and AoDs.
+To reduce the fluctuations due to the errors, a first order Savitzky-Golay filter \cite{Savitzky1964}, with frame length 11 (corresponding to a time window of $100~\mathrm{ms}$) was used to smooth the estimated AoAs and AoDs.
 
 %% 角度范围
 %\subsection{Range of AoAs and AoDs}
