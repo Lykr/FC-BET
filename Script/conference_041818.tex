@@ -79,9 +79,9 @@ On the other hand, \cite{Va2017} exploits extended Kalman filter and requires on
 % 相较于低速的用户终端，为高速车辆提供可靠的波束对准更具挑战性，因为车辆较高的速度将会导致车辆更快驶出波束的覆盖范围。
 Providing reliable beam alignment for high speed vehicles is more challenging than for low speed terminals, due to vehicles move out of the beam coverage faster. 
 %为了保证车辆始终被较高增益的波束覆盖，需要进行高频率的对准，而高频的波束会进一步加大系统的开支，尤其是当采用高分辨率码本的时候。
-To ensure that the vehicles are always covered by high gain beams, high frequency beam alignment is required, and it can further increase system overhead, especially when high resolution code books are used.
+To ensure that the vehicles are always covered by high gain beams, high frequency beam alignment is required, and it will further increase system overhead, especially when high resolution code books are used.
 % 幸运的是，由于毫米波信道的稀疏性 *，且毫米波信道的 AoA、AoD 与收发端位置的具有一定的相关性 *，在 LOS 信号下沿固定道路行驶的车辆的 AoA 和 AoD 应该能被很好的预测出来。
-Fortunately, due to the sparsity of mmWave channel \cite{Lee2014} and the correlation between the angle of arrival (AoA) and angle of departure (AoD) of a millimeter-wave channel and the location of the receiver and transmitter \cite{Aviles2016}, the angle of beam pair of a vehicle traveling along a road under LOS condition should be well predicted.
+Fortunately, due to the sparsity of mmWave channel \cite{Lee2014} and the correlation between the angle of arrival (AoA) and angle of departure (AoD) of a millimeter-wave channel and the location of the receiver and transmitter \cite{Aviles2016}, the beam angles of a vehicle traveling along a road under LOS condition can be well predicted.
 
 % 本文提出了一种基于 LSTM 网络的波束追踪方法，使用 LSTM 网络，通过对历史车辆穷尽扫描所获得的历史信道信息进行学习，根据当前车辆在一定时间步的信道信息，预测在下一时刻的 AoA 和 AoD，以达到减少系统开支的效果。
 In this paper, a LSTM-based beam tracking method is proposed. By using LSTM network to learn the historical channel state information (CSI) which was obtained from exhaustive beam search, AoA and AoD of current channel between vehicle and BS can be predicted to reduce system overhead.
@@ -89,7 +89,7 @@ In this paper, a LSTM-based beam tracking method is proposed. By using LSTM netw
 Meanwhile, a road traffic simulation software is use to generate time seires vehicle information (e.g. position, speed, etc.) to set up time seires CSI with a statistical channel model for training the network.
 %% 此外，提出了快速中断恢复算法，在追踪失效后能够减少波束扫描的次数，尽快恢复连接。
 % 相比较于 *，本论文有以下几点不同：1）采用了更加完善的信道模型；2）同时预测 AoA 与 AoD；3）中断判断根据接收端的 SNR 而非角度差进行判断；4）在一个追踪周期中平均需要更少的波束测量。此外，与 * 相比使用了更实际的基于量化相移器的波束码本进行波束扫描。
-Compared to \cite{Zhang2016, Va2017}, this paper differs in the following ways: 1) More realistic channel model; 2) Simultaneous prediction of AoA and AoD; 3) The outage judgment is based on the SNR of the receiver instead of the angle difference; 4) Fewer beam measurements required on average in a tracking cycle. In addition, beam search is performed more realistic than \cite{Va2017}, by using a quantized phase shifter based beamforming.
+Compared to prior work, this paper differs in the following ways: 1) More realistic channel model; 2) Simultaneous prediction of AoA and AoD; 3) The outage judgment is based on the SNR of the receiver instead of the angle difference; 4) Fewer beam measurements required on average in a tracking cycle. 5) In addition, beam search is performed more realistic by using a quantized phase shifter based beamforming.
 
 % 内容安排
 
@@ -216,8 +216,8 @@ The dataset is consisted of time series AoAs and AoDs of the vehicles from initi
 
 After the LSTM network has been trained, at the beginning of a round of beam tracking, a vehicle takes $n_{LSTM}$ consecutive exhaustive beam search to obtain initial estimated AoAs and AoDs, and the network will take the estimated AoAs and AoDs to predict AoA and AoD at next time step. 
 Then, the predicted AoA and AoD at $k$th time steps will be used to compose new feature which from $(k - n_{LSTM} + 1)$th to $k$th time steps to predict the AoA and AoD at $(k + 1)$ time step.
-For every time step, SNR under current predicted AoA and AoD will be calculated and compares with a threshold $T_{SNR}$.
-The network will repeat to use predicted result to compose new features to predict AoA and AoD, when the calculated SNR is greater than the threshold.
+For every time step, SNR under current predicted AoA and AoD will be calculated and compares with a threshold ${SNR}_T$.
+The network will repeat to use predicted result to compose new features to predict AoA and AoD, when the calculated SNR is greater than ${SNR}_T$.
 Otherwise, a new round of estimation and prediction will be repeated.
 
 %% 快速中断恢复算法？
@@ -310,7 +310,7 @@ The advantage of training with radian value instead of the codeword index is tha
 
 % 数据平滑
 Note that due to limitation of the resolution of the beam codebook and the noise received at the vehicle, there will be some errors in the estimation of the AoAs and AoDs, which is reflected in fluctuations in the estimated time series AoAs and AoDs.
-To reduce the fluctuations due to the errors, a first order Savitzky-Golay filter \cite{Savitzky1964}, with frame length 11 (corresponding to a time window of $100~\mathrm{ms}$) was used to smooth the estimated AoAs and AoDs.
+To reduce the fluctuations due to the errors, a first order Savitzky-Golay filter \cite{Savitzky1964}, with frame length 11 was used to smooth the estimated AoAs and AoDs.
 
 %% 角度范围
 %\subsection{Range of AoAs and AoDs}
@@ -319,10 +319,15 @@ To reduce the fluctuations due to the errors, a first order Savitzky-Golay filte
 
 \section{Simulation Results}
 
-% 在下文的描述中，我们利用控制变量法，对仿真结果进行比较，以获得不同参数值对结果的影响。需要注意的是，对于每个仿真结果，除特殊提及的参数外，其余参数均默认为参数表中的数值。
+In this section, the performance of proposed LSTM-based beam tracking solution is presented by analyzing the SNR of received signal, number of measurements and outage probability.
+The outage probability for a simulation is given by:
+\begin{equation}
+    P_{o} =\frac{\sum ^{N}_{i=1}\mathbf{I}( {SNR}_{i} \leqslant {SNR}_{T})}{N}
+\end{equation}
+where $N$ is the number of testing samples, ${SNR}_i$ is the SNR of received signal for $i$th sample and $\mathbf{I}$ is an indicator function.
+Note that for each simulation result, all parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
 
 % 仿真参数
-
 \begin{table}[!t]
     \renewcommand{\arraystretch}{1.3}
     \caption{Simulation Parameters}
@@ -342,7 +347,8 @@ To reduce the fluctuations due to the errors, a first order Savitzky-Golay filte
         Path loss standard deviation $\sigma_p$ & $5.8$ dB\\
         Noise variance of received signal $\sigma_v^2$ & $10^{-14}$\\
         Sequence length of LSTM $n_{LSTM}$ & $5$\\
-        Threshold of SNR $T_{SNR}$ & $5$ dB\\
+        Threshold of SNR ${SNR}_T$ & $5$ dB\\
+        Data sample rate & $200$ Hz\\
         \hline
     \end{tabular}
 \end{table}
@@ -360,6 +366,8 @@ To reduce the fluctuations due to the errors, a first order Savitzky-Golay filte
 
 % 16 * 4 天线，10^(-14) 噪声方差，10 步长下的与对比算法的比较
 % 做不出来。
+
+\section{Conclusions}
 
 \section*{Acknowledgment}
 
