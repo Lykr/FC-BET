@@ -48,7 +48,7 @@ The use of millimeter wave (mmWave) frequency bands for transmission can improve
 However for vehicle, the high mobility of vehicle results in extremely frequent beam alignment and significant overhead.
 In this paper, a long short-term memory (LSTM)-based beam tracking method was proposed for reducing overhead brought by beam alignment in mmWave Vehicular Networks, by predicting angles of beam pair at next time step through known angles of beam pairs at a certain number of consecutive time steps as features.
 To train this network, a time series array antenna channel data was set up by statistical channel model using time series vehicle information generated from road traffic simulation software named ``Simulation of Urban MObility (SUMO)''.
-Simulation results show that proposed LSTM-based method outpreforms Kalman filter based method, and can prevent frequent beam alignment to reduce overhead while ensuring acceptable signal-to-noise ratio (SNR).
+Simulation results show that proposed LSTM-based method outpreforms Kalman filter based method, and can prevent frequent beam alignment to reduce overhead while ensuring acceptable signal to noise ratio (SNR).
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -348,7 +348,7 @@ Note that for each simulation result, all parameters default to the values in Ta
         Noise variance of received signal $\sigma_v^2$ & $10^{-14}$\\
         Sequence length of LSTM $n_{LSTM}$ & $5$\\
         Threshold of SNR ${SNR}_T$ & $5$ dB\\
-        Data sample rate & $200$ Hz\\
+        Data sample rate & $20$ Hz\\
         \hline
     \end{tabular}
 \end{table}
