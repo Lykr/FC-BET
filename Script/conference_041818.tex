@@ -132,10 +132,10 @@ The narrowband time-varying $L$ subpaths channel matrix between the vehicle and 
     \label{cm}
 \end{equation}
 where $g_{ln} \in \mathbb{C}$ is complex small-scale fading gain on subpath $l$ at $n$th time step, $\phi_{ln}$ is AoA of the $l$th subpath signal received by the vehicle at $n$th time step, and $\theta_{ln}$ is AoD of the $l$th subpath signal transmitted by the BS at $n$th time step. 
-$\phi_{ln} = \phi_n + \Delta \phi_{ln}$ and $\theta _{ln} =\theta _{n} +\Delta \theta _{ln}$, where $\phi_{n}$ and $\theta_{n}$ is the AoA and AoD of the cluster center at $n$th time step, $\Delta \phi _{ln} \sim \mathcal{WN}( \delta ^{2}_{rn})$, and $\Delta \theta _{ln} \sim \mathcal{WN}( \delta ^{2}_{tn})$.
+$\phi_{ln} = \phi_n + \Delta \phi_{ln}$ and $\theta _{ln} =\theta _{n} +\Delta \theta _{ln}$, where $\phi_{n}$ and $\theta_{n}$ is the AoA and AoD of the cluster center at $n$th time step, $\Delta \phi _{ln} \sim \mathcal{WN}( \delta ^{2}_{rn})$, $\Delta \theta _{ln} \sim \mathcal{WN}( \delta ^{2}_{tn})$, $\delta_{tn} \sim \mathcal{E}(\lambda_t)$ and $\delta_{rn} \sim \mathcal{E}(\lambda_r)$.
 The complex small-scale fading gain is given by:
 \begin{equation}
-    g_{ln} =\overline{g}_{ln} e^{j2\pi t_{n} f_{Dn,max} cos( \omega _{ln})}, \overline{g}_{ln} \sim \mathcal{CN}\left( 0,10^{-0.1PL_n}\right)
+    g_{ln} =\overline{g}_{ln} e^{j2\pi t_{n} f_{Dn,max} cos( \omega _{ln})}, \overline{g}_{ln} \sim \mathcal{CN}\left( 0, 10^{-0.1PL_n}\right)
     \label{ssfg}
 \end{equation}
 where $t_{n}$ is the signal transmission time at $n$th time step, $f_{Dn,max} ={v_{n}}/{\lambda _{c}}$ is maximum doppler shift at $n$th time step, $v_{n}$ is the speed of vehicle at $n$th time step, $\lambda _{c}$ is the carrier wavelength, $\omega _{ln} = \phi_{ln} - \pi / 2$ is the AoA of subpath $l$ relative to the direction of vehicle at $n$th time step, and $PL_n$ is omnidirectional path loss at $n$th time step, which is defined as:
@@ -244,7 +244,7 @@ Once the position of the vehicle and the BS are obtained, $\theta_n$ and $\phi_n
     \end{cases}
     \label{ba}
 \end{equation}
-where $\Gamma _{xn} =x_{rn} -x_{tn}$, $\Gamma _{yn} =y_{rn} -y_{tn} $, $(x_{tn}, y_{tn})$ are coordinates of the BS, $\beta _{n}$ is directional angle of the vehicle. 
+where $\Gamma _{xn} =x_{rn} -x_{t}$, $\Gamma _{yn} =y_{rn} -y_{t} $, $(x_{t}, y_{t})$ are coordinates of the BS, $\beta _{n}$ is directional angle of the vehicle. 
 Furthermore, $t_n = d_n / c$, $d_n = \sqrt{\Gamma_{xn}^2 + \Gamma_{yn}^2}$, and $c$ is light speed.
 Now the channel matrix at each time step can be obtained from \eqref{cm}, \eqref{ssfg}, \eqref{pl} and \eqref{ba}.
 
@@ -264,13 +264,14 @@ The beam management procedure is as follows. The reference signals are sent to t
 % 码本设计
 AoAs and AoDs measured from exhaustive beam search method is used to train the network, rather than using the generated CSI directly.
 Although AoAs and AoDs are in range $[0, 2\pi]$, only the angles in range $[0,\pi]$ are considered, since the cosine function of the angles is symmetric around $\pi$.
-To reduce the overhead of beamforming, a discrete resolution $b$-bit codebook is adopted to perform beam search, where $b$ is the number of bits for quantized phase shifters, which is assumed to be $2log_2 M$ for a $M$-element antenna terminal.
-Assume the number of beam patterns of a codebook is equal to its quantized bits in this paper.
-So, for a terminal with $M$-element antenna, the candidate beam angles vector $\mathbf{b}_M$ is given by:
+To reduce the overhead of beamforming, a discrete resolution $b$-bit codebook is adopted to perform beam search, where $b$ is the number of bits for quantized phase shifters.
+For a $b$-bit codebook, it is consisted of $2^b$ beam patterns.
+In this paper, $b$ is assumed to be $2log_2 M$ for a $M$-element antenna terminal.
+For a terminal with $M$-element antenna, the candidate beam angles vector $\mathbf{b}_M$ is given by:
 \begin{equation}
     \mathbf{b}_M = \left[\frac{1}{2M}\pi, \frac{2}{2M}\pi, ..., \pi\right]
 \end{equation}
-In other words, there are $2M_r$ beam patterns for the vehicle, and $2M_t$ beam patterns for the BS.
+So, there are $2M_r$ beam patterns for the vehicle, and $2M_t$ beam patterns for the BS.
 Note that another codebook which achieves uniform maximum gain in all direction is not used for this solution, beacause its low spatial resolution near $0$ and $\pi$ resulting in network underfitting.
 The beam codebooks of the vehicle and the BS are:
 \begin{gather}
@@ -316,19 +317,49 @@ To reduce the fluctuations due to the errors, a first order Savitzky-Golay filte
 
 %After getting the AoAs and AoDs for all time step, we use a time windows of 1 second to get the range of them for a total of 11 time steps, including the current time step and 10 future time steps.
 
-\section{Simulation Results and Discussion}
+\section{Simulation Results}
+
+% 在下文的描述中，我们利用控制变量法，对仿真结果进行比较，以获得不同参数值对结果的影响。需要注意的是，对于每个仿真结果，除特殊提及的参数外，其余参数均默认为参数表中的数值。
 
 % 仿真参数
 
+\begin{table}[!t]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Simulation Parameters}
+    \label{t_SP}
+    \centering
+    \begin{tabular}{l c c}
+        \hline
+        \bfseries Parameter & \bfseries Value\\
+        \hline
+        Carrier frequency $f_{c}$ & $28 \times 10^9$ Hz\\
+        Coordinates of BS $(x_t, y_t)$ & $(80, 80)$\\
+        Number of antenna elements for BS $M_t$ & $16$\\
+        Number of antenna elements for Vehicle $M_r$ & $4$\\
+        Number of subpaths $L$ & $20$\\
+        Expectation of BS rms angular spread $\lambda_t$ & $10.2 \degree$\\
+        Expectation of Vehicle rms angular spread $\lambda_r$ & $15.5 \degree$\\
+        Path loss standard deviation $\sigma_p$ & $5.8$ dB\\
+        Noise variance of received signal $\sigma_v^2$ & $10^{-14}$\\
+        Sequence length of LSTM $n_{LSTM}$ & $5$\\
+        Threshold of SNR $T_{SNR}$ & $5$ dB\\
+        \hline
+    \end{tabular}
+\end{table}
+    
 % 收敛性能？
 
 % 16 * 4 天线，不同噪声方差下的 SNR 累积分布函数，中断次数和观测次数
+% 随着噪声方差增大，累积分布函数？，中断次数和观测次数增多。
 
 % 不同规格天线，10^(-14) 噪声方差的比较
+% 少天线效果好，中天线效果最佳，多天线效果回落。
 
 % 16 * 4 天线，10^(-14) 噪声方差，不同步长下的比较
+% 小步长效果差，中最佳，多回落。
 
 % 16 * 4 天线，10^(-14) 噪声方差，10 步长下的与对比算法的比较
+% 做不出来。
 
 \section*{Acknowledgment}
 
