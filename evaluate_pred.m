@@ -1,4 +1,4 @@
-function [y_pred, SNR_pred, n_o, n_m] = evaluate_pred(param, others, net, x_test, y_test, SNR_threshold)
+function [y_pred, SNR_pred, n_o, n_m] = evaluate_pred(param, others, net, x_test, y_test)
 
 n = length(x_test);
 lstm_step = size(x_test{1}, 2);
@@ -42,7 +42,7 @@ for i = lstm_step + 1 : n + lstm_step
     % calculate SNR
     SNR_pred(i) = abs(e_r' * h_list{i} * e_t)^2 / abs(noise_list{i}(beam_veh, beam_bs))^2;
     
-    if 10*log10(SNR_pred(i)) <= SNR_threshold
+    if 10*log10(SNR_pred(i)) <= param.SNR_threshold
         hasOutage = 1;
         n_o = n_o + 1;
         mao = 0;

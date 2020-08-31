@@ -1,0 +1,56 @@
+%% Check results of networks
+t_p = length(y_pred);
+
+% AOA and AOD
+figure(1);
+hold on;
+plot(y_test(:, 1), '.');
+plot(y_test(:, 2), '.');
+plot(y_pred(:, 1), 'x');
+plot(y_pred(:, 2), 'x');
+hold off;
+xlim([0 t_p]);
+ylim([0 pi]);
+legend('AOA: Exhaustive Search', 'AOD: Exhaustive Search', 'AOA: LSTM-based', 'AOD: LSTM-based');
+
+% % h_siso
+% h_siso_est = test_others.h_siso_est_list(end - t_p + 1 : end);
+% 
+% figure(2);
+% hold on;
+% plot((abs(h_siso_pred) - abs(h_siso_est)) ./ abs(h_siso_est), '.');
+% hold off;
+% xlim([0 t_p]);
+% ylim([-1 0]);
+
+% SNR
+SNR_est = 10 * log10(others_test.SNR_est_list(end - t_p + 1 : end));
+SNR_est_mean = 10 * log10(mean(others_test.SNR_est_list(end - t_p + 1 : end)));
+SNR_pred = 10 * log10(SNR_pred_n);
+SNR_pred_mean = 10 * log10(mean(SNR_pred_n));
+figure(3);
+hold on;
+plot(SNR_est, '.');
+plot(SNR_pred, '.');
+plot([0 t_p], [SNR_est_mean SNR_est_mean], 'LineWidth', 1.5);
+plot([0 t_p], [SNR_pred_mean SNR_pred_mean], 'LineWidth', 1.5);
+plot([0 t_p], [param.SNR_threshold param.SNR_threshold], 'LineWidth', 1.5);
+hold off;
+xlim([0 t_p]);
+legend('Exhaustive Search', 'LSTM-based', ...
+    'Average SNR of Exhaustive Search', 'Average SNR of LSTM-based', ...
+    'SNR Threshold');
+
+% CDF of SNR
+figure(4);
+hold on;
+cdf_h1 = cdfplot(SNR_est);
+cdf_h2 = cdfplot(SNR_pred);
+set(cdf_h1, 'LineWidth', 1.5);
+set(cdf_h2, 'LineWidth', 1.5);
+plot([param.SNR_threshold param.SNR_threshold], [0 1], 'LineWidth', 1.5);
+hold off;
+legend('Exhaustive Search', 'LSTM-based', 'Threshold');
+
+%
+nrmse = sqrt(mean((y_pred(:, 2) - y_test(:, 2)) .^ 2) / mean(y_test(:, 2) .^2));
