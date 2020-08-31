@@ -1,6 +1,6 @@
 clear;
 
-theta = [0: 0.001 * pi: 2*pi];
+theta = [0: 0.001 * pi: pi];
 n_a = 4;
 n_p = n_a * 2;
 beam_list = [pi / n_p / 2: pi / n_p: pi];% acos([1 - 2/n_p : -2/n_p : -1]);
@@ -53,7 +53,7 @@ hold off;
 
 %% loss º¯ÊýµÄ±Æ½ü
 
-for j = 4 %1:n_p
+for j = 7 %1:n_p
     e_t = get_eMatrix(n_a, beam_list(j));
     for i = 1 : n
         e_l_i = get_eMatrix(n_a, theta(i));

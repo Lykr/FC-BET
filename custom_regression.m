@@ -26,7 +26,7 @@ classdef custom_regression < nnet.layer.RegressionLayer
             %         loss  - Loss between Y and T
 
             % Layer forward loss function goes here.
-            loss = mean(cos(abs(Y - T) / 2 - pi / 2), 'all');
+            loss = sum((1 - cos(Y - T)) / 2, 'all');
         end
         
 %         function dLdY = backwardLoss(layer, Y, T)

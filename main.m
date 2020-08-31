@@ -17,7 +17,7 @@ param.channel.r_tau = 2.8;
 param.channel.zeta = 4.0;
 param.channel.spread_e_t = 10.2 / 180 * pi; % 10.2 degree
 param.channel.spread_e_r = 15.5 / 180 * pi; % 15.5 degree
-param.channel.var_n = 10 ^ (-14);
+param.channel.var_n = 10 ^ (-13);
 
 param.SNR_threshold = 5; % in dB
 

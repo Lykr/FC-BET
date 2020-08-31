@@ -192,13 +192,13 @@ And two dropout layers are set to prevent overfitting.
 
 Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
 In \cite{Burghal2019}, considering the problem of the angle ambiguity due to the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
-However, another problem is that the codewords whose beam angle near $0$ or $\pi$ have close gains at two different angles, resulting in unnecessary loss in some cases.
+In addition, another problem is that the codewords whose beam angle near $0$ or $\pi$ have close gains at two different angles, resulting in unnecessary loss in some cases.
 For instance, in the case of the codeword whose beam angle is $\pi$, there are same gains at $0$ and $\pi$. 
 The loss should be small, even zero, if estimated angle is $0$ and predicted angle is $\pi$, although the absolute difference of them is $\pi$.
 
 A straightforward idea is taking the negative of the dot product of the array response vector of estimated angle and predicted angle plus a positive constant as the loss function.
 Calculating this loss, however, requires array response vectors of estimated angle and predicted angle at the corresponding time step, which will increase the computational cost when training network.
-On the other hand, considering this function is not differetiable, it will be impossible to perform backpropagation (BP).
+On the other hand, considering this function contains complex numbers, it will be difficlut to perform backpropagation (BP).
 
 
 % \begin{figure}[htbp]
@@ -333,9 +333,9 @@ Note that for each simulation result, all parameters default to the values in Ta
     \caption{Simulation Parameters}
     \label{t_SP}
     \centering
-    \begin{tabular}{l c c}
+    \begin{tabular}{l | c}
         \hline
-        \bfseries Parameter & \bfseries Value\\
+        \bfseries Parameters & \bfseries Values\\
         \hline
         Carrier frequency $f_{c}$ & $28 \times 10^9$ Hz\\
         Coordinates of BS $(x_t, y_t)$ & $(80, 80)$\\
