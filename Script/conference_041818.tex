@@ -191,22 +191,23 @@ And two dropout layers are set to prevent overfitting.
 \subsection{Loss Function}
 
 Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
-In \cite{Burghal2019}, considering the problem of the angle ambiguity due to the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
+In \cite{Burghal2019}, considering the problem of angle ambiguity due to the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
+However, when using this formula as a loss function, the training progress may be unstable due to the presence of multiple global minima, and the responses may not converge in the interval we want.
+To avoid the problem of angle ambiguity, the AoAs and AoDs are limited in $(0, \pi]$ by simple conversion before training.
+
 In addition, another problem is that the codewords whose beam angle near $0$ or $\pi$ have close gains at two different angles, resulting in unnecessary loss in some cases.
 For instance, in the case of the codeword whose beam angle is $\pi$, there are same gains at $0$ and $\pi$. 
 The loss should be small, even zero, if estimated angle is $0$ and predicted angle is $\pi$, although the absolute difference of them is $\pi$.
-
 A straightforward idea is taking the negative of the dot product of the array response vector of estimated angle and predicted angle plus a positive constant as the loss function.
 Calculating this loss, however, requires array response vectors of estimated angle and predicted angle at the corresponding time step, which will increase the computational cost when training network.
 On the other hand, considering this function contains complex numbers, it will be difficlut to perform backpropagation (BP).
 
-
-% \begin{figure}[htbp]
-%     \centerline{\includegraphics[scale=0.65]{beams}}
-%     \caption{Uniform angle codebook}
-%     \label{beams}
-% \end{figure}
-
+Hence, considering complexity of computation and training performance, a modified MSE is used as loss function, which is given as:
+\begin{equation}
+    Loss = \frac{1}{N} \sum_{i=1}^{N}(\phi^{p}_{i} - \phi^{e}_{i})^2
+    \label{lf}
+\end{equation}
+where $N$ is the number of training samples, 
 % 预测过程
 \subsection{Procedure of Beam Tracking}
 
@@ -320,12 +321,12 @@ To reduce the fluctuations, a first order Savitzky-Golay filter \cite{Savitzky19
 \section{Simulation Results}
 
 In this section, the performance of proposed LSTM-based beam tracking solution is presented by analyzing the SNR of received signal, number of measurements and outage probability.
+Note that for each simulation result, all parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
 The outage probability for a simulation is given by:
 \begin{equation}
     P_{o} =\frac{\sum ^{N}_{i=1}\mathbf{I}( {SNR}_{i} \leqslant {SNR}_{T})}{N}
 \end{equation}
-where $N$ is the number of testing samples, ${SNR}_i$ is the SNR of received signal for $i$th sample and $\mathbf{I}$ is an indicator function.
-Note that for each simulation result, all parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
+where ${SNR}_i$ is the SNR of received signal for $i$th sample and $\mathbf{I}$ is an indicator function.
 
 % 仿真参数
 \begin{table}[!t]
@@ -348,7 +349,7 @@ Note that for each simulation result, all parameters default to the values in Ta
         Noise variance of received signal $\sigma_v^2$ & $10^{-14}$\\
         Sequence length of LSTM $n_{LSTM}$ & $5$\\
         Threshold of SNR ${SNR}_T$ & $5$ dB\\
-        Data sample rate & $20$ Hz\\
+        Data generation rate & $20$ Hz\\
         \hline
     \end{tabular}
 \end{table}
@@ -357,6 +358,8 @@ Note that for each simulation result, all parameters default to the values in Ta
 
 % 16 * 4 天线，不同噪声方差下的 SNR 累积分布函数，中断次数和观测次数
 % 随着噪声方差增大，累积分布函数？，中断次数和观测次数增多。
+The default noise variance of received signal is defined as $10^{-14}$ to make sure that there are not any outages when using exhaustive search for obtaining AoAs and AoDs.
+Since the SNR performance of exhaustive search is considered to be the best, there is a high probability that if there are outages when using exhaustive search, there will be outages when using the LSTM-based method at the same time.
 
 % 不同规格天线，10^(-14) 噪声方差的比较
 % 少天线效果好，中天线效果最佳，多天线效果回落。

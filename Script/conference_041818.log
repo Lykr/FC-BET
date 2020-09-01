@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.8.26)  31 AUG 2020 17:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.8.26)  1 SEP 2020 17:30
 entering extended mode
 **c:/Users/67463/Desktop/mmWave/Script/conference_041818.tex
 (c:/Users/67463/Desktop/mmWave/Script/conference_041818.tex
@@ -685,7 +685,7 @@ Overfull \hbox (9.47563pt too wide) in paragraph at lines 44--44
 [1{C:/Users/67463/AppData/Local/MiKTeX/pdftex/config/pdftex.map}
 
 
-] (c:/Users\67463\Desktop\mmWave\Script\geo.tex) (c:/Users\67463\Desktop\mmWave\Script\lstm.tex) [2] (c:/Users\67463\Desktop\mmWave\Script\scene.tex) [3] (c:/Users\67463\Desktop\mmWave\Script\conference_041818.bbl [4])
+] (c:/Users\67463\Desktop\mmWave\Script\geo.tex) (c:/Users\67463\Desktop\mmWave\Script\lstm.tex) [2] [3] (c:/Users\67463\Desktop\mmWave\Script\scene.tex) [4] (c:/Users\67463\Desktop\mmWave\Script\conference_041818.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -697,19 +697,17 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[5
-
-] (c:/Users\67463\Desktop\mmWave\Script\conference_041818.aux) ) 
+[5] (c:/Users\67463\Desktop\mmWave\Script\conference_041818.aux) ) 
 Here is how much of TeX's memory you used:
- 19683 strings out of 481212
- 430771 string characters out of 2905973
- 687910 words of memory out of 3000000
- 34882 multiletter control sequences out of 15000+200000
+ 19684 strings out of 481212
+ 430775 string characters out of 2905973
+ 687918 words of memory out of 3000000
+ 34883 multiletter control sequences out of 15000+200000
  581066 words of font info for 127 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  60i,16n,68p,626b,726s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/yhmath/yhcmex.pfb>
-Output written on c:/Users\67463\Desktop\mmWave\Script\conference_041818.pdf (5 pages, 286106 bytes).
+Output written on c:/Users\67463\Desktop\mmWave\Script\conference_041818.pdf (5 pages, 287139 bytes).
 PDF statistics:
  142 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
