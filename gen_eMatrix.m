@@ -1,4 +1,4 @@
-function eMatrix = get_eMatrix(n, angle)
+function eMatrix = gen_eMatrix(n, angle)
     eMatrix = ones(n,1);
     
     for i = 1 : n

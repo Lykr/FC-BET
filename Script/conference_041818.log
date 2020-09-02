@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.8.26)  1 SEP 2020 17:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.8.26)  2 SEP 2020 17:21
 entering extended mode
 **c:/Users/67463/Desktop/mmWave/Script/conference_041818.tex
 (c:/Users/67463/Desktop/mmWave/Script/conference_041818.tex
@@ -685,7 +685,25 @@ Overfull \hbox (9.47563pt too wide) in paragraph at lines 44--44
 [1{C:/Users/67463/AppData/Local/MiKTeX/pdftex/config/pdftex.map}
 
 
-] (c:/Users\67463\Desktop\mmWave\Script\geo.tex) (c:/Users\67463\Desktop\mmWave\Script\lstm.tex) [2] [3] (c:/Users\67463\Desktop\mmWave\Script\scene.tex) [4] (c:/Users\67463\Desktop\mmWave\Script\conference_041818.bbl)
+] (c:/Users\67463\Desktop\mmWave\Script\geo.tex) (c:/Users\67463\Desktop\mmWave\Script\lstm.tex) [2] [3] (c:/Users\67463\Desktop\mmWave\Script\scene.tex)
+Package epstopdf Info: Source file: <results_different_noise.eps>
+(epstopdf)                    date: 2020-09-02 17:14:02
+(epstopdf)                    size: 23803 bytes
+(epstopdf)             Output file: <results_different_noise-eps-converted-to.pdf>
+(epstopdf)                    date: 2020-09-02 17:15:37
+(epstopdf)                    size: 10913 bytes
+(epstopdf)             Command: <epstopdf --outfile=results_different_noise-eps-converted-to.pdf results_different_noise.eps>
+(epstopdf)             \includegraphics on input line 366.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file c:/Users/67463/Desktop/mmWave/Script/results_different_noise-eps-converted-to.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<results_different_noise-eps-converted-to.pdf, id=57, 421.575pt x 316.18124pt>
+File: results_different_noise-eps-converted-to.pdf Graphic file (type pdf)
+<use results_different_noise-eps-converted-to.pdf>
+Package pdftex.def Info: results_different_noise-eps-converted-to.pdf  used on input line 366.
+(pdftex.def)             Requested size: 248.72708pt x 186.5453pt.
+[4] (c:/Users\67463\Desktop\mmWave\Script\conference_041818.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -697,19 +715,19 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[5] (c:/Users\67463\Desktop\mmWave\Script\conference_041818.aux) ) 
+[5 <c:/Users/67463/Desktop/mmWave/Script/results_different_noise-eps-converted-to.pdf>] (c:/Users\67463\Desktop\mmWave\Script\conference_041818.aux) ) 
 Here is how much of TeX's memory you used:
- 19684 strings out of 481212
- 430775 string characters out of 2905973
- 687918 words of memory out of 3000000
- 34883 multiletter control sequences out of 15000+200000
+ 19717 strings out of 481212
+ 431488 string characters out of 2905973
+ 686929 words of memory out of 3000000
+ 34903 multiletter control sequences out of 15000+200000
  581066 words of font info for 127 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  60i,16n,68p,626b,726s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/yhmath/yhcmex.pfb>
-Output written on c:/Users\67463\Desktop\mmWave\Script\conference_041818.pdf (5 pages, 287139 bytes).
+{C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb><C:/Users/67463/AppData/Local/Programs/MiKTeX/fonts/type1/public/yhmath/yhcmex.pfb>
+Output written on c:/Users\67463\Desktop\mmWave\Script\conference_041818.pdf (5 pages, 289174 bytes).
 PDF statistics:
- 142 PDF objects out of 1000 (max. 8388607)
+ 144 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 121 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 126 words of extra memory for PDF output out of 10000 (max. 10000000)
 

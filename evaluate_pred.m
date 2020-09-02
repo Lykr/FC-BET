@@ -23,10 +23,10 @@ for i = lstm_step + 1 : n + lstm_step
     % prediction
     if hasOutage == 1
         y_pred(i, :) = y_test(i - lstm_step, :);
+        n_m = n_m + 1;
         mao = mao + 1;
         if mao >= lstm_step
             hasOutage = 0;
-            n_m = n_m + mao;
             mao = 0;
         end
     else

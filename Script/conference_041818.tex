@@ -148,7 +148,7 @@ Note that only the case of single cluster under line-of-sight (LOS) condition is
 In addition, the cluster angle depends on the geometric position of the vehicle and base station.
 
 % 接收信号
-For a transmitted signal $x_n$ from the BS, received signal $y_n$ in the vehicle at $n$th time step is:
+For a transmitted signal $x_n$ ($|x_n|=1$) from the BS, received signal $y_n$ in the vehicle at $n$th time step is:
 \begin{equation}
     y_n = \mathbf{w}^H_n \mathbf{H}_n \mathbf{f}_n x_n + \mathbf{w}^H_n \mathbf{v}_n
     \label{rs}
@@ -167,7 +167,7 @@ where $\mathbf{w}_n$ and $\mathbf{f}_n$ are combining vector and beamforming vec
 \subsection{The LSTM Network}
 
 % 问题定义
-The purpose of beam tracking is to obtain beam angles ($\phi_{ln}$ and $\theta_{ln}$) with as few channel estimates as possible for reducing overhead brought by beam alignment.
+The purpose of beam tracking is to obtain beam angles ($\phi_{ln}$ and $\theta_{ln}$) with as few beam measurements as possible for reducing overhead brought by beam search.
 Since the vehicle must travel in a particular direction on the road and the mmWave beams are correlated with the position of vehicles, the problem of obtaining beam angles can be formulated as a time series regression problem after the historical CSI of vehicles is collected.
 
 % LSTM 方案
@@ -193,7 +193,6 @@ And two dropout layers are set to prevent overfitting.
 Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
 In \cite{Burghal2019}, considering the problem of angle ambiguity due to the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
 However, when using this formula as a loss function, the training progress may be unstable due to the presence of multiple global minima, and the responses may not converge in the interval we want.
-To avoid the problem of angle ambiguity, the AoAs and AoDs are limited in $(0, \pi]$ by simple conversion before training.
 
 In addition, another problem is that the codewords whose beam angle near $0$ or $\pi$ have close gains at two different angles, resulting in unnecessary loss in some cases.
 For instance, in the case of the codeword whose beam angle is $\pi$, there are same gains at $0$ and $\pi$. 
@@ -202,12 +201,14 @@ A straightforward idea is taking the negative of the dot product of the array re
 Calculating this loss, however, requires array response vectors of estimated angle and predicted angle at the corresponding time step, which will increase the computational cost when training network.
 On the other hand, considering this function contains complex numbers, it will be difficlut to perform backpropagation (BP).
 
-Hence, considering complexity of computation and training performance, a modified MSE is used as loss function, which is given as:
+Hence, to avoid the problem of angle ambiguity and close gains, the AoAs and AoDs are limited in $(0, \pi]$ by simple conversion before training.
+Considering complexity of computation and training performance, a modified MSE is used as loss function, which is given as:
 \begin{equation}
-    Loss = \frac{1}{N} \sum_{i=1}^{N}(\phi^{p}_{i} - \phi^{e}_{i})^2
+    Loss = \frac{1}{N} \sum_{i=1}^{N}\left[(\phi^{p}_{i} - \phi^{e}_{i})^2 + (\theta^{p}_{i} - \theta^{e}_{i})^2\right]
     \label{lf}
 \end{equation}
-where $N$ is the number of training samples, 
+where $N$ is the number of training samples, $\phi ^{e}_{i}$, $\theta ^{e}_{i}$, $\phi ^{p}_{i}$, $\theta ^{p}_{i}$, are the estimated AoA, estimated AoD, predicted AoA, and predicted AoD, respectively, for sample $i$.
+
 % 预测过程
 \subsection{Procedure of Beam Tracking}
 
@@ -246,7 +247,7 @@ Once the position of the vehicle and the BS are obtained, $\theta_n$ and $\phi_n
     \label{ba}
 \end{equation}
 where $\Gamma _{xn} =x_{rn} -x_{t}$, $\Gamma _{yn} =y_{rn} -y_{t} $, $(x_{t}, y_{t})$ are coordinates of the BS, $\beta _{n}$ is directional angle of the vehicle. 
-Furthermore, $t_n = d_n / c$, $d_n = \sqrt{\Gamma_{xn}^2 + \Gamma_{yn}^2}$, and $c$ is light speed.
+Furthermore, the signal transmission time $t_n = d_n / c$ can be calculated, where the distance between the BS and the vehicle is $d_n = \sqrt{\Gamma_{xn}^2 + \Gamma_{yn}^2}$, and $c$ is light speed.
 Now the channel matrix at each time step can be obtained from \eqref{cm}, \eqref{ssfg}, \eqref{pl} and \eqref{ba}.
 
 % 波束角度
@@ -256,7 +257,7 @@ Now the channel matrix at each time step can be obtained from \eqref{cm}, \eqref
 In this paper, Downlink (DL) configuration scheme is considered for beam management.
 The beam management procedure is as follows. The reference signals are sent to the vehicle from the BS, the vehicle measures and determines the optimal beam for communication, then transmits beam reporting back to the BS.
 
-\begin{figure}[htbp]
+\begin{figure}[tbp]
     \centerline{\input{scene}}
     \caption{Scene of mmWave vehicular networks for data generation}
     \label{scene}
@@ -321,7 +322,7 @@ To reduce the fluctuations, a first order Savitzky-Golay filter \cite{Savitzky19
 \section{Simulation Results}
 
 In this section, the performance of proposed LSTM-based beam tracking solution is presented by analyzing the SNR of received signal, number of measurements and outage probability.
-Note that for each simulation result, all parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
+Note that for each simulation result, parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
 The outage probability for a simulation is given by:
 \begin{equation}
     P_{o} =\frac{\sum ^{N}_{i=1}\mathbf{I}( {SNR}_{i} \leqslant {SNR}_{T})}{N}
@@ -346,7 +347,7 @@ where ${SNR}_i$ is the SNR of received signal for $i$th sample and $\mathbf{I}$ 
         Expectation of BS rms angular spread $\lambda_t$ & $10.2 \degree$\\
         Expectation of Vehicle rms angular spread $\lambda_r$ & $15.5 \degree$\\
         Path loss standard deviation $\sigma_p$ & $5.8$ dB\\
-        Noise variance of received signal $\sigma_v^2$ & $10^{-14}$\\
+        Noise variance of received signal $\sigma_v^2$ & $-140$ dBW\\
         Sequence length of LSTM $n_{LSTM}$ & $5$\\
         Threshold of SNR ${SNR}_T$ & $5$ dB\\
         Data generation rate & $20$ Hz\\
@@ -358,7 +359,16 @@ where ${SNR}_i$ is the SNR of received signal for $i$th sample and $\mathbf{I}$ 
 
 % 16 * 4 天线，不同噪声方差下的 SNR 累积分布函数，中断次数和观测次数
 % 随着噪声方差增大，累积分布函数？，中断次数和观测次数增多。
-The default noise variance of received signal is defined as $10^{-14}$ to make sure that there are not any outages when using exhaustive search for obtaining AoAs and AoDs.
+Fig.~\ref{results_different_noise} show the performance of LSTM-based beam tracking method
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[scale=0.59]{results_different_noise}
+    \caption{Insert caption}
+    \label{results_different_noise}
+\end{figure}
+
+The default noise variance of the received signal is defined as $-140$ dBW to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs.
 Since the SNR performance of exhaustive search is considered to be the best, there is a high probability that if there are outages when using exhaustive search, there will be outages when using the LSTM-based method at the same time.
 
 % 不同规格天线，10^(-14) 噪声方差的比较

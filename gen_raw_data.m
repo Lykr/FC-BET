@@ -1,4 +1,4 @@
-function data = get_raw_data(param, sumo_output)
+function data = gen_raw_data(param, sumo_output)
 timesteps_num = numel(fieldnames(sumo_output));
 t = 0;
 
@@ -16,7 +16,7 @@ for i = 1 : timesteps_num
         
         data.(rec_timestep).(veh_name).speed = veh_data.speed;
         
-        [angles, h] = get_channel(param, veh_data);
+        [angles, h] = gen_channel(param, veh_data);
         data.(rec_timestep).(veh_name).angles = angles;
         data.(rec_timestep).(veh_name).h = h;
         

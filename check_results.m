@@ -1,5 +1,4 @@
 %% Check results of networks
-t_p = length(y_pred);
 
 % AOA and AOD
 figure(1);
@@ -24,10 +23,6 @@ legend('AOA: Exhaustive Search', 'AOD: Exhaustive Search', 'AOA: LSTM-based', 'A
 % ylim([-1 0]);
 
 % SNR
-SNR_est = 10 * log10(others_test.SNR_est_list(end - t_p + 1 : end));
-SNR_est_mean = 10 * log10(mean(others_test.SNR_est_list(end - t_p + 1 : end)));
-SNR_pred = 10 * log10(SNR_pred_n);
-SNR_pred_mean = 10 * log10(mean(SNR_pred_n));
 figure(3);
 hold on;
 plot(SNR_est, '.');

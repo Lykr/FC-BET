@@ -1,4 +1,4 @@
-function [angles, h] = get_channel(param, veh_data)
+function [angles, h] = gen_channel(param, veh_data)
 % Generate channel matrix from parameters
 % angle: right,anti-clockwise; array: right, up
 
@@ -72,6 +72,6 @@ function e = get_e(num_atenna, angles)
     e = zeros(r, c);
     
     for i = 1 : c
-        e(:, i) = get_eMatrix(num_atenna, angles(i));
+        e(:, i) = gen_eMatrix(num_atenna, angles(i));
     end
 end

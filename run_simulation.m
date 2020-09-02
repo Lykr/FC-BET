@@ -44,7 +44,11 @@ net = trainNetwork(x_train, y_train, layers, options);
 
 [y_pred, SNR_pred_n, n_o, n_m] = evaluate_pred(param, others_test, net, x_test, y_test);
 
-% [y_kf, SNR_kf, n_o_kf, n_m_kf] = evaluate_kf(param, others_test, x_test, y_test, SNR_threshold);
+% [y_kf, SNR_kf, n_o_kf, n_m_kf] = evaluate_kf(param, others_test, x_test, y_test);
 
-%% Check results of networks
-check_results;
+%% Calculate SNR
+t_p = length(y_pred);
+SNR_est = 10 * log10(others_test.SNR_est_list(end - t_p + 1 : end));
+SNR_est_mean = 10 * log10(mean(others_test.SNR_est_list(end - t_p + 1 : end)));
+SNR_pred = 10 * log10(SNR_pred_n);
+SNR_pred_mean = 10 * log10(mean(SNR_pred_n));
