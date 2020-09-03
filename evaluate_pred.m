@@ -1,4 +1,4 @@
-function [y_pred, SNR_pred, n_o, n_m] = evaluate_pred(param, others, net, x_test, y_test)
+function [y_pred, SNR_pred, n_o_l, n_m, n_o_e] = evaluate_pred(param, others, net, x_test, y_test)
 
 n = length(x_test);
 lstm_step = size(x_test{1}, 2);
@@ -7,7 +7,8 @@ SNR_pred = zeros(n, 1);
 y_pred = zeros(n, 2);
 y_pred(1 : lstm_step, :) = x_test{1}';
 
-n_o = 0;
+n_o_l = 0;
+n_o_e = 0;
 n_m = lstm_step;
 hasOutage = 0;
 mao = 0;
@@ -44,8 +45,12 @@ for i = lstm_step + 1 : n + lstm_step
     
     if 10*log10(SNR_pred(i)) <= param.SNR_threshold
         hasOutage = 1;
-        n_o = n_o + 1;
+        n_o_l = n_o_l + 1;
         mao = 0;
+    end
+    
+    if 10*log10(others.SNR_est_list(i)) <= param.SNR_threshold
+        n_o_e = n_o_e + 1;
     end
 end
 

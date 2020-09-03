@@ -42,9 +42,9 @@ net = trainNetwork(x_train, y_train, layers, options);
 %% LSTM network testing
 % pred_y = predict(net, test_x);
 
-[y_pred, SNR_pred_n, n_o, n_m] = evaluate_pred(param, others_test, net, x_test, y_test);
+[y_pred, SNR_pred_n, n_o_l, n_m, n_o_e] = evaluate_pred(param, others_test, net, x_test, y_test);
 
-% [y_kf, SNR_kf, n_o_kf, n_m_kf] = evaluate_kf(param, others_test, x_test, y_test);
+% [y_kf, SNR_kf, n_o_l_kf, n_m_kf] = evaluate_kf(param, others_test, x_test, y_test);
 
 %% Calculate SNR
 t_p = length(y_pred);
