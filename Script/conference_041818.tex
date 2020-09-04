@@ -186,7 +186,7 @@ It is powerful for handling time series data, beacase relying on three gates whi
 \end{figure}
 
 % 结构
-Fig.~\ref{lstm} show the structure of the network, which is a sequential model comprises LSTM layer with 50 hidden units, a dropout layer with 0.2 probability, a LSTM layer with 50 hidden units, a dropout layer with 0.2 probability and a fully connected layer with 2 nodes.
+Fig.~\ref{lstm} shows the structure of the network, which is a sequential model comprises LSTM layer with 50 hidden units, a dropout layer with 0.2 probability, a LSTM layer with 50 hidden units, a dropout layer with 0.2 probability and a fully connected layer with 2 nodes.
 The output of the first LSTM layer is a sequence of length $n_{LSTM}$, which is used as the input of the second LSTM layer.
 And two dropout layers are set to prevent overfitting. 
 
@@ -334,7 +334,7 @@ The outage probability for a simulation is given by:
 where ${SNR}_i$ is the SNR of received signal for $i$th sample and $\mathbf{I}$ is an indicator function.
 
 In this paper, the sample rate of series channel data is $20$ Hz (20 samples per second) and there are total $613$ samples for training and $401$ samples for testing. 
-Table \ref{t_SP} show the common simulation parameters.
+Table \ref{t_SP} shows the common simulation parameters.
 For each simulation, parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
 
 % 仿真参数
@@ -366,7 +366,7 @@ For each simulation, parameters default to the values in Table \ref{t_SP}, excep
 
 % 16 * 4 天线，不同噪声方差下的平均 SNR，中断次数和观测次数
 % 随着噪声方差增大，平均 SNR 降低，中断次数和观测次数增多。
-Fig.~\ref{results_noise} show the performances of algorithms versus noise variance of received signal.
+Fig.~\ref{results_noise} shows the performances of schemes versus noise variance of received signal.
 It illustrates that for both exhaustive search and LSTM-based scheme, the average SNR of received signal is decreasing and the probability of outages is increasing with the increasing of $\sigma_v^2$.
 The difference in performance between the LSTM-based scheme and the exhaustive search scheme is small, up to about $6$ dB.
 When $\sigma_v^2=-140$ dBW, the average SNR of received signal in exhaustive search is $54.67$ dB and in LSTM-based scheme is $52.32$ dB, there is only $2.35$ dB loss in SNR, and about $4.3$\% loss in spectral efficiency.
@@ -379,10 +379,10 @@ When $\sigma_v^2=-140$ dBW, the average SNR of received signal in exhaustive sea
 \end{figure}
 
 Since the SNR performance of exhaustive search is considered to be the best, there is a high probability that if there are outages when using exhaustive search, there will also be outages when using other schemes at the same time.
-Fig.~\ref{results_noise} show that there is not any outages when the noise variance of received signal is lower than $-140$ dBW.
+Fig.~\ref{results_noise} shows that there is not any outages when the noise variance of received signal is lower than $-140$ dBW.
 Therefore, the default noise variance of received signal is defined as $-140$ dBW for following simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs.
 
-Table \ref{t_NM} show comparison of the number of measurements in differenct schemes.
+Table \ref{t_NM} shows comparison of the number of measurements in differenct schemes.
 Compared with the exhaustive search scheme, proposed LSTM-based scheme can reduce about 94.3\% measurement overhead.
 Considering the significant reduction in measurement overhead, the 4.3\% loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
 Note that the proposed LSTM-based scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a less complex beam search method (e.g. hierarchical method).
@@ -409,15 +409,14 @@ Note that the proposed LSTM-based scheme obtain initial beam angles for predicti
 % 不同规格天线，10^(-14) 噪声方差的比较
 % 少天线效果好，中天线效果最佳，多天线效果回落。
 
+Fig.~\ref{results_antenna} shows the performances of schemes versus antenna configuration $M_t \times M_r$. It is observed that 
+
 \begin{figure}[!htbp]
     \centering
     \includegraphics[scale=0.59]{results_antenna}
     \caption{Average SNR and outages probability versus $M_t \times M_r$}
     \label{results_antenna}
 \end{figure}
-
-% 16 * 4 天线，10^(-14) 噪声方差，不同步长下的比较
-% 小步长效果差，中最佳，多回落。
 
 \section{Conclusions}
 
