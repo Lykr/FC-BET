@@ -25,8 +25,8 @@ legend('AOA: Exhaustive Search', 'AOD: Exhaustive Search', 'AOA: LSTM-based', 'A
 % SNR
 figure(3);
 hold on;
-plot(SNR_est, '.');
-plot(SNR_pred, '.');
+plot(SNR_est, 'LineWidth', 1);
+plot(SNR_pred, 'LineWidth', 1);
 plot([0 t_p], [SNR_est_mean SNR_est_mean], 'LineWidth', 1.5);
 plot([0 t_p], [SNR_pred_mean SNR_pred_mean], 'LineWidth', 1.5);
 plot([0 t_p], [param.SNR_threshold param.SNR_threshold], 'LineWidth', 1.5);
@@ -47,5 +47,23 @@ plot([param.SNR_threshold param.SNR_threshold], [0 1], 'LineWidth', 1.5);
 hold off;
 legend('Exhaustive Search', 'LSTM-based', 'Threshold');
 
-%
+% Network performances
 nrmse = sqrt(mean((y_pred(:, 2) - y_test(:, 2)) .^ 2) / mean(y_test(:, 2) .^2));
+% RMSE
+figure(5);
+hold on;
+box on;
+plot(info.TrainingRMSE, 'linewidth', 1);
+xlabel('Training epochs', 'Fontname', 'Times New Roman');
+ylabel('RMSE (rad)', 'Fontname', 'Times New Roman');
+hold off;
+set (gcf,'Position',[400,400,500,200])
+% Loss
+figure(6);
+hold on;
+box on;
+plot(info.TrainingLoss, 'linewidth', 1);
+xlabel('Training epochs', 'Fontname', 'Times New Roman');
+ylabel('Loss (rad^2)', 'Fontname', 'Times New Roman');
+hold off;
+set (gcf,'Position',[400,400,500,200])

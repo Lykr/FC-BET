@@ -24,6 +24,7 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{threeparttable}
+\usepackage{subfigure}
 \usetikzlibrary{fadings}
 \usetikzlibrary{patterns}
 \usetikzlibrary{shadows.blur}
@@ -33,7 +34,7 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{LSTM-based Beam Tracking for mmWave Vehicular Networks\\
+\title{LSTM based Beam Tracking for mmWave Vehicular Networks\\
 }
 
 \author{\IEEEauthorblockN{Chen Wang, XXX, XXX, XXX}
@@ -47,10 +48,10 @@ wangchen@bupt.edu.cn}
 \begin{abstract}
 The use of millimeter wave (mmWave) frequency bands for transmission can improve data transmission rate with the help of beamforming technology to overcome the high path and penetration losses.
 However for vehicle, the high mobility of vehicle results in extremely frequent beam alignment and significant overhead.
-In this paper, a long short-term memory (LSTM)-based beam tracking scheme was proposed for reducing overhead brought by beam alignment in mmWave Vehicular Networks, by predicting beam angles at next time step through known beam angles at a certain number of consecutive time steps as features.
+In this paper, a long short-term memory (LSTM) based beam tracking scheme was proposed for reducing overhead brought by beam alignment in mmWave Vehicular Networks, by predicting beam angles at next time step through known beam angles at a certain number of consecutive time steps as features.
 To train this network, a time series array antenna channel data was set up by statistical channel model using time series vehicle information generated from road traffic simulation software named ``Simulation of Urban MObility (SUMO)''.
-Simulation results show that the proposed LSTM-based scheme can reduce a significant overhead with an acceptable loss in spectral efficiency compared with exhaustive search scheme.
-% Simulation results show that the proposed LSTM-based scheme outpreforms Kalman filter based scheme, and can prevent frequent beam alignment to reduce overhead while ensuring acceptable signal to noise ratio (SNR).
+Simulation results show that the proposed LSTM based scheme can reduce a significant overhead with an acceptable loss in spectral efficiency compared with exhaustive search scheme.
+% Simulation results show that the proposed LSTM based scheme outpreforms Kalman filter based scheme, and can prevent frequent beam alignment to reduce overhead while ensuring acceptable signal to noise ratio (SNR).
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -87,7 +88,7 @@ To ensure that the vehicles are always covered by high gain beams, high frequenc
 Fortunately, due to the sparsity of mmWave channel \cite{Lee2014} and the correlation between the angle of arrival (AoA) and angle of departure (AoD) of a millimeter-wave channel and the location of the receiver and transmitter \cite{Aviles2016}, the beam angles of a vehicle traveling along a road under LOS condition can be well predicted.
 
 % 本文提出了一种基于 LSTM 网络的波束追踪方法，使用 LSTM 网络，通过对历史车辆穷尽扫描所获得的历史信道信息进行学习，根据当前车辆在一定时间步的信道信息，预测在下一时刻的 AoA 和 AoD，以达到减少系统开支的效果。
-In this paper, a LSTM-based beam tracking scheme is proposed. By using LSTM network to learn the historical channel state information (CSI) which was obtained from exhaustive beam search, AoA and AoD of current channel between vehicle and BS can be predicted to reduce system overhead.
+In this paper, a LSTM based beam tracking scheme is proposed. By using LSTM network to learn the historical channel state information (CSI) which was obtained from exhaustive beam search, AoA and AoD of current channel between vehicle and BS can be predicted to reduce system overhead.
 % 同时，为了获取信道数据用以训练神经网络，交通流仿真软件 SUMO 被用来生成时序车辆信息，结合统计信道模型与生成的时序车辆信息，生成了时序的信道信息。
 Meanwhile, a road traffic simulation software is use to generate time seires vehicle information (e.g. position, speed, etc.) to set up time seires CSI with a statistical channel model for training the network.
 %% 此外，提出了快速中断恢复算法，在追踪失效后能够减少波束扫描的次数，尽快恢复连接。
@@ -116,7 +117,7 @@ Gaussian, complex Gaussian, wrapped Gaussian and exponential distribution are de
 \section{System Model}\label{SM}
 
 % 场景和天线数
-A mmWave vehicular networks scenario including a vehicle with $M_r$ antenna as receiver and a base station (BS) with $M_t$ antenna as transmitter are considered. 
+A mmWave vehicular networks scenario including a vehicle with $M_r$ antenna elements as receiver and a base station (BS) with $M_t$ antenna elements as transmitter are considered. 
 % 天线结构、阵元间距、赋形技术
 Both of them equips with uniform linear array (ULA) of half wave interval antenna as shown in Fig.~\ref{geo}, and adopted analog beamforming used quantized phase shifter which connect with single analog radio frequency (RF) chain.
 % 阵列响应矢量
@@ -164,7 +165,7 @@ where $\mathbf{w}_n$ and $\mathbf{f}_n$ are combining vector and beamforming vec
     \label{geo}
 \end{figure}
 
-\section{LSTM-based Beam Tracking Solution}
+\section{LSTM based Beam Tracking Solution}
 
 % 网络
 \subsection{The LSTM Network}
@@ -195,7 +196,7 @@ And two dropout layers are set to prevent overfitting.
 
 Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
 In \cite{Burghal2019}, considering the problem of angle ambiguity due to the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
-However, when using this formula as a loss function, the training progress may be unstable due to the presence of multiple global minima, and the responses may not converge in a reasonable interval.
+However, when using this formula as a loss function, the training progress may be unstable due to the multiple global minima, and the responses may not converge in a reasonable interval.
 
 In addition, another problem is that the codewords whose beam angle near $0$ or $\pi$ have close gains at two different angles, resulting in unnecessary loss in some cases.
 For instance, in the case of the codeword whose beam angle is $\pi$, there are same gains at $0$ and $\pi$. 
@@ -235,7 +236,7 @@ It makes more sense to use the SNR of received signal rather than the absolute d
 % 信道矩阵
 \subsection{Channel Matrix}
 % 场景介绍
-A road traffic simulation software named ``SUMO'' was used to generate time series information of the vehicle in the scene mentioned in Section \ref{SM}, which including a BS and a vehicle driving on curve road as shown in Fig.~\ref{scene}.
+A road traffic simulation software named ``SUMO'' was used to generate time series information of the vehicle in the scenario mentioned in Section \ref{SM}, which including a BS and a vehicle driving on curve road as shown in Fig.~\ref{scene}.
 The vehicle departs from $(0, 100)$ at first time step, and arrives $(100, 0)$ at final time step.
 Note that the speed of vehicle is non-linear and depends on the road conditions and behavior of the dirver which defined by SUMO.
 
@@ -262,7 +263,7 @@ Now the channel matrix at each time step can be obtained from \eqref{cm}, \eqref
 In this paper, Downlink (DL) configuration scheme is considered for beam management.
 The beam management procedure is as follows. The reference signals are sent to the vehicle from the BS, the vehicle measures and determines the optimal beam for communication, then transmits beam reporting back to the BS.
 
-\begin{figure}[tbp]
+\begin{figure}[!tbp]
     \centerline{\input{scene}}
     \caption{Scene of mmWave vehicular networks for data generation}
     \label{scene}
@@ -326,7 +327,7 @@ To reduce the fluctuations, a first order Savitzky-Golay filter \cite{Savitzky19
 
 \section{Simulation Results}
 
-In this section, the performances of proposed LSTM-based beam tracking solution is presented by analyzing the SNR of received signal, number of measurements and outage probability.
+In this section, the performances of proposed LSTM based beam tracking solution is presented by analyzing the SNR of received signal, number of measurements and outage probability.
 The outage probability for a simulation is given by:
 \begin{equation}
     P_{o} =\frac{\sum ^{N}_{i=1}\mathbf{I}( {SNR}_{i} \leqslant {SNR}_{T})}{N}
@@ -356,38 +357,57 @@ For each simulation, parameters default to the values in Table \ref{t_SP}, excep
         Expectation of Vehicle rms angular spread $\lambda_r$ & $15.5 \degree$\\
         Path loss standard deviation $\sigma_p$ & $5.8$ dB\\
         Noise variance of received signal $\sigma_v^2$ & $-140$ dBW\\
-        Sequence length of LSTM $n_{LSTM}$ & $5$\\
         Threshold of SNR ${SNR}_T$ & $5$ dB\\
+        Lookback of LSTM $n_{LSTM}$ & $5$\\
+        Optimizer of LSTM & Adam\\
+        Training Epochs & 400\\
+        Batch size & Training data size\\
+        Learning rate & 0.05\\
+        Normalization & None\\
         \hline
     \end{tabular}
 \end{table}
     
 % 收敛性能？
+\begin{figure}[!b]
+    \centering
+    \subfigure[RMSE of the LSTM Network]{
+        \includegraphics[scale=0.65]{results_rmse}
+        \label{results_rmse}
+        }
+    \subfigure[Loss of the LSTM Network]{
+        \includegraphics[scale=0.65]{results_loss}
+        \label{results_loss}
+    }
+    \caption{Convergence of the LSTM network}
+    \label{results_convergence}
+\end{figure}
 
+Fig.~\ref{results_convergence} demonstrates the convergence of the LSTM network.
+The RMSE of the LSTM network is shown in Fig.~\ref{results_rmse}.
+It is observed that the RMSE rapidly converges to about $0.4$ around $50$th epoch, and finally converges to about $0.2$ after $400$ epochs.
+And the loss of the LSTM network is shown in Fig.~\ref{results_loss}.
+It shows that the loss decreases sharply around $20$ epochs, and converges to a small value about $0.01$ after $400$ epochs.
 % 16 * 4 天线，不同噪声方差下的平均 SNR，中断次数和观测次数
 % 随着噪声方差增大，平均 SNR 降低，中断次数和观测次数增多。
-Fig.~\ref{results_noise} shows the performances of schemes versus noise variance of received signal.
-It illustrates that for both exhaustive search and LSTM-based scheme, the average SNR of received signal is decreasing and the probability of outages is increasing with the increasing of $\sigma_v^2$.
-The difference in performance between the LSTM-based scheme and the exhaustive search scheme is small, up to about $6$ dB.
-When $\sigma_v^2=-140$ dBW, the average SNR of received signal in exhaustive search is $54.67$ dB and in LSTM-based scheme is $52.32$ dB, there is only $2.35$ dB loss in SNR, and about $4.3$\% loss in spectral efficiency.
-
-\begin{figure}[!htbp]
+\begin{figure}[!t]
     \centering
     \includegraphics[scale=0.59]{results_noise}
     \caption{Average SNR and outages probability versus $\sigma_v^2$}
     \label{results_noise}
 \end{figure}
 
+Fig.~\ref{results_noise} shows the performances of schemes versus noise variance of received signal.
+The vehicle using exhaustive search scheme uses exhaustive search method to find the optimal beam angles at each time step.
+It illustrates that for both exhaustive search and LSTM based scheme, the average SNR of received signal is decreasing and the probability of outages is increasing with the increasing of $\sigma_v^2$.
+The difference in performance between the LSTM based scheme and the exhaustive search scheme is small, up to about $6$ dB.
+When $\sigma_v^2=-140$ dBW, the average SNR of received signal in exhaustive search is $54.67$ dB and in LSTM based scheme is $52.32$ dB, there is only $2.35$ dB loss in SNR, and about $4.3$\% loss in spectral efficiency.
+
 Since the SNR performance of exhaustive search is considered to be the best, there is a high probability that if there are outages when using exhaustive search, there will also be outages when using other schemes at the same time.
 Fig.~\ref{results_noise} shows that there is not any outages when the noise variance of received signal is lower than $-140$ dBW.
-Therefore, the default noise variance of received signal is defined as $-140$ dBW for following simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs.
+Therefore, the default noise variance of received signal is defined as $-140$ dBW for following simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs in this scenario.
 
-Table \ref{t_NM} shows comparison of the number of measurements in differenct schemes.
-Compared with the exhaustive search scheme, proposed LSTM-based scheme can reduce about 94.3\% measurement overhead.
-Considering the significant reduction in measurement overhead, the 4.3\% loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
-Note that the proposed LSTM-based scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a less complex beam search method (e.g. hierarchical method).
-
-\begin{table}[!htbp]
+\begin{table}[!b]
     \renewcommand{\arraystretch}{1.3}
     \centering
     \begin{threeparttable}
@@ -396,7 +416,7 @@ Note that the proposed LSTM-based scheme obtain initial beam angles for predicti
             \hline
             \bfseries Schemes & \bfseries Complexity & \bfseries Number of Measurements\\
             \hline
-            LSTM-based & $N_s + N_f M_t M_r$\tnote{1} & $2240$\\
+            LSTM based & $N_s + N_f M_t M_r$\tnote{1} & $2240$\\
             Exhaustive search & $N M_t M_r$ & $39552$\\
             \hline
         \end{tabular}
@@ -406,23 +426,35 @@ Note that the proposed LSTM-based scheme obtain initial beam angles for predicti
     \end{threeparttable}
 \end{table}
 
+Table \ref{t_NM} shows the comparison of the number of measurements in differenct schemes.
+Compared with the exhaustive search scheme, proposed LSTM based scheme can reduce about 94.3\% measurement overhead.
+Considering the significant reduction in measurement overhead, the 4.3\% loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
+Note that the proposed LSTM based scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a less complex beam search method (e.g. hierarchical method).
+
 % 不同规格天线，10^(-14) 噪声方差的比较
 % 少天线效果好，中天线效果最佳，多天线效果回落。
 
-Fig.~\ref{results_antenna} shows the performances of schemes versus antenna configuration $M_t \times M_r$. It is observed that 
-
-\begin{figure}[!htbp]
+\begin{figure}[!t]
     \centering
     \includegraphics[scale=0.59]{results_antenna}
     \caption{Average SNR and outages probability versus $M_t \times M_r$}
     \label{results_antenna}
 \end{figure}
 
+Fig.~\ref{results_antenna} shows the performances of schemes versus antenna configuration $M_t \times M_r$.
+It is illustrates that the performances of LSTM based scheme is decreasing with the increasing of antennas scale.
+The reason is the beamwidths of both are so small that reducing the tolerance for prediction error and making it difficlut for LSTM based scheme to accurately align with each other.
+It is observed that there are fluctuations in both SNR and outages probability, due to the randomness of the channel which is caused by the statistical characteristics of the channel and the vehicle movement.
+
 \section{Conclusions}
+
+This paper studies the problem of beam tracking in mmWave vehicular network, and a LSTM based beam tracking scheme is proposed to reduce the beam alignment overhead in a common vehicular scenario.
+In order to train and evaluate the proposed scheme, a time series array antenna channel data was set up by statistical channel model using time series vehicle information generated from SUMO.
+Simulation results show that the proposed LSTM based scheme can reduce significant measurement overhead compared with the exhaustive search scheme, while ensuring an acceptable loss in SNR.
 
 \section*{Acknowledgment}
 
-Thanks, guy.
+This work was supported by ...
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
