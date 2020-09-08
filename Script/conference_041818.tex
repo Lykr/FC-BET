@@ -152,7 +152,7 @@ Note that only the case of single cluster under line-of-sight (LOS) condition is
 In addition, the cluster angle depends on the geometric position of the vehicle and base station.
 
 % 接收信号
-For a transmitted signal $x_n$ ($|x_n|=1$) from the BS, received signal $y_n$ in the vehicle at $n$th time step is:
+For a transmitted signal $x_n$ from the BS, received signal $y_n$ in the vehicle at $n$th time step is:
 \begin{equation}
     y_n = \mathbf{w}^H_n \mathbf{H}_n \mathbf{f}_n x_n + \mathbf{w}^H_n \mathbf{v}_n
     \label{rs}
@@ -196,14 +196,21 @@ And two dropout layers are set to prevent overfitting.
 
 Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
 In \cite{Burghal2019}, considering the problem of angle ambiguity due to the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
-However, when using this formula as a loss function, the training progress may be unstable due to the multiple global minima, and the responses may not converge in a reasonable interval.
+However, when using this as a loss function, the training progress may be unstable due to the multiple global minima, and the responses may not converge in a reasonable interval.
 
-In addition, another problem is that the codewords whose beam angle near $0$ or $\pi$ have close gains at two different angles, resulting in unnecessary loss in some cases.
+In addition, another problem is that the codewords whose beam angle near $0$ or $\pi$ have close gains at two different angles, resulting in unnecessary loss in some cases, as shown in Fig.~\ref{results_gain}.
 For instance, in the case of the codeword whose beam angle is $\pi$, there are same gains at $0$ and $\pi$. 
 The loss should be small, even zero, if estimated angle is $0$ and predicted angle is $\pi$, although the absolute difference of them is $\pi$.
-A straightforward idea is taking the negative of the dot product of the array response vector of estimated angle and predicted angle plus a positive constant as the loss function.
+A straightforward idea is taking $Constant-\mathbf{a}^{H}(M, \theta^e)\mathbf{a}(M, \theta^p)$ as the loss.
 Calculating this loss, however, requires array response vectors of estimated angle and predicted angle at the corresponding time step, which will increase the computational cost when training network.
 On the other hand, considering this function contains complex numbers, it will be difficlut to perform backpropagation (BP).
+
+\begin{figure}[!b]
+    \centering
+    \includegraphics[scale=0.59]{results_gain}
+    \caption{Heatmap of $\mathbf{a}^{H}(16, \theta^e)\mathbf{a}(16, \theta^p)$}
+    \label{results_gain}
+\end{figure}
 
 Hence, to avoid the problem of angle ambiguity and close gains, the AoAs and AoDs are limited in $(0, \pi]$ by simple conversion before training.
 Considering complexity of computation and training performance, a modified MSE is used as loss function, which is given as:
@@ -334,6 +341,20 @@ The outage probability for a simulation is given by:
 \end{equation}
 where ${SNR}_i$ is the SNR of received signal for $i$th sample and $\mathbf{I}$ is an indicator function.
 
+\begin{figure}[!b]
+    \centering
+    \subfigure[RMSE of the LSTM Network]{
+        \includegraphics[scale=0.65]{results_rmse}
+        \label{results_rmse}
+        }
+    \subfigure[Loss of the LSTM Network]{
+        \includegraphics[scale=0.65]{results_loss}
+        \label{results_loss}
+    }
+    \caption{Convergence of the LSTM network}
+    \label{results_convergence}
+\end{figure}
+
 In this paper, the sample rate of series channel data is $20$ Hz (20 samples per second) and there are total $613$ samples for training and $401$ samples for testing. 
 Table \ref{t_SP} shows the common simulation parameters.
 For each simulation, parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
@@ -363,26 +384,11 @@ For each simulation, parameters default to the values in Table \ref{t_SP}, excep
         Training Epochs & 400\\
         Batch size & Training data size\\
         Learning rate & 0.05\\
-        Normalization & None\\
         \hline
     \end{tabular}
 \end{table}
     
 % 收敛性能？
-\begin{figure}[!b]
-    \centering
-    \subfigure[RMSE of the LSTM Network]{
-        \includegraphics[scale=0.65]{results_rmse}
-        \label{results_rmse}
-        }
-    \subfigure[Loss of the LSTM Network]{
-        \includegraphics[scale=0.65]{results_loss}
-        \label{results_loss}
-    }
-    \caption{Convergence of the LSTM network}
-    \label{results_convergence}
-\end{figure}
-
 Fig.~\ref{results_convergence} demonstrates the convergence of the LSTM network.
 The RMSE of the LSTM network is shown in Fig.~\ref{results_rmse}.
 It is observed that the RMSE rapidly converges to about $0.4$ around $50$th epoch, and finally converges to about $0.2$ after $400$ epochs.
@@ -403,10 +409,6 @@ It illustrates that for both exhaustive search and LSTM based scheme, the averag
 The difference in performance between the LSTM based scheme and the exhaustive search scheme is small, up to about $6$ dB.
 When $\sigma_v^2=-140$ dBW, the average SNR of received signal in exhaustive search is $54.67$ dB and in LSTM based scheme is $52.32$ dB, there is only $2.35$ dB loss in SNR, and about $4.3$\% loss in spectral efficiency.
 
-Since the SNR performance of exhaustive search is considered to be the best, there is a high probability that if there are outages when using exhaustive search, there will also be outages when using other schemes at the same time.
-Fig.~\ref{results_noise} shows that there is not any outages when the noise variance of received signal is lower than $-140$ dBW.
-Therefore, the default noise variance of received signal is defined as $-140$ dBW for following simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs in this scenario.
-
 \begin{table}[!b]
     \renewcommand{\arraystretch}{1.3}
     \centering
@@ -416,8 +418,8 @@ Therefore, the default noise variance of received signal is defined as $-140$ dB
             \hline
             \bfseries Schemes & \bfseries Complexity & \bfseries Number of Measurements\\
             \hline
-            LSTM based & $N_s + N_f M_t M_r$\tnote{1} & $2240$\\
-            Exhaustive search & $N M_t M_r$ & $39552$\\
+            LSTM based & $N_s + N_f M_t M_r$\tnote{1} & $721$\\
+            Exhaustive search & $N M_t M_r$ & $25984$\\
             \hline
         \end{tabular}
         \begin{tablenotes}
@@ -426,8 +428,12 @@ Therefore, the default noise variance of received signal is defined as $-140$ dB
     \end{threeparttable}
 \end{table}
 
+Since the SNR performance of exhaustive search is considered to be the best, there is a high probability that if there are outages when using exhaustive search, there will also be outages when using other schemes at the same time.
+Fig.~\ref{results_noise} shows that there is not any outages when the noise variance is lower than $-140$ dBW.
+Therefore, the default noise variance of received signal is defined as $-140$ dBW for simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs in this scenario.
+
 Table \ref{t_NM} shows the comparison of the number of measurements in differenct schemes.
-Compared with the exhaustive search scheme, proposed LSTM based scheme can reduce about 94.3\% measurement overhead.
+Compared with the exhaustive search scheme, proposed LSTM based scheme can reduce about 97.2\% measurement overhead.
 Considering the significant reduction in measurement overhead, the 4.3\% loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
 Note that the proposed LSTM based scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a less complex beam search method (e.g. hierarchical method).
 
@@ -444,11 +450,12 @@ Note that the proposed LSTM based scheme obtain initial beam angles for predicti
 Fig.~\ref{results_antenna} shows the performances of schemes versus antenna configuration $M_t \times M_r$.
 It is illustrates that the performances of LSTM based scheme is decreasing with the increasing of antennas scale.
 The reason is the beamwidths of both are so small that reducing the tolerance for prediction error and making it difficlut for LSTM based scheme to accurately align with each other.
-It is observed that there are fluctuations in both SNR and outages probability, due to the randomness of the channel which is caused by the statistical characteristics of the channel and the vehicle movement.
+It is observed that there are fluctuations in both SNR and outages probability, due to the randomness of the channel which is caused by the statistical characteristics (e.g. angular spread, noise variance, etc.) of the channel and the vehicle movement.
 
 \section{Conclusions}
 
-This paper studies the problem of beam tracking in mmWave vehicular network, and a LSTM based beam tracking scheme is proposed to reduce the beam alignment overhead in a common vehicular scenario.
+This paper studies the beam tracking problem of uniform linear antenna channel in mmWave vehicular network.
+A LSTM based beam tracking scheme is proposed to reduce the beam alignment overhead in a common vehicular scenario.
 In order to train and evaluate the proposed scheme, a time series array antenna channel data was set up by statistical channel model using time series vehicle information generated from SUMO.
 Simulation results show that the proposed LSTM based scheme can reduce significant measurement overhead compared with the exhaustive search scheme, while ensuring an acceptable loss in SNR.
 

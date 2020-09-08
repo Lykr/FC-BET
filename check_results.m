@@ -1,6 +1,6 @@
 %% Check results of networks
 
-% AOA and AOD
+%% AOA and AOD
 figure(1);
 hold on;
 plot(y_test(:, 1), '.');
@@ -22,7 +22,7 @@ legend('AOA: Exhaustive Search', 'AOD: Exhaustive Search', 'AOA: LSTM-based', 'A
 % xlim([0 t_p]);
 % ylim([-1 0]);
 
-% SNR
+%% SNR
 figure(3);
 hold on;
 plot(SNR_est, 'LineWidth', 1);
@@ -36,7 +36,7 @@ legend('Exhaustive Search', 'LSTM-based', ...
     'Average SNR of Exhaustive Search', 'Average SNR of LSTM-based', ...
     'SNR Threshold');
 
-% CDF of SNR
+%% CDF of SNR
 figure(4);
 hold on;
 cdf_h1 = cdfplot(SNR_est);
@@ -47,7 +47,7 @@ plot([param.SNR_threshold param.SNR_threshold], [0 1], 'LineWidth', 1.5);
 hold off;
 legend('Exhaustive Search', 'LSTM-based', 'Threshold');
 
-% Network performances
+%% Network performances
 nrmse = sqrt(mean((y_pred(:, 2) - y_test(:, 2)) .^ 2) / mean(y_test(:, 2) .^2));
 % RMSE
 figure(5);
@@ -57,7 +57,7 @@ plot(info.TrainingRMSE, 'linewidth', 1);
 xlabel('Training epochs', 'Fontname', 'Times New Roman');
 ylabel('RMSE (rad)', 'Fontname', 'Times New Roman');
 hold off;
-set (gcf,'Position',[400,400,500,200])
+set (gcf,'Position',[400,400,500,150])
 % Loss
 figure(6);
 hold on;
@@ -66,4 +66,4 @@ plot(info.TrainingLoss, 'linewidth', 1);
 xlabel('Training epochs', 'Fontname', 'Times New Roman');
 ylabel('Loss (rad^2)', 'Fontname', 'Times New Roman');
 hold off;
-set (gcf,'Position',[400,400,500,200])
+set (gcf,'Position',[400,400,500,150])

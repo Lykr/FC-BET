@@ -65,3 +65,19 @@ for j = 7 %1:n_p
     plot(theta, interp1(e_l));
 end
 hold off;
+
+%% Close Gain
+[x, y] = meshgrid(0:0.01:pi);
+z = zeros(size(x, 1), size(x, 2));
+for i = 1 : size(x, 1)
+    for j = 1 : size(x, 1)
+        z(i,j) = abs(gen_eMatrix(16,x(i,j))'*gen_eMatrix(16,y(i,j)));
+    end
+end
+mesh(x,y,z);
+xlabel('Estimated angles (rad)', 'Fontname','Times New Roman');
+ylabel('Predicted angles (rad)', 'Fontname','Times New Roman');
+grid off;
+box on;
+xlim([0 pi]);
+ylim([0 pi]);
