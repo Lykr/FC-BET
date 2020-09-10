@@ -67,11 +67,12 @@ end
 hold off;
 
 %% Close Gain
+n_t = 32;
 [x, y] = meshgrid(0:0.01:pi);
 z = zeros(size(x, 1), size(x, 2));
 for i = 1 : size(x, 1)
     for j = 1 : size(x, 1)
-        z(i,j) = abs(gen_eMatrix(16,x(i,j))'*gen_eMatrix(16,y(i,j)));
+        z(i,j) = abs(gen_eMatrix(n_t,x(i,j))'*gen_eMatrix(n_t,y(i,j)));
     end
 end
 mesh(x,y,z);
