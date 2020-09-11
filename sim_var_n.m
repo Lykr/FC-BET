@@ -15,10 +15,10 @@ for i = 1 : list_num_1
     n_o_e_list_1(i) = n_o_e;
     n_o_l_list_1(i) = n_o_l;
 end
-pc_r = [227 23 13]./255;
-pc_b = [41 69 241]./255;
-colororder([pc_b; pc_r]);
+pc_r = [178 34 34]./255;
+pc_b = [61 89 171]./255;
 figure(1);
+colororder([pc_b; pc_r]);
 box on;
 hold on;
 x_in_dBW = 10 * log10(var_n_list_1);

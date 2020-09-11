@@ -48,22 +48,25 @@ hold off;
 legend('Exhaustive Search', 'LSTM-based', 'Threshold');
 
 %% Network performances
+pc_b = [61 89 171]./255;
 nrmse = sqrt(mean((y_pred(:, 2) - y_test(:, 2)) .^ 2) / mean(y_test(:, 2) .^2));
 % RMSE
 figure(5);
 hold on;
 box on;
-plot(info.TrainingRMSE, 'linewidth', 1);
+plot(info.TrainingRMSE, 'linewidth', 1, 'color', pc_b);
 xlabel('Training epochs', 'Fontname', 'Times New Roman');
 ylabel('RMSE (rad)', 'Fontname', 'Times New Roman');
 hold off;
-set (gcf,'Position',[400,400,500,150])
+set (gcf,'Position',[400,400,500,150]);
+set(gca, 'linewidth', 1);
 % Loss
 figure(6);
 hold on;
 box on;
-plot(info.TrainingLoss, 'linewidth', 1);
+plot(info.TrainingLoss, 'linewidth', 1, 'color', pc_b);
 xlabel('Training epochs', 'Fontname', 'Times New Roman');
 ylabel('Loss (rad^2)', 'Fontname', 'Times New Roman');
 hold off;
-set (gcf,'Position',[400,400,500,150])
+set (gcf,'Position',[400,400,500,150]);
+set(gca, 'linewidth', 1);

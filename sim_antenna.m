@@ -20,9 +20,10 @@ for i = 1 : list_num_3
     n_o_e_list_3(i) = n_o_e;
     n_o_l_list_3(i) = n_o_l;
 end
-pc_r = [255 0 51]./255;
-pc_b = [0 64 128]./255;
+pc_r = [178 34 34]./255;
+pc_b = [61 89 171]./255;
 figure(3);
+colororder([pc_b; pc_r]);
 box on;
 hold on;
 yyaxis left;
@@ -39,5 +40,6 @@ plot(x_3, n_o_l_list_3./length(y_test), '--^', 'LineWidth', 1);
 ylabel('Probability of outages', 'Fontname', 'Times New Roman');
 hold off;
 xticklabels({'2*4','2*8','4*8','4*16','8*16','8*32','16*32','16*64','32*64'});
-legend_1 = legend('Exhaustive search', 'LSTM-based', 'Exhaustive search', 'LSTM-based');
+legend_1 = legend('Exhaustive', 'LSTM-based', 'Exhaustive', 'LSTM-based');
 set(legend_1, 'Fontname', 'Times New Roman');
+set(gca, 'linewidth', 1);
