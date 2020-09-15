@@ -31,7 +31,7 @@ ylim([0, 80]);
 xlim([0.99 9.01]);
 plot(x_3, SNR_est_mean_list_3, '-o', 'LineWidth', 1);
 plot(x_3, SNR_pred_mean_list_3, '-^', 'LineWidth', 1);
-xlabel('Antenna Configuration M_r*M_t', 'Fontname', 'Times New Roman');
+xlabel('Antenna Size M_r\timesM_t', 'Fontname', 'Times New Roman');
 ylabel('Average SNR of received signal (dB)', 'Fontname', 'Times New Roman');
 yyaxis right;
 ylim([-0.01, 1.01]);
