@@ -1,4 +1,4 @@
-function [y_pred, SNR_pred, n_o_l, n_m, n_o_e] = evaluate_pred(param, others, net, x_test, y_test)
+function [y_pred, SNR_pred, n_o_l, n_m, n_o_e] = evaluate_pred(param, others_test, net, x_test, y_test)
 
 n = length(x_test);
 lstm_step = size(x_test{1}, 2);
@@ -17,8 +17,8 @@ veh_beam_book = param.veh.beam_info.beam_book;
 veh_beam_angles = param.veh.beam_info.beam_angles;
 bs_beam_book = param.bs.beam_info.beam_book;
 bs_beam_angles = param.bs.beam_info.beam_angles;
-h_list = others.h_list;
-noise_list = others.noise_list;
+h_list = others_test.h_list;
+noise_list = others_test.noise_list;
 
 for i = lstm_step + 1 : n + lstm_step
     % prediction
@@ -49,7 +49,7 @@ for i = lstm_step + 1 : n + lstm_step
         mao = 0;
     end
     
-    if 10*log10(others.SNR_est_list(i)) <= param.SNR_threshold
+    if 10*log10(others_test.SNR_est_list(i)) <= param.SNR_threshold
         n_o_e = n_o_e + 1;
     end
 end
