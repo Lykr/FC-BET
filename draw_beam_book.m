@@ -68,7 +68,7 @@ hold off;
 
 %% Close Gain
 n_t = 32;
-[x, y] = meshgrid(0:0.01:pi);
+[x, y] = meshgrid(0:0.001:pi);
 z = zeros(size(x, 1), size(x, 2));
 for i = 1 : size(x, 1)
     for j = 1 : size(x, 1)

@@ -39,7 +39,7 @@ for i = 1 : timesteps_num
 end
 
 % Preprocessing
-smooth_angles_est_list = sgolayfilt(others.angles_est_list, 1, 21);
+smooth_angles_est_list = sgolayfilt(others.angles_est_list, 1, 51);
 
 for i = 1 : timesteps_num
     for j = 1 : vehs_num
