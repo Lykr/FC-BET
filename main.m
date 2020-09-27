@@ -1,7 +1,7 @@
 clear;
 
 %% Parameters
-param.interval = 5;
+param.interval = 2;
 param.bs.x = 80; % position of base station
 param.bs.y = 80;
 param.bs.frequency_carrier = 28e9; % frequency of carrier
@@ -24,12 +24,12 @@ param.SNR_threshold = 5; % in dB
 lstm_step = 5;
 
 %% Run simulation
-simulation_switch = -1; %-1-normal 0-all, 1-var_n, 2-measurements, 3-anttenna, 4-steps
+simulation_switch = 1; %-1-normal 0-all, 1-var_n, 2-measurements, 3-anttenna, 4-steps
 
 % Normal
 if simulation_switch == 0 || simulation_switch == -1
     get_data;
-    run_simulation;
+    run_simulation; 
 end
 
 % Different noise variances of received signal
