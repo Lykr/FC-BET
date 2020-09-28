@@ -5,10 +5,10 @@ param.interval = 5;
 param.bs.x = 80; % position of base station
 param.bs.y = 80;
 param.bs.frequency_carrier = 28e9; % frequency of carrier
-param.bs.num_antenna = 16; % number of base station antenna, default to 16
+param.bs.num_antenna = 1; % number of base station antenna, default to 16
 param.bs.beam_info = gen_beam_info(param.bs.num_antenna, 2 * param.bs.num_antenna); % get beam codebook for bs
 
-param.veh.num_antenna = 4; % number of veh's antenna, default to 4
+param.veh.num_antenna = 1; % number of veh's antenna, default to 4
 param.veh.beam_info = gen_beam_info(param.veh.num_antenna, 2 * param.veh.num_antenna); % get beam codebook for veh
 
 param.channel.L = 20;
@@ -24,7 +24,7 @@ param.SNR_threshold = 5; % in dB
 lstm_step = 5;
 
 %% Run simulation
-simulation_switch = 1; %-1-normal 0-all, 1-var_n, 2-measurements, 3-anttenna, 4-steps
+simulation_switch = -1; %-1-normal 0-all, 1-var_n, 2-measurements, 3-anttenna, 4-steps
 
 % Normal
 if simulation_switch == 0 || simulation_switch == -1
