@@ -1,7 +1,7 @@
 clear;
 
 %% Parameters
-param.interval = 2;
+param.interval = 5;
 param.bs.x = 80; % position of base station
 param.bs.y = 80;
 param.bs.frequency_carrier = 28e9; % frequency of carrier
@@ -54,4 +54,6 @@ if simulation_switch == 0 || simulation_switch == 4
     sim_steps;
 end
 %% Check results of networks
-% check_results;
+if simulation_switch == -1
+    check_results;
+end

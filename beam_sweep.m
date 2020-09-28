@@ -12,12 +12,14 @@ bs_beam_num = length(bs_beam_angles);
 % Y = w' * Hf + w' * n;
 n_r = param.veh.num_antenna;
 var_n = param.channel.var_n; % noise variance
-noise = (randn(veh_beam_num, bs_beam_num, n_r) + 1i * randn(veh_beam_num, bs_beam_num, n_r)) .* sqrt(var_n / 2); % noise part of received signal
+% noise = (randn(veh_beam_num, bs_beam_num, n_r) + 1i * randn(veh_beam_num, bs_beam_num, n_r)) .* sqrt(var_n / 2); % noise part of received signal
+noise = (randn(n_r, 1) + 1i * randn(n_r, 1)) .* sqrt(var_n / 2);
 N = zeros(veh_beam_num, bs_beam_num);
 
 for i = 1 : veh_beam_num
     for j = 1 : bs_beam_num
-        N(i, j) = veh_beam_book(:, i)' * reshape(noise(i, j, :), n_r, 1);
+        %         N(i, j) = veh_beam_book(:, i)' * reshape(noise(i, j, :), n_r, 1);
+        N(i, j) = veh_beam_book(:, i)' * noise;
     end
 end
 CSI.noise = N;
