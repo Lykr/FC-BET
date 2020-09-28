@@ -77,7 +77,7 @@ Otherwise, misalignment of the beam pairs will result in reduction in gain and d
 A hierarchical codebook design was proposed in \cite{Noh2017}, which essentially exploits binary search algorithm to reduce overhead by using different beam widths at different stages to perform beam search.
 This algorithm requires a high quantization level phase shifter and potentially multiple RF chains to implement, which leads to high cost.
 % 对此，* 提出了一种基于卡尔曼滤波器使用穷尽扫描进行波束追踪的方案，以减少系统的开支，然而穷尽扫描所需要的测量次数和协议开支会随着天线数的增加而增加。
-In \cite{Zhang2016}, Zhang et al. proposed a Kalman filter based scheme for beam tracking using exhaustive search, whose measurements and protocol overhead increase with the number of elements in antenna.
+In \cite{Zhang2016}, Zhang et al. proposed a Kalman filter based scheme for beam tracking using exhaustive search, whose measurement and protocol overheads increase with the number of elements in antenna.
 % * 在此基础上加以改进采用 EKF，并且只需要单次测量，更适用于在快速变换环境下的信道追踪。
 Based on prior works, \cite{Va2017} exploits extended Kalman filter and requires only a single measurement, making it more suitable for beam tracking in fast-changing environments.
 
@@ -93,7 +93,7 @@ In practice, the inaccurate or incomplete situational awareness may be introduce
 
 % 本文提出了一种基于 LSTM 网络的波束追踪方法，使用 LSTM 网络，通过对历史车辆穷尽扫描所获得的历史信道信息进行学习，根据当前车辆在一定时间步的信道信息，预测在下一时刻的 AoA 和 AoD，以达到减少系统开支的效果。
 In this paper, a LSTM-based beam tracking scheme is proposed.
-By using LSTM network to learn the historical beam angles which were obtained from exhaustive beam search performed by analog beamforming based on quantized phase shifter, AoA and AoD of current channel between vehicle and BS can be predicted simultaneously to reduce measurement overhead.
+By using LSTM network to leverage the historical beam angles which were obtained from exhaustive beam search performed by analog beamforming based on quantized phase shifter, AoA and AoD of current channel between vehicle and BS can be predicted simultaneously to reduce measurement overhead.
 % 仿真过程
 In each round of tracking, the predicted beam angles will be used to select beamforming codeword for transmission and compose new feature, until the signal-to-noise ratio (SNR) of received signal less than or equal to a threshold.
 % 此外，为了获取信道数据用以训练神经网络，交通流仿真软件 SUMO 被用来生成时序车辆信息，结合统计信道模型与生成的时序车辆信息，生成了时序的信道信息。
