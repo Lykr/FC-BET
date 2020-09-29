@@ -145,7 +145,7 @@ The array response vector of a ULA with $M$ half-wave interval antenna elements 
 where $\varphi$ is the arrival angle of the signal. When AoA of the vehicle is $\phi$ and AoD of the BS is $\theta$, the array response vectors of both are $\mathbf{a}_{r}( \phi ) =\mathbf{a}( M_{r} ,\phi )$ and $\mathbf{a}_{t}( \theta ) =\mathbf{a}( M_{t} ,\theta )$, respectively.
 
 % 信道模型
-A statistical 28 GHz mmWave channel model in \cite{Akdeniz2014} is used, which is modeled by real experimental data collected in New York City.
+A statistical 28 GHz mmWave channel model in \cite{Akdeniz2014} is taken as channel model in this paper, which is modeled by real experimental data collected in New York City.
 The narrowband time-varying $L$ subpaths channel matrix between the vehicle and BS at $n$th time step is $\mathbf{H}_{n} \in \mathbb{C}^{M_{r} \times M_{t}}$, which is given as:
 \begin{equation}
     \mathbf{H}_{n} =\frac{1}{\sqrt{L}} \sum\limits ^{L}_{l=1} g_{ln}\mathbf{a}_{r}( \phi _{ln})\mathbf{a}^{H}_{t}( \theta _{ln})
@@ -165,7 +165,7 @@ where $t_{n}$ is the signal transmission time at $n$th time step, $f_{Dn,max} ={
     \label{pl}
 \end{equation}
 where $d_n$ is distance between the vehicle and the BS at $n$th time step, and $\xi \sim \mathcal{N}(0, \sigma_p^2)$.
-Note that only the case of single cluster under line-of-sight (LOS) condition is considered in this paper, and the cluster angle depends on the geometric position of the vehicle and the BS.
+Note that only the case of single cluster under line-of-sight (LOS) condition is considered in this paper, and the cluster angles depend on the geometric position of the vehicle and the BS.
 
 % 接收信号
 For a transmitted signal $x_n$ from the BS, received signal $y_n$ in the vehicle at $n$th time step is:
@@ -182,13 +182,13 @@ where $\mathbf{w}_n$ and $\mathbf{f}_n$ are combining vector and beamforming vec
 
 % 问题定义
 The purpose of beam tracking is to obtain beam angles with as few beam measurements as possible for reducing the overhead brought by beam alignment.
-Since the vehicle must travel in a particular direction on the road and the mmWave beams are correlated with the position of vehicles, the problem of beam tracking can be formulated as a time series regression problem after the historical beam angles of vehicles is collected.
+Since the vehicle must travel in a particular direction on the road and the mmWave beams are correlated with the position of vehicles \cite{Aviles2016, Wang2019}, the problem of beam tracking can be formulated as a time series regression problem after the historical beam angles of vehicles is collected.
 
 % LSTM 方案
 An artificial neural network named LSTM network is used to solve this regression problem.
 It has been implemented successfully in several fields such as machine translation, image captioning, speech recognition, and even stock prices prediction in economy.
 As one of the recurrent neural networks (RNNs), LSTM is generally considered to be more robust to long time series than simpler vanilla RNN implementations \cite{Hochreiter1997}.
-It is powerful for handling time series data and learning long-term relations between features, relying on three gates which are forget, input and output gates composed of neural networks (NNs) in LSTM cells.
+It is powerful for handling time series data and learning long-term relations between features, relying on three gates, i.e. forget, input and output gates composed of neural networks (NNs) in LSTM cells.
 
 \begin{figure}[tbp]
     \centerline{\input{lstm}}
@@ -239,7 +239,7 @@ The dataset is consisted of time series AoAs and AoDs of the vehicle from initia
 
 After the LSTM network has been trained, the vehicle takes exhaustive beam searches in consecutive $n_{LSTM}$ time steps to obtain initial estimated AoAs and AoDs at the beginning of a round of beam tracking. 
 The network will take the initial estimated AoAs and AoDs to predict AoA and AoD at next time step. 
-Then, the predicted AoA and AoD at $k$th time steps and the AoAs and AoDs from $k - n_{LSTM} + 1$th to $k - 1$th time step of last feature will be used to compose new feature.
+Then, the predicted AoA and AoD and the AoAs and AoDs of last $n_{LSTM} - 1$ time steps in last feature will be used to compose new feature.
 
 Once the predicted AoA and AoD are obtained, the codewords whose steering angle closest to the predicted beam angles will be taken as beamforming and combining vectors.
 For every time step, SNR under current prediction will be calculated and compared with a threshold ${SNR}_T$.
@@ -292,7 +292,7 @@ The beam management procedure is as follows. The reference signals are sent to t
 
 % 码本设计
 The AoAs and AoDs measured from exhaustive beam search scheme is used to train the network, rather than using the generated channel data directly.
-Although the AoAs and AoDs are in range $[0, 2\pi]$, only the angles in range $(0,\pi]$ are considered, since the cosine function is symmetric around $\pi$.
+Although the AoAs and AoDs are in $(0, 2\pi]$, only the angles in $(0,\pi]$ are considered, since the cosine function is symmetric around $\pi$.
 To reduce the overhead of beamforming, a discrete resolution $b$-bit codebook is adopted to perform beam search, where $b$ is the number of bits for quantized phase shifters.
 For a $b$-bit codebook, it is consisted of $2^b$ beam patterns.
 In this paper, $b$ is assumed to be $2log_2 M$ for a $M$-element antenna terminal, and the candidate beam angles vector $\mathbf{b}_M$ is given by:
@@ -315,7 +315,7 @@ Assume $x_n = 1$ is sent as reference signal, the observation matrix comprises a
 \begin{equation}
     \mathbf{Y}_{n} =\mathbf{W}^{H}\mathbf{H}_{n}\mathbf{F} +\mathbf{V}_{n}
 \end{equation}
-where $\mathbf{V}_n \in \mathbb{C}^{2M_r \times 2M_t}$ is Gaussian noise matrix composed of independent identically distribution (i.i.d.) elements, which are the noise part of \eqref{rs}. $\mathbf{Y}_n \in \mathbb{C}^{2M_r \times 2M_t}$, $[\mathbf{Y}_n]_{i,j}$ is the received signal of using $[\mathbf{W}]_{:,i}$ as combining vector and $[\mathbf{F}]_{:,j}$ as beamforming vector.
+where $\mathbf{V}_n \in \mathbb{C}^{2M_r \times 2M_t}$ is Gaussian noise matrix composed of independent identically distribution (i.i.d.) elements, which are the noise part of \eqref{rs}. $\mathbf{Y}_n \in \mathbb{C}^{2M_r \times 2M_t}$, $[\mathbf{Y}_n]_{i,j}$ is the received signal used $[\mathbf{W}]_{:,i}$ as combining vector and $[\mathbf{F}]_{:,j}$ as beamforming vector.
 
 % 最优波束
 For each time step, both of the vehicle and the BS use their codebook to perform exhaustive beam search to find the optimal beam pair.
@@ -327,7 +327,7 @@ The indexes of optimal beam pair can be obtained by solving an optimization prob
         &j_{n} \in [ 1,2M_{t}]
     \end{aligned}
 \end{equation}
-A simple nested loop algorithm can be exploited to solve this problem. Then, at $n$th time step, the optimal combining vector $\mathbf{w}^{*}_{n}$ and the optimal beamforming vector $\mathbf{f}^{*}_{n}$ are $\mathbf{w}^{*}_{n}=[\mathbf{W}]_{:,i_{n}^*}$ and $\mathbf{f}^{*}_{n}=[\mathbf{F}]_{:,j_{n}^*}$, respectively. And the estimated AoA $\phi ^{e}_{n}$ and AoD $\theta ^{e}_{n}$ used to training network are given by:
+A simple nested loop algorithm can be exploited to solve this problem. Then, at $n$th time step, the optimal combining vector $\mathbf{w}^{*}_{n}$ and the optimal beamforming vector $\mathbf{f}^{*}_{n}$ are $\mathbf{w}^{*}_{n}=[\mathbf{W}]_{:,i_{n}^*}$ and $\mathbf{f}^{*}_{n}=[\mathbf{F}]_{:,j_{n}^*}$, respectively. And the estimated AoA $\phi ^{e}_{n}$ and AoD $\theta ^{e}_{n}$ used for training are given by:
 \begin{equation}
     \begin{cases}
         \phi ^{e}_{n} = \frac{i_{n}^* \pi}{2M_{r}}\\
@@ -347,7 +347,7 @@ To reduce the fluctuations, a first order Savitzky-Golay filter \cite{Savitzky19
 
 \section{Simulation Results}\label{SR}
 
-In this section, the performances of proposed LSTM-based beam tracking solution are presented by analyzing the SNR of received signal, number of measurements and outage probability.
+In this section, performances of the proposed LSTM-based beam tracking solution are presented by analyzing the SNR of received signal, number of measurements and outage probability.
 The outage probability for a simulation is given by:
 \begin{equation}
     P_{o} =\frac{\sum ^{N}_{i=1}\mathbf{I}( {SNR}_{i} \leqslant {SNR}_{T})}{N}
@@ -446,7 +446,7 @@ When $\sigma_v^2=-140$ dBW, there is not any outage in exhaustive scheme, and th
 % Therefore, the default noise variance of received signal is defined as $-140$ dBW for simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs in this scenario.
 % 
 Table \ref{t_NM} shows the comparison of the number of measurements in different schemes.
-Compared with the exhaustive scheme, proposed LSTM-based scheme can reduce about $97.2$\% measurement overhead.
+Compared with the exhaustive scheme, the proposed LSTM-based scheme can reduce about $97.2$\% measurement overhead.
 Considering the significant reduction in measurement overhead, the $6.7$\% loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
 Note that the proposed LSTM-based scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search method (e.g. hierarchical method).
 
