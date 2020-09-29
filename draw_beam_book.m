@@ -31,7 +31,7 @@ beam_angles = [0: pi/bn: pi-pi/bn];
 theta = [0: 0.001 * pi: 2*pi];
 
 for i = 1 : bn
-    M(:, i) = get_eMatrix(nt, beam_angles(i));
+    M(:, i) = gen_eMatrix(nt, beam_angles(i));
 end
 
 r = 2;
@@ -41,7 +41,7 @@ v(9:end) = 0;
 vv = inv(M*M')*M*(u-1)*(-1);
 
 for i = 1 : numel(theta)
-    e_l_i = get_eMatrix(nt, theta(i));
+    e_l_i = gen_eMatrix(nt, theta(i));
     e_l(i) = v' * e_l_i;
     e_ll(i) = vv' * e_l_i;
 end
