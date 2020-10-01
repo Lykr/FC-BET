@@ -423,7 +423,7 @@ Fig.~\ref{results_noise} shows the performances of schemes versus noise variance
 The vehicle which adopts exhaustive scheme uses exhaustive search method to find the optimal beam angles at each time step.
 It illustrates that for both exhaustive and LSTM-based scheme, the average SNR of received signal is decreasing and the probability of outages is increasing with the increasing of $\sigma_v^2$.
 The difference in SNR between LSTM-based scheme and exhaustive scheme is small, up to about $10$ dB.
-When $\sigma_v^2=-140$ dBW, there is not any outage in exhaustive scheme, and the average SNR of received signal in exhaustive scheme is $55.62$ dB compared to $51.93$ dB in LSTM-based scheme, with a loss of only $3.69$ dB in SNR, implying a loss of about $6.7$\% in spectral efficiency.
+When $\sigma_v^2=-140$ dBW, there is not any outage in exhaustive scheme, and the average SNR of received signal in exhaustive scheme is $55.62$ dB compared to $51.93$ dB in LSTM-based scheme, with a loss of only $3.69$ dB in SNR, implying a loss of about $6.7\%$ in spectral efficiency.
 \begin{table}[!t]
     \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
     \renewcommand{\arraystretch}{1.3}
@@ -432,10 +432,10 @@ When $\sigma_v^2=-140$ dBW, there is not any outage in exhaustive scheme, and th
     \caption{\label{t_NM}Comparisons of the Number of Measurements}
         \begin{tabular}{c c c}
             \hline
-            \bfseries Schemes & \bfseries Complexity & \tabincell{c}{\bfseries Number of\\ \bfseries Measurements}\\
+            \bfseries Schemes & \bfseries Complexity & \bfseries Number of Measurements\\
             \hline
             LSTM-based & $N_s + 4 N_f M_t M_r$\tnote{1} & $1676$\\
-            Hierarchical & $N (2 \log_2{\frac{M_t}{M_r}} + 4 \log_2{2 M_r})$ & $6416$\\ % $N (2 (\log_2{2 M_t} - \log_2{2 M_r}) + 4 \log_2{2 M_r})$
+            Hierarchical & $2 N \log_2{4 M_t M_r}$ & $6416$\\ % $N (2 (\log_2{2 M_t} - \log_2{2 M_r}) + 4 \log_2{2 M_r})$
             Exhaustive & $4 N M_t M_r$ & $102656$\\
             \hline
         \end{tabular}
@@ -450,8 +450,8 @@ When $\sigma_v^2=-140$ dBW, there is not any outage in exhaustive scheme, and th
 % Therefore, the default noise variance of received signal is defined as $-140$ dBW for simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs in this scenario.
 % 
 Table \ref{t_NM} shows the comparison of the number of measurements in different schemes.
-Compared with the exhaustive scheme, the proposed LSTM-based scheme can reduce about $98.4$\% measurement overhead.
-Considering the significant reduction in measurement overhead, the $6.7$\% loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
+The proposed LSTM-based scheme reduces the measurement overhead by about $98.4\%$ and $73.9\%$ compared to the exhaustive and hierarchical schemes, respectively.
+Considering the significant reduction in measurement overhead, the $6.7\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
 Note that the proposed LSTM-based scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search method (e.g. hierarchical method).
 
 % 不同规格天线，10^(-14) 噪声方差的比较
