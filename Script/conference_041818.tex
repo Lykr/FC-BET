@@ -89,7 +89,7 @@ Providing reliable beam alignment in mmWave vehicular networks is more challengi
 %为了保证车辆始终被较高增益的波束覆盖，需要进行高频率的对准，而高频的波束会进一步加大系统的开支，尤其是当采用高分辨率码本的时候。
 Frequent beam alignment is required to ensure that the vehicles are always covered by high gain beams, and it will further increase system overhead, especially when high resolution codebooks are used.
 % 幸运的是，由于毫米波信道的稀疏性 *，且毫米波信道的 AoA、AoD 与收发端位置的具有一定的相关性 *，在 LOS 信号下沿固定道路行驶的车辆的 AoA 和 AoD 应该能被很好的预测出来。
-Fortunately, due to the sparsity of mmWave channel \cite{Lee2014} and the correlation between the angles of arrival (AoAs) and departure (AoDs) of a mmWave channel and the positions of the receiver and transmitter \cite{Aviles2016}, the beam angles of a vehicle traveling along a road under LOS condition can be well predicted.
+Fortunately, due to the sparsity of mmWave channel \cite{Lee2014} and the correlation between the angles of arrival (AoAs) and departure (AoDs) of a mmWave channel and the positions of the receiver and transmitter \cite{Aviles2016}, the beam angles of a vehicle traveling along a road under line-of-sight (LOS) condition can be well predicted.
 % 机器学习方法
 Wang et al. proposed a situational awareness-aided beam training solution using machine learning in mmWave Vehicle to Infrastructure (V2I) communication, which is dependent on availability of accurate localization of vehicles \cite{Wang2019}. 
 In practice, the inaccurate or incomplete situational awareness may be introduced by localization error, limited location updating frequencies and data transmission rate of vehicles, resulting in beam misalignment.
@@ -168,7 +168,7 @@ where $t_{n}$ is the signal transmission time at $n$th time step, $f_{Dn,max} ={
     \label{pl}
 \end{equation}
 where $d_n$ is distance between the vehicle and the BS at $n$th time step, and $\xi \sim \mathcal{N}(0, \sigma_p^2)$.
-Note that only the case of single cluster under line-of-sight (LOS) condition is considered in this paper, and the cluster angles depend on the geometric position of the vehicle and the BS.
+Note that only the case of single cluster under LOS condition is considered in this paper, and the cluster angles depend on the geometric position of the vehicle and the BS.
 
 % 接收信号
 For a transmitted signal $x_n$ from the BS, received signal $y_n$ in the vehicle at $n$th time step is:
