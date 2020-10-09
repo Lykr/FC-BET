@@ -51,9 +51,10 @@
 \begin{abstract}
 The use of millimeter wave (mmWave) frequency bands can improve data transmission rate with the help of beamforming technique to overcome the high path and penetration losses.
 However, utilizing mmWave technology in vehicular networks is challenging, as the high mobility of vehicles results in frequent beam alignment and significant overhead.
-In this paper, a long short-term memory (LSTM)-based beam tracking scheme is proposed for reducing overhead caused by beam alignment in mmWave Vehicular Networks, by predicting beam angles at next time step through known beam angles at a certain number of consecutive time steps as features.
+In this paper, a long short-term memory (LSTM)-based beam tracking scheme is proposed for reducing overhead caused by frequent beam alignment in mmWave Vehicular Networks.
+% , by predicting beam angles at next time step through known beam angles at a certain number of consecutive time steps as features.
 To train this network, a time series channel data is set up by statistical channel model using time series vehicle information generated from road traffic simulation software named ``Simulation of Urban MObility (SUMO)''.
-Simulation results have verified the proposed LSTM-based scheme can reduce a significant overhead with an acceptable loss in spectral efficiency compared with exhaustive search scheme.
+Simulation results show that the proposed LSTM-based scheme can reduce a significant overhead with an acceptable loss in spectral efficiency compared with conventional scheme.
 % Simulation results show that the proposed LSTM-based scheme outpreforms Kalman filter based scheme, and can prevent frequent beam alignment to reduce overhead while ensuring acceptable signal to noise ratio (SNR).
 \end{abstract}
 
@@ -136,9 +137,11 @@ Gaussian, complex Gaussian, wrapped Gaussian and exponential distribution are de
 \end{figure}
 
 % 场景和天线数
-A mmWave vehicular network scenario including a vehicle with $M_r$ antenna elements as receiver and a base station (BS) with $M_t$ antenna elements as transmitter is considered. 
+A mmWave vehicular network scenario including a vehicle with $M_r$ antenna elements and a base station (BS) with $M_t$ antenna elements is considered, as shown in Fig.~\ref{geo}.
 % 天线结构、阵元间距、赋形技术
-Both of them equip with uniform linear array (ULA) of half-wave interval antenna as shown in Fig.~\ref{geo}, and adopted analog beamforming based on quantized phase shifter which connect with single analog RF chain.
+Both of them are equipped with a single RF chain and uniform linear array (ULA) of half-wave interval antenna.
+Analog beamforming based on quantized phase shifter is adopted at both BS and vehicle. 
+
 % 阵列响应矢量
 The array response vector of a ULA with $M$ half-wave interval antenna elements is given by:
 \begin{equation}
@@ -151,13 +154,13 @@ where $\varphi$ is the arrival angle of the signal. When AoA of the vehicle is $
 A statistical 28 GHz mmWave channel model in \cite{Akdeniz2014} is taken as channel model in this paper, which is modeled by real experimental data collected in New York City.
 The narrowband time-varying $L$ subpaths channel matrix between the vehicle and BS at $n$th time step is $\mathbf{H}_{n} \in \mathbb{C}^{M_{r} \times M_{t}}$, which is given as:
 \begin{equation}
-    \mathbf{H}_{n} =\frac{1}{\sqrt{L}} \sum\limits ^{L}_{l=1} g_{ln}\mathbf{a}_{r}( \phi _{ln})\mathbf{a}^{H}_{t}( \theta _{ln})
+    \mathbf{H}_{n} =\sqrt{\frac{M_r M_t}{L}} \sum\limits ^{L}_{l=1} g_{ln}\mathbf{a}_{r}( \phi _{ln})\mathbf{a}^{H}_{t}( \theta _{ln})
     \label{cm}
 \end{equation}
-where $g_{ln} \in \mathbb{C}$ is complex small-scale fading gain on subpath $l$ at $n$th time step, $\phi_{ln}$ and $\theta_{ln}$ are the AoA and AoD of the $l$th subpath at $n$th time step, respectively. 
+where $g_{ln} \in \mathbb{C}$ is complex fading gain on subpath $l$ at $n$th time step, $\phi_{ln}$ and $\theta_{ln}$ are the AoA and AoD of the $l$th subpath at $n$th time step, respectively. 
 $\phi_{ln} = \phi_n + \Delta \phi_{ln}$ and $\theta _{ln} =\theta _{n} +\Delta \theta _{ln}$, where $\phi_{n}$ and $\theta_{n}$ is the AoA and AoD of the cluster center at $n$th time step, $\Delta \phi _{ln} \sim \mathcal{WN}( \delta ^{2}_{rn})$, $\Delta \theta _{ln} \sim \mathcal{WN}( \delta ^{2}_{tn})$, $\delta_{tn} \sim \mathcal{E}(\lambda_t)$ and $\delta_{rn} \sim \mathcal{E}(\lambda_r)$.
 $\lambda_t$ and $\lambda_r$ are root-mean-square (RMS) angular spread of transmitter and receiver, respectively.
-The complex small-scale fading gain is given by:
+The complex fading gain is given by:
 \begin{equation}
     g_{ln} =\overline{g}_{ln} e^{j2\pi t_{n} f_{Dn,max} cos( \omega _{ln})}, \overline{g}_{ln} \sim \mathcal{CN}\left( 0, 10^{-0.1PL_n}\right)
     \label{ssfg}
@@ -170,15 +173,37 @@ where $t_{n}$ is the signal transmission time at $n$th time step, $f_{Dn,max} ={
 where $d_n$ is distance between the vehicle and the BS at $n$th time step, and $\xi \sim \mathcal{N}(0, \sigma_p^2)$.
 Note that only the case of single cluster under LOS condition is considered in this paper, and the cluster angles depend on the geometric position of the vehicle and the BS.
 
+% 管理方式
+Beam management procedure is as follows. The reference signals are sent to the vehicle from the BS, the vehicle measures and determines the optimal beam pair for communication, then feeds back to the BS.
+
+% 码本设计
+A discrete resolution $b$-bit codebook is adopted to perform beam search, where $b$ is the number of bits for quantized phase shifters.
+For a $b$-bit codebook, it is consisted of $2^b$ beam patterns.
+$b$ is assumed to be $2log_2 M$ for a $M$-element antenna terminal, and the candidate beam angles vector $\mathbf{b}_M$ is given by:
+\begin{equation}
+    \mathbf{b}_M = \left[\frac{1}{2M}\pi, \frac{2}{2M}\pi, ..., \frac{2M-1}{2M}\pi, \pi\right]
+\end{equation}
+So, there are $2M_r$ beam patterns for the vehicle, and $2M_t$ beam patterns for the BS.
+Note that another codebook which achieves uniform maximum gain in all direction is not used for this scheme, due to its low spatial resolution near $0$ and $\pi$ resulting in network underfitting.
+The beam codebooks of the vehicle and the BS are:
+\begin{gather}
+    \begin{aligned}
+        \mathbf{W} =&\left[\mathbf{a}_{r}([\mathbf{b}_{M_r}]_1) ,\mathbf{a}_{r}\left([\mathbf{b}_{M_r}]_2 \right) ,...,\mathbf{a}_{r}\left([\mathbf{b}_{M_r}]_{2M_r} \right)\right] \\
+        \mathbf{F} =&\left[\mathbf{a}_{t}([\mathbf{b}_{M_t}]_1) ,\mathbf{a}_{t}\left([\mathbf{b}_{M_t}]_2 \right) ,...,\mathbf{a}_{t}\left([\mathbf{b}_{M_t}]_{2M_t} \right)\right]
+    \end{aligned}
+\end{gather}
+where $\mathbf{W} \in \mathbb{C}^{M_{r} \times 2M_{r}}$ is the codebook of vehicle, and $\mathbf{F} \in \mathbb{C}^{M_{t} \times 2M_{t}}$ is the codebook of BS. Each column vector of the codebook is codeword which represents a beam pattern, each entry in the column is phase rotation for corresponding antenna element to generate directional beam.
+
 % 接收信号
 For a transmitted signal $x_n$ from the BS, received signal $y_n$ in the vehicle at $n$th time step is:
 \begin{equation}
     y_n = \mathbf{w}^H_n \mathbf{H}_n \mathbf{f}_n x_n + \mathbf{w}^H_n \mathbf{v}_n
     \label{rs}
 \end{equation}
-where $\mathbf{w}_n$ and $\mathbf{f}_n$ are combining vector and beamforming vector at $n$th time step, respectively. $\mathbf{v}_n$ is Gaussian noise at time step $n$ and $\mathbf{v}_n \sim \mathcal{CN}(0, \sigma^2_v \mathbf{I}_{M_r})$. 
+where $\mathbf{w}_n$ and $\mathbf{f}_n$ are combining and beamforming vector at $n$th time step, which are the codeword in $\mathbf{W}$ and $\mathbf{F}$, respectively.
+$\mathbf{v}_n$ is Gaussian noise at time step $n$ and $\mathbf{v}_n \sim \mathcal{CN}(0, \sigma^2_v \mathbf{I}_{M_r})$. 
 
-\section{LSTM-based Beam Tracking Solution}\label{LBTS}
+\section{LSTM-based Beam Tracking Scheme}\label{LBTS}
 
 % 网络
 \subsection{The LSTM Network}
@@ -225,7 +250,7 @@ On the other hand, considering it is a complex function, it will be difficult to
     \label{results_gain}
 \end{figure}
 
-Hence, to avoid the problem of angle ambiguity, the AoAs and AoDs are limited in $(0, \pi]$ by simple conversion before training.
+Hence, to avoid the problem of angle ambiguity, the AoAs and AoDs are limited in $(0, \pi]$ by simple conversion before training, since the cosine function is symmetric around $\pi$.
 And considering complexity of computation, a modified MSE is used as loss function, which is given as:
 \begin{equation}
     Loss = \frac{1}{N} \sum_{i=1}^{N}\left[(\phi^{p}_{i} - \phi^{e}_{i})^2 + (\theta^{p}_{i} - \theta^{e}_{i})^2\right]
@@ -254,7 +279,7 @@ It makes more sense to take the SNR of received signal rather than the absolute 
 %% 快速中断恢复算法？
 %\subsection{Fast Outage Recovery}
 
-\section{Data Generation}\label{DG}
+\section{Dataset Built}\label{DG}
 
 % 信道矩阵
 \subsection{Channel Matrix}
@@ -271,8 +296,7 @@ The vehicle departs from $(0, 100)$ at first time step, and arrives $(100, 0)$ a
 Note that the speed of vehicle is non-linear and it depends on the road conditions and behavior of the driver which is defined by SUMO.
 
 % 几何信息
-The generated vehicle time series information is composed of position, speed $v_n$ and directional angle $\beta_n$ of the vehicle at each time step.
-For $n$th time step, the position of vehicle is given by $(x_{rn}, y_{rn})$, $v_n$ is used to determine maximum Doppler shift in \eqref{ssfg}, and $\beta_n$ is used to determine $\phi_{ln}$ and $\omega_{ln}$.
+At $n$th time step, the generated vehicle time series information is composed of position $(x_{rn}, y_{rn})$, speed $v_n$ and directional angle $\beta_n$ of the vehicle, where $v_n$ is used to determine maximum Doppler shift in \eqref{ssfg}, and $\beta_n$ is used to determine $\phi_{ln}$ and $\omega_{ln}$.
 
 Once the position of the vehicle and the BS are obtained, $\theta_n$ and $\phi_n$ can be calculated by simple geometric methods as following:
 \begin{equation}
@@ -289,32 +313,11 @@ Now the channel matrix at each time step can be obtained from \eqref{arv}, \eqre
 % 波束角度
 \subsection{Beam Search}
 
-% 管理方式
-In this paper, downlink (DL) configuration scheme is considered for beam management.
-The beam management procedure is as follows. The reference signals are sent to the vehicle from the BS, the vehicle measures and determines the optimal beam pair for communication, then feeds back to the BS.
-
-% 码本设计
 The AoAs and AoDs measured from exhaustive beam search scheme is used to train the network, rather than using the generated channel data directly.
-Although the AoAs and AoDs are in $(0, 2\pi]$, only the angles in $(0,\pi]$ are considered, since the cosine function is symmetric around $\pi$.
-To reduce the overhead of beamforming, a discrete resolution $b$-bit codebook is adopted to perform beam search, where $b$ is the number of bits for quantized phase shifters.
-For a $b$-bit codebook, it is consisted of $2^b$ beam patterns.
-In this paper, $b$ is assumed to be $2log_2 M$ for a $M$-element antenna terminal, and the candidate beam angles vector $\mathbf{b}_M$ is given by:
-\begin{equation}
-    \mathbf{b}_M = \left[\frac{1}{2M}\pi, \frac{2}{2M}\pi, ..., \frac{2M-1}{2M}\pi, \pi\right]
-\end{equation}
-So, there are $2M_r$ beam patterns for the vehicle, and $2M_t$ beam patterns for the BS.
-Note that another codebook which achieves uniform maximum gain in all direction is not used for this solution, because its low spatial resolution near $0$ and $\pi$ resulting in network underfitting.
-The beam codebooks of the vehicle and the BS are:
-\begin{gather}
-    \begin{aligned}
-        \mathbf{W} =&\left[\mathbf{a}_{r}([\mathbf{b}_{M_r}]_1) ,\mathbf{a}_{r}\left([\mathbf{b}_{M_r}]_2 \right) ,...,\mathbf{a}_{r}\left([\mathbf{b}_{M_r}]_{2M_r} \right)\right] \\
-        \mathbf{F} =&\left[\mathbf{a}_{t}([\mathbf{b}_{M_t}]_1) ,\mathbf{a}_{t}\left([\mathbf{b}_{M_t}]_2 \right) ,...,\mathbf{a}_{t}\left([\mathbf{b}_{M_t}]_{2M_t} \right)\right]
-    \end{aligned}
-\end{gather}
-where $\mathbf{W} \in \mathbb{C}^{M_{r} \times 2M_{r}}$ is the codebook of vehicle, and $\mathbf{F} \in \mathbb{C}^{M_{t} \times 2M_{t}}$ is the codebook of BS. Each column of the codebook represents a beam pattern, each entry in the column is phase rotation for corresponding antenna element to generate directional beam.
+% Although the AoAs and AoDs are in $(0, 2\pi]$, only the angles in $(0,\pi]$ are considered, since the cosine function is symmetric around $\pi$.
 
 % 观察信号
-Assume $x_n = 1$ is sent as reference signal, the observation matrix comprises all measurement of exhaustive search now can be given by:
+Assume $x_n = 1$ is sent as reference signal, the observation matrix comprises all measurement of exhaustive search can be given by:
 \begin{equation}
     \mathbf{Y}_{n} =\mathbf{W}^{H}\mathbf{H}_{n}\mathbf{F} +\mathbf{V}_{n}
 \end{equation}
@@ -337,7 +340,7 @@ A simple nested loop algorithm can be exploited to solve this problem. Then, at 
         \theta ^{e}_{n} = \frac{j_{n}^* \pi}{2M_{t}}
     \end{cases}
 \end{equation}
-The advantage of training with radian instead of the codeword indexes is that it allows the proposed beam tracking solution to be generalized under terminals with different antenna configuration and beamforming techniques, without additional computation and transmitted data.
+The advantage of training with radian instead of the codeword indexes is that it allows the proposed beam tracking scheme to be generalized under terminals with different antenna configuration and beamforming techniques, without additional computation and transmitted data.
 
 % 数据平滑
 Note that due to the limited resolution of the beam codebook and the noise received at the vehicle, there will be some errors for the channel estimation, which are reflected in fluctuations in the estimated time series AoAs and AoDs.
@@ -350,33 +353,15 @@ To reduce the fluctuations, a first order Savitzky-Golay filter \cite{Savitzky19
 
 \section{Simulation Results}\label{SR}
 
-In this section, performances of the proposed LSTM-based beam tracking solution are presented by analyzing the SNR of received signal, number of measurements and outage probability.
+In this section, performances of the proposed LSTM-based beam tracking scheme are presented by analyzing the SNR of received signal, number of measurements and outage probability.
 The outage probability for a simulation is given by:
 \begin{equation}
     P_{o} =\frac{\sum ^{N}_{i=1}\mathbf{I}( {SNR}_{i} \leqslant {SNR}_{T})}{N}
 \end{equation}
 where ${SNR}_i$ is the SNR of received signal for the $i$th sample and $\mathbf{I}$ is an indicator function.
 
-\begin{figure}[!b]
-    \centering
-    \subfigure[RMSE of the LSTM Network]{
-        \includegraphics[scale=0.65]{results_rmse}
-        \label{results_rmse}
-        }
-    \subfigure[Loss of the LSTM Network]{
-        \includegraphics[scale=0.65]{results_loss}
-        \label{results_loss}
-    }
-    \caption{Convergence of the LSTM network}
-    \label{results_convergence}
-\end{figure}
-
-In this paper, the sample rate of series channel data is $20$ Hz ($50$ ms interval) and there are total $613$ samples for training and $401$ samples for testing. 
-Table \ref{t_SP} shows the common simulation parameters.
-For each simulation, parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
-
 % 仿真参数
-\begin{table}[!t]
+\begin{table}[!b]
     \renewcommand{\arraystretch}{1.3}
     \caption{Simulation Parameters}
     \label{t_SP}
@@ -402,8 +387,26 @@ For each simulation, parameters default to the values in Table \ref{t_SP}, excep
         \hline
     \end{tabular}
 \end{table}
-    
+
+In this paper, the sample rate of series channel data is $20$ Hz ($50$ ms interval) and there are total $613$ samples for training and $401$ samples for testing. 
+Table \ref{t_SP} shows the common simulation parameters.
+For each simulation, parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
+
 % 收敛性能？
+\begin{figure}[!t]
+    \centering
+    \subfigure[RMSE of the LSTM Network]{
+        \includegraphics[scale=0.65]{results_rmse}
+        \label{results_rmse}
+        }
+    \subfigure[Loss of the LSTM Network]{
+        \includegraphics[scale=0.65]{results_loss}
+        \label{results_loss}
+    }
+    \caption{Convergence of the LSTM network}
+    \label{results_convergence}
+\end{figure}
+
 Fig.~\ref{results_convergence} demonstrates the convergence of the LSTM network.
 The root-mean-square error (RMSE) of the LSTM network is shown in Fig.~\ref{results_rmse}.
 It is observed that the RMSE rapidly converges to about $0.4$ around $50$th epoch, and finally converges to about $0.2$ after $400$ epochs.
@@ -418,12 +421,12 @@ It shows that the loss decreases sharply around $20$ epochs, and converges to a 
     \caption{Average SNR and outages probability versus $\sigma_v^2$}
     \label{results_noise}
 \end{figure}
-
 Fig.~\ref{results_noise} shows the performances of schemes versus noise variance of received signal.
 The vehicle which adopts exhaustive scheme uses exhaustive search method to find the optimal beam angles at each time step.
 It illustrates that for both exhaustive and LSTM-based scheme, the average SNR of received signal is decreasing and the probability of outages is increasing with the increasing of $\sigma_v^2$.
 The difference in SNR between LSTM-based scheme and exhaustive scheme is small, up to about $10$ dB.
 When $\sigma_v^2=-140$ dBW, there is not any outage in exhaustive scheme, and the average SNR of received signal in exhaustive scheme is $55.62$ dB compared to $51.93$ dB in LSTM-based scheme, with a loss of only $3.69$ dB in SNR, implying a loss of about $6.7\%$ in spectral efficiency.
+
 \begin{table}[!t]
     \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
     \renewcommand{\arraystretch}{1.3}
@@ -474,7 +477,7 @@ It is observed that there are fluctuations in both SNR and outages probability, 
 This paper studies the beam tracking problem in mmWave vehicular network with ULA.
 A LSTM-based beam tracking scheme is proposed to reduce the beam alignment overhead in a common vehicular scenario.
 In order to train and evaluate the proposed scheme, a time series channel data is set up by statistical channel model using time series vehicle information generated from SUMO.
-Simulation results have verified the proposed LSTM-based scheme can reduce significant measurement overhead compared with the exhaustive scheme, while ensuring an acceptable loss in spectral efficiency.
+Simulation results have verified the proposed LSTM-based scheme can reduce the measurement overhead by $98.4\%$ and $73.9\%$ compared to the exhaustive and hierarchical schemes, respectively, with a loss of about $6.7\%$ in spectral efficiency.
 
 \section*{Acknowledgment}
 

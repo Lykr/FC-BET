@@ -44,7 +44,7 @@ path_loss = 61.4 + 10 * 2 * log10(distance) + randn * 5.8;
 small_scale_fading_gain = sqrt(gamma * 10 ^ (-0.1 * path_loss) / 2) .* (randn(K * L, 1) + 1i * randn(K * L, 1)) .* doppler_part;
 
 % channel struct
-h = 1 / sqrt(L) * e_r * diag(small_scale_fading_gain) * e_t';
+h = sqrt(param.veh.num_antenna * param.bs.num_antenna) / sqrt(L) * e_r * diag(small_scale_fading_gain) * e_t';
 
 if aoa > pi
     aoa = 2 * pi - aoa;
