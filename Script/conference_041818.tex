@@ -152,26 +152,27 @@ where $\varphi$ is the arrival angle of the signal. When AoA of the vehicle is $
 
 % 信道模型
 A statistical 28 GHz mmWave channel model in \cite{Akdeniz2014} is taken as channel model in this paper, which is modeled by real experimental data collected in New York City.
+And only the case of single cluster under LOS condition is considered in this paper.
 The narrowband time-varying $L$ subpaths channel matrix between the vehicle and BS at $n$th time step is $\mathbf{H}_{n} \in \mathbb{C}^{M_{r} \times M_{t}}$, which is given as:
 \begin{equation}
     \mathbf{H}_{n} =\sqrt{\frac{M_r M_t}{L}} \sum\limits ^{L}_{l=1} g_{ln}\mathbf{a}_{r}( \phi _{ln})\mathbf{a}^{H}_{t}( \theta _{ln})
     \label{cm}
 \end{equation}
-where $g_{ln} \in \mathbb{C}$ is complex fading gain on subpath $l$ at $n$th time step, $\phi_{ln}$ and $\theta_{ln}$ are the AoA and AoD of the $l$th subpath at $n$th time step, respectively. 
-$\phi_{ln} = \phi_n + \Delta \phi_{ln}$ and $\theta _{ln} =\theta _{n} +\Delta \theta _{ln}$, where $\phi_{n}$ and $\theta_{n}$ is the AoA and AoD of the cluster center at $n$th time step, $\Delta \phi _{ln} \sim \mathcal{WN}( \delta ^{2}_{rn})$, $\Delta \theta _{ln} \sim \mathcal{WN}( \delta ^{2}_{tn})$, $\delta_{tn} \sim \mathcal{E}(\lambda_t)$ and $\delta_{rn} \sim \mathcal{E}(\lambda_r)$.
+where $g_{ln} \in \mathbb{C}$ is complex fading gain on subpath $l$, $\phi_{ln}$ and $\theta_{ln}$ are the AoA and AoD of the $l$th subpath, respectively. 
+$\phi_{ln} = \phi_n + \Delta \phi_{ln}$ and $\theta _{ln} =\theta _{n} +\Delta \theta _{ln}$, where $\phi_{n}$ and $\theta_{n}$ is the AoA and AoD of the cluster center, $\Delta \phi _{ln} \sim \mathcal{WN}( \delta ^{2}_{rn})$, $\Delta \theta _{ln} \sim \mathcal{WN}( \delta ^{2}_{tn})$, $\delta_{tn} \sim \mathcal{E}(\lambda_t)$ and $\delta_{rn} \sim \mathcal{E}(\lambda_r)$.
 $\lambda_t$ and $\lambda_r$ are root-mean-square (RMS) angular spread of transmitter and receiver, respectively.
-The complex fading gain is given by:
+Note that the cluster angles depend on the geometric position of the vehicle and the BS.
+The complex fading gain on $l$th subpath at $n$th time step is given by:
 \begin{equation}
     g_{ln} =\overline{g}_{ln} e^{j2\pi t_{n} f_{Dn,max} cos( \omega _{ln})}, \overline{g}_{ln} \sim \mathcal{CN}\left( 0, 10^{-0.1PL_n}\right)
     \label{ssfg}
 \end{equation}
-where $t_{n}$ is the signal transmission time at $n$th time step, $f_{Dn,max} ={v_{n}}/{\lambda _{c}}$ is maximum Doppler shift at $n$th time step, $v_{n}$ is the speed of vehicle at $n$th time step, $\lambda _{c}$ is the carrier wavelength, $\omega _{ln} = \phi_{ln} - \pi / 2$ is the AoA of subpath $l$ relative to the direction of vehicle at $n$th time step, and $PL_n$ is omnidirectional path loss at $n$th time step, which is defined as:
+where $t_{n}$ is the signal transmission time, $f_{Dn,max} ={v_{n}}/{\lambda _{c}}$ is maximum Doppler shift, $v_{n}$ is the speed of vehicle, $\lambda _{c}$ is the carrier wavelength, $\omega _{ln} = \phi_{ln} - \pi / 2$ is the AoA of subpath $l$ relative to the direction of vehicle, and $PL_n$ is omnidirectional path loss at time step $n$, which is defined as:
 \begin{equation}
     PL_n = 61.4 + 20 \log(d_n) + \xi~[dB]
     \label{pl}
 \end{equation}
-where $d_n$ is distance between the vehicle and the BS at $n$th time step, and $\xi \sim \mathcal{N}(0, \sigma_p^2)$.
-Note that only the case of single cluster under LOS condition is considered in this paper, and the cluster angles depend on the geometric position of the vehicle and the BS.
+where $d_n$ is distance between the vehicle and the BS, and $\xi \sim \mathcal{N}(0, \sigma_p^2)$.
 
 % 管理方式
 Beam management procedure is as follows. The reference signals are sent to the vehicle from the BS, the vehicle measures and determines the optimal beam pair for communication, then feeds back to the BS.
@@ -195,13 +196,13 @@ The beam codebooks of the vehicle and the BS are:
 where $\mathbf{W} \in \mathbb{C}^{M_{r} \times 2M_{r}}$ is the codebook of vehicle, and $\mathbf{F} \in \mathbb{C}^{M_{t} \times 2M_{t}}$ is the codebook of BS. Each column vector of the codebook is codeword which represents a beam pattern, each entry in the column is phase rotation for corresponding antenna element to generate directional beam.
 
 % 接收信号
-For a transmitted signal $x_n$ from the BS, received signal $y_n$ in the vehicle at $n$th time step is:
+At time step $n$, for transmitted signal $x_n$ from the BS, received signal $y_n$ in the vehicle is:
 \begin{equation}
     y_n = \mathbf{w}^H_n \mathbf{H}_n \mathbf{f}_n x_n + \mathbf{w}^H_n \mathbf{v}_n
     \label{rs}
 \end{equation}
-where $\mathbf{w}_n$ and $\mathbf{f}_n$ are combining and beamforming vector at $n$th time step, which are the codeword in $\mathbf{W}$ and $\mathbf{F}$, respectively.
-$\mathbf{v}_n$ is Gaussian noise at time step $n$ and $\mathbf{v}_n \sim \mathcal{CN}(0, \sigma^2_v \mathbf{I}_{M_r})$. 
+where $\mathbf{w}_n$ and $\mathbf{f}_n$ are combining and beamforming vector, which are the codeword in $\mathbf{W}$ and $\mathbf{F}$, respectively.
+$\mathbf{v}_n$ is Gaussian noise and $\mathbf{v}_n \sim \mathcal{CN}(0, \sigma^2_v \mathbf{I}_{M_r})$. 
 
 \section{LSTM-based Beam Tracking Scheme}\label{LBTS}
 
