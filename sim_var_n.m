@@ -1,4 +1,4 @@
-var_n_list_1 = [1e-16 1e-15 1e-14 1e-13 1e-12 1e-11 1e-10 1e-9];
+var_n_list_1 = [1e-14 1e-13 1e-12 1e-11 1e-10 1e-9 1e-8 1e-7];
 list_num_1 = length(var_n_list_1);
 SNR_est_mean_list_1 = zeros(1, list_num_1);
 SNR_pred_mean_list_1 = zeros(1, list_num_1);
@@ -23,8 +23,8 @@ box on;
 hold on;
 x_in_dBW = 10 * log10(var_n_list_1);
 yyaxis left;
-xlim([-160.01, -89.99]);
-ylim([-20, 80]);
+xlim([-140.01, -69.99]);
+ylim([-10.01, 80.01]);
 plot(x_in_dBW, SNR_est_mean_list_1, '-o', 'LineWidth', 1);
 plot(x_in_dBW, SNR_pred_mean_list_1, '-^', 'LineWidth', 1);
 xlabel('Noise variance of received signal (dBW)', 'Fontname', 'Times New Roman');
