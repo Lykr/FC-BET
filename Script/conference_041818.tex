@@ -109,7 +109,7 @@ By using LSTM network to leverage the historical beam angles which were obtained
 % 仿真过程
 In each round of tracking, the predicted beam angles will be used to select beamforming codeword for transmission and compose new feature, until the signal-to-noise ratio (SNR) of received signal less than or equal to a threshold.
 % 此外，为了获取信道数据用以训练神经网络，交通流仿真软件 SUMO 被用来生成时序车辆信息，结合统计信道模型与生成的时序车辆信息，生成了时序的信道信息。
-In addition, a road traffic simulation software is used to generate time series vehicle information to set up time series channel data with a statistical channel model which is modeled by real experimental data for training and evaluating the network.
+In addition, a road traffic simulation software is used to generate time series vehicle information to set up time series channel data with a statistical channel model which is modeled by real experimental data for training and evaluating the scheme.
 % Compared with prior works, this paper differs in the following ways: 1) More realistic channel model; 2) Simultaneous prediction of AoA and AoD; 3) Outage judgment is based on the SNR of receiver instead of the angle difference; 4) Fewer beam measurements required on average in a tracking round. 5) In addition, beam search is performed more realistic by using a quantized phase shifter based analog beamforming.
 
 % 论文结构
@@ -138,7 +138,7 @@ Gaussian, complex Gaussian, wrapped Gaussian and exponential distribution are de
 
 \section{System Model}\label{SM}
 
-\begin{figure}[!tbp]
+\begin{figure}[!t]
     \centerline{\input{geo}}
     \caption{Channel geometry}
     \label{geo}
@@ -223,18 +223,19 @@ The purpose of beam tracking is to obtain beam angles with as few beam measureme
 Since the vehicle must travel in a particular direction on the road and the mmWave beams are correlated with the position of vehicles \cite{Aviles2016, Wang2019}, the problem of beam tracking can be formulated as a time series regression problem after the historical beam angles of vehicles is collected.
 
 % LSTM 方案
-An artificial neural network named LSTM network is used to solve this regression problem.
-It has been implemented successfully in several fields such as machine translation, image captioning, speech recognition, and even stock prices prediction in economy.
-As one of the recurrent neural networks (RNNs), LSTM is generally considered to be more robust to long time series than simpler vanilla RNN implementations \cite{Hochreiter1997}.
-It is powerful for handling time series data and learning long-term relations between features, relying on three gates, i.e. forget, input and output gates composed of neural networks (NNs) in LSTM cells.
+% An artificial neural network named LSTM network is used to solve this regression problem.
+% It has been implemented successfully in several fields such as machine translation, image captioning, speech recognition, and even stock prices prediction in economy.
+% As one of the recurrent neural networks (RNNs), LSTM is generally considered to be more robust to long time series than simpler vanilla RNN implementations \cite{Hochreiter1997}.
+% It is powerful for handling time series data and learning long-term relations between features, relying on three gates, i.e. forget, input and output gates composed of neural networks (NNs) in LSTM cells.
 
-\begin{figure}[!t]
+\begin{figure}[!b]
     \centerline{\input{lstm}}
     \caption{Structure of network}
     \label{lstm}
 \end{figure}
 
 % 结构
+An artificial neural network named LSTM network is used to solve this regression problem.
 Fig.~\ref{lstm} shows the structure of the network, which is a sequential model comprises two LSTM layers with 50 hidden units, two dropout layers with 0.2 probability and a fully connected layer with 2 nodes.
 The output of the first LSTM layer is a sequence of length $n_{LSTM}$, which is used as the input of the second LSTM layer.
 And two dropout layers are set to prevent overfitting. 
@@ -252,7 +253,7 @@ The loss should be small, even zero, if estimated angle is $0$ and predicted ang
 A straightforward idea is taking $1-|\mathbf{a}^{H}(M, \theta^e)\mathbf{a}(M, \theta^p)|$ as the loss.
 Calculating this loss, however, requires array response vectors of estimated angle and predicted angle at the corresponding time step, which will increase the computational cost when training network.
 
-\begin{figure}[!b]
+\begin{figure}[!t]
     \centering
     \includegraphics[scale=0.59]{results_gain}
     \caption{Heatmap of $|\mathbf{a}^{H}(16, \theta^e)\mathbf{a}(16, \theta^p)|$}
@@ -270,7 +271,13 @@ where $N$ is the number of training samples, $\phi ^{e}_{i}$, $\theta ^{e}_{i}$,
 % 预测过程
 \subsection{Procedure of Beam Tracking}
 
-Before exploiting the LSTM network for beam tracking, the BS demands to collect historical beam angles, which are estimated by the vehicle using exhaustive beam search, for training the LSTM network.
+\begin{figure}[!t]
+    \centerline{\includegraphics[scale=0.6]{procedure.pdf}}
+    \caption{Procedure of beam tracking}
+    \label{procedure}
+\end{figure}
+
+Fig.~\ref{procedure} shows the procedure of beam tracking in this paper. Before exploiting the LSTM network for beam tracking, the BS demands to collect historical beam angles, which are estimated by the vehicle using exhaustive beam search, for training the LSTM network.
 The dataset is consisted of time series AoAs and AoDs of the vehicle from initial access to disconnection.
 At time step $k$, the network takes the AoAs and AoDs from time step $k - n_{LSTM}$ to $k - 1$ as features and the AoA and AoD at time step $k$ as responses.
 
@@ -465,7 +472,7 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
 Table \ref{t_NM} shows the comparison of the number of measurements in different schemes.
 The proposed LSTM-based scheme reduces the measurement overhead by about $98.3\%$ and $73.2\%$ compared to the exhaustive and hierarchical schemes, respectively.
 Considering the significant reduction in measurement overhead, the $8.1\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
-Note that the proposed LSTM-based scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search method (e.g. hierarchical method in \cite{Xiao2016}).
+% Note that the proposed LSTM-based scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search method (e.g. hierarchical method in \cite{Xiao2016}).
 
 % 不同规格天线，10^(-14) 噪声方差的比较
 % 少天线效果好，中天线效果最佳，多天线效果回落。
