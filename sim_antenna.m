@@ -40,6 +40,6 @@ plot(x_3, n_o_l_list_3./length(y_test), '--^', 'LineWidth', 1);
 ylabel('Probability of outages', 'Fontname', 'Times New Roman');
 hold off;
 xticklabels({'2\times4','2\times8','4\times8','4\times16','8\times16','8\times32','16\times32','16\times64','32\times64'});
-legend_1 = legend('Exhaustive', 'LSTM-based', 'Exhaustive', 'LSTM-based');
+legend_1 = legend('Exhaustive', 'FC-BET', 'Exhaustive', 'FC-BET');
 set(legend_1, 'Fontname', 'Times New Roman');
 set(gca, 'linewidth', 1);
