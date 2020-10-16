@@ -19,12 +19,12 @@ param.channel.spread_e_t = 10.2 / 180 * pi; % 10.2 degree
 param.channel.spread_e_r = 15.5 / 180 * pi; % 15.5 degree
 param.channel.var_n = 1e-12;
 
-param.SNR_threshold = 10; % in dB
+param.SNR_threshold = 5; % in dB
 
-lstm_step = 10;
+lstm_step = 5;
 
 %% Run simulation
-simulation_switch = 3; %-1-normal 0-all, 1-var_n, 2-measurements, 3-anttenna, 4-steps
+simulation_switch = -1; %-1-normal 0-all, 1-var_n, 2-measurements, 3-anttenna, 4-steps
 
 % Normal
 if simulation_switch == 0 || simulation_switch == -1

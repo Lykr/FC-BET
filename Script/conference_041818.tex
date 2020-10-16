@@ -244,7 +244,7 @@ Since the vehicle must travel in a particular direction on the road and the mmWa
 % 结构
 An artificial neural network  is used to solve this regression problem.
 Fig.~\ref{lstm} shows the structure of the network, which is a sequential model comprises two LSTM layers with 50 hidden units, two dropout layers with 0.2 probability and a fully connected layer with 2 nodes.
-The output of the first LSTM layer is a sequence of length $n_{LSTM}$, which is used as the input of the second LSTM layer.
+The output of the first LSTM layer is a sequence of length $n_L$, which is used as the input of the second LSTM layer.
 And two dropout layers are set to prevent overfitting. 
 
 % 损失函数？
@@ -291,11 +291,11 @@ where $N$ is the number of training samples, $\phi ^{e}_{i}$, $\theta ^{e}_{i}$,
 Fig.~\ref{procedure} shows the procedure of FC-BET scheme.
 Before exploiting the LSTM network for beam tracking, the BS demands to collect historical optimal AoAs and AoDs, which are estimated by the vehicle using exhaustive beam search, to build a dataset for training the LSTM network.
 The dataset is consisted of time series AoAs and AoDs of the vehicle from initial access to disconnection.
-At time step $k$, the network takes the AoAs and AoDs from time step $k - n_{LSTM}$ to $k - 1$ as features and the AoA and AoD at time step $k$ as responses.
+At time step $k$, the network takes the AoAs and AoDs from time step $k - n_L$ to $k - 1$ as features and the AoA and AoD at time step $k$ as responses.
 
-After the LSTM network has been trained, the vehicle takes exhaustive beam searches in consecutive $n_{LSTM}$ time steps to obtain initial estimated AoAs and AoDs at the beginning of a round of beam tracking. 
+After the LSTM network has been trained, the vehicle takes exhaustive beam searches in consecutive $n_L$ time steps to obtain initial estimated AoAs and AoDs at the beginning of a round of beam tracking. 
 The network will take the initial estimated AoAs and AoDs to predict AoA and AoD at next time step. 
-Then, the predicted AoA and AoD will be used to compose new features with the last $n_{LSTM} - 1$ AoAs and AoDs in last feature.
+Then, the predicted AoA and AoD will be used to compose new features with the last $n_L - 1$ AoAs and AoDs in last feature.
 
 Once the predicted AoA and AoD are obtained, the codewords whose steering angle closest to the predicted beam angles will be taken as beamforming and combining vectors.
 For every time step, signal-to-noise ratio (SNR) under current prediction will be calculated and compared with a threshold ${SNR}_T$.
@@ -365,8 +365,8 @@ A simple nested loop algorithm can be exploited to solve this problem. Then, at 
 The advantage of training with radian instead of the codeword indexes is that it allows the proposed beam tracking scheme to be generalized under terminals with different antenna configuration and beamforming techniques, without additional computation and transmitted data.
 
 % 数据平滑
-Note that due to the limited resolution of the beam codebook and the noise received at the vehicle, there will be some errors for the channel estimation, which are reflected in fluctuations in the estimated time series AoAs and AoDs.
-To reduce the fluctuations, a first order Savitzky-Golay filter with frame length $51$ is used to smooth the estimated AoAs and AoDs for training the LSTM network better.
+% Note that due to the limited resolution of the beam codebook and the noise received at the vehicle, there will be some errors for the channel estimation, which are reflected in fluctuations in the estimated time series AoAs and AoDs.
+% To reduce the fluctuations, a first order Savitzky-Golay filter with frame length $51$ is used to smooth the estimated AoAs and AoDs for training the LSTM network better.
 
 %% 角度范围
 %\subsection{Range of AoAs and AoDs}
@@ -401,8 +401,8 @@ where ${SNR}_i$ is the SNR of received signal for the $i$th sample and $\mathbf{
         Expectation of vehicle RMS angular spread $\lambda_r$ & $15.5 \degree$\\
         Path loss standard deviation $\sigma_p$ & $5.8$ dB\\
         Noise variance of received signal $\sigma_v^2$ & $-120$ dBW\\
-        Threshold of SNR ${SNR}_T$ & $10$ dB\\
-        Lookback of LSTM $n_{LSTM}$ & $5$\\
+        Threshold of SNR ${SNR}_T$ & $5$ dB\\
+        Lookback of LSTM $n_L$ & $5$\\
         Optimizer of LSTM & Adam\\
         Training epochs & 400\\
         Learning rate & 0.05\\
@@ -459,7 +459,7 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
             \hline
             \bfseries Schemes & \bfseries Complexity & \bfseries Measurement Overhead\\
             \hline
-            FC-BET & $N_s + 4 N_f M_r M_t$\tnote{1} & $4324$\\
+            FC-BET & $N_s + 4 n_L N_f M_r M_t$\tnote{1} & $13799$\\
             Hierarchical \cite{Xiao2016} & $2 N log_2{4 M_r M_t}$ & $16144$\\ % $N (2 (\log_2{2 M_t} - \log_2{2 M_r}) + 4 \log_2{2 M_r})$
             Exhaustive & $4 N M_r M_t$ & $258304$\\
             \hline
@@ -475,10 +475,10 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
 % Therefore, the default noise variance of received signal is defined as $-140$ dBW for simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs in this scenario.
 % 
 Table \ref{t_NM} shows the comparison of the measurement overhead in different schemes.
-The proposed FC-BET scheme reduces the measurement overhead by about $98.3\%$ and $73.2\%$ compared with the exhaustive and hierarchical schemes, respectively.
+The proposed FC-BET scheme reduces the measurement overhead by about $98.3\%$ and $14.5\%$ compared with the exhaustive and hierarchical schemes, respectively.
 Considering the significant reduction in measurement overhead, the $8.1\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
 % It is noteworthy that the measurement overhead of FC-BET scheme is independent with $b$ when $N_f = 0$.
-% Note that the proposed FC-BET scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search method (e.g. hierarchical method in \cite{Xiao2016}).
+Note that the proposed FC-BET scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search method (e.g. hierarchical method in \cite{Xiao2016}).
 
 % 不同规格天线，10^(-14) 噪声方差的比较
 % 少天线效果好，中天线效果最佳，多天线效果回落。
@@ -499,7 +499,7 @@ The reason is that the beamwidths of the vehicle and the BS become smaller when 
 This paper studies the beam tracking problem in mmWave vehicular communications with ULA.
 A fast consecutive beam tracking scheme based on LSTM, called FC-BET, is proposed to reduce the beam training overhead in a common vehicular scenario.
 In order to evaluate the proposed scheme, a time series channel dataset is built by statistical channel model using sequential vehicle information generated from SUMO.
-Simulation results have verified the FC-BET scheme can reduce the measurement overhead by $98.3\%$ and $73.2\%$ compared with the exhaustive and hierarchical schemes, respectively, with a loss of about $8.1\%$ in spectral efficiency.
+Simulation results have verified the FC-BET scheme can reduce the measurement overhead by $98.3\%$ and $14.5\%$ compared with the exhaustive and hierarchical schemes, respectively, with a loss of about $8.1\%$ in spectral efficiency.
 
 \section*{Acknowledgment}
 
