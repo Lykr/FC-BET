@@ -83,7 +83,7 @@ Misalignment of the beam pairs will result in reducing gain and degrading perfor
 A straightforward solution is the exhaustive search.
 However, it has significant overhead, and is not suitable for fast-changing environments \cite{Va2017}.
 % 研究 * 提出了一种分级码本的设计，本质是采用了二分查找的方式，在不同阶段使用不同宽度的波束进行波束扫描并获得最佳波束对，以此减少开支。然而，这种算法需要量化相移器具有较高的量化水平，并且有可能需要多个射频链来实现，这导致采用这种算法方案的成本极高。
-To reduce the overhead, hierarchical search was proposed in \cite{Xiao2016}, which essentially exploits binary search algorithm to find the optimal beam.
+To reduce the overhead, hierarchical search was proposed in \cite{Alkhateeb2014}, which essentially exploits binary search algorithm to find the optimal beam.
 This algorithm requires a high quantization level phase shifter and potentially multiple RF chains to implement, which leads to high cost.
 % * 在此基础上加以改进采用 EKF，并且只需要单次测量，更适用于在快速变换环境下的信道追踪。
 % Based on Zhang's work, \cite{Va2017} exploits extended Kalman filter and requires only a single measurement, making it more suitable for beam tracking in fast-changing environments.
@@ -301,7 +301,7 @@ Once the predicted AoA and AoD are obtained, the codewords whose steering angle 
 For every time step, signal-to-noise ratio (SNR) under current prediction will be calculated and compared with a threshold ${SNR}_T$.
 The network will repeat to use predicted result to compose new features to predict AoA and AoD at next time step, when the calculated SNR is greater than ${SNR}_T$.
 Otherwise, a new round of estimation and prediction will be executed.
-It makes more sense to take the SNR of received signal rather than the absolute difference between predicted and estimated angles as a threshold, because there is no way to obtain a precise beam angle for judgment until it is accurately measured or predicted.
+% It makes more sense to take the SNR of received signal rather than the absolute difference between predicted and estimated angles as a threshold, because there is no way to obtain a precise beam angle for judgment until it is accurately measured or predicted.
 
 \section{Dataset Built}\label{DG}
 
@@ -460,7 +460,7 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
             \bfseries Schemes & \bfseries Complexity & \bfseries Measurement Overhead\\
             \hline
             FC-BET & $N_s + 4 n_L N_f M_r M_t$\tnote{1} & $13799$\\
-            Hierarchical \cite{Xiao2016} & $2 N log_2{4 M_r M_t}$ & $16144$\\ % $N (2 (\log_2{2 M_t} - \log_2{2 M_r}) + 4 \log_2{2 M_r})$
+            Hierarchical & $2 N log_2{4 M_r M_t}$ & $16144$\\ % $N (2 (\log_2{2 M_t} - \log_2{2 M_r}) + 4 \log_2{2 M_r})$
             Exhaustive & $4 N M_r M_t$ & $258304$\\
             \hline
         \end{tabular}
@@ -478,7 +478,7 @@ Table \ref{t_NM} shows the comparison of the measurement overhead in different s
 The proposed FC-BET scheme reduces the measurement overhead by about $98.3\%$ and $14.5\%$ compared with the exhaustive and hierarchical schemes, respectively.
 Considering the significant reduction in measurement overhead, the $8.1\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
 % It is noteworthy that the measurement overhead of FC-BET scheme is independent with $b$ when $N_f = 0$.
-Note that the proposed FC-BET scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search method (e.g. hierarchical method in \cite{Xiao2016}).
+Note that the proposed FC-BET scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search method.
 
 % 不同规格天线，10^(-14) 噪声方差的比较
 % 少天线效果好，中天线效果最佳，多天线效果回落。
