@@ -4,6 +4,8 @@ classdef custom_regression < nnet.layer.RegressionLayer
         % (Optional) Layer properties.
 
         % Layer properties go here.
+        Mt = 0;
+        Mr = 0;
     end
  
     methods
@@ -27,7 +29,7 @@ classdef custom_regression < nnet.layer.RegressionLayer
 
             % Layer forward loss function goes here.
 %             loss = mean((cos(Y) - cos(T)) .^ 2, 'all');
-            loss = sum((1 - cos(Y - T)) / 2, 'all');
+            loss = 1/(layer.Mt + layer.Mr) * mean(layer.Mr.*(Y(1,:) - T(1,:)).^2 + layer.Mt.*(Y(2,:) - T(2,:)).^2);
         end
         
 %         function dLdY = backwardLoss(layer, Y, T)

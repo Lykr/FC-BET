@@ -21,10 +21,10 @@ param.channel.var_n = 1e-12;
 
 param.SNR_threshold = 10; % in dB
 
-lstm_step = 5;
+lstm_step = 10;
 
 %% Run simulation
-simulation_switch = -1; %-1-normal 0-all, 1-var_n, 2-measurements, 3-anttenna, 4-steps
+simulation_switch = 3; %-1-normal 0-all, 1-var_n, 2-measurements, 3-anttenna, 4-steps
 
 % Normal
 if simulation_switch == 0 || simulation_switch == -1

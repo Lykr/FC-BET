@@ -25,6 +25,7 @@
 \usepackage{booktabs}
 \usepackage{threeparttable}
 \usepackage{subfigure}
+\usepackage{bm}
 \usetikzlibrary{fadings}
 \usetikzlibrary{patterns}
 \usetikzlibrary{shadows.blur}
@@ -37,7 +38,7 @@
 \title{FC-BET: A Fast Consecutive Beam Tracking Scheme for MmWave Vehicular Communications}
 
 \author{
-    \IEEEauthorblockN{Chen Wang, Yawen Chen, Zhaoming Lu, Xiangming Wen, Luhan Wang, Zifan Wang}
+    \IEEEauthorblockN{Chen Wang, Yawen Chen, Zhaoming Lu, Xiangming Wen, Zifan Wang, Luhan Wang}
     \IEEEauthorblockA{
         \textit{Beijing Key Laboratory of Network System Architecture and Convergence} \\
         \textit{Beijing Laboratory of Advanced Information Networks} \\
@@ -82,8 +83,8 @@ Misalignment of the beam pairs will result in reducing gain and degrading perfor
 A straightforward solution is the exhaustive search.
 However, it has significant overhead, and is not suitable for fast-changing environments \cite{Va2017}.
 % 研究 * 提出了一种分级码本的设计，本质是采用了二分查找的方式，在不同阶段使用不同宽度的波束进行波束扫描并获得最佳波束对，以此减少开支。然而，这种算法需要量化相移器具有较高的量化水平，并且有可能需要多个射频链来实现，这导致采用这种算法方案的成本极高。
-To reduce the overhead, a hierarchical search was proposed in \cite{Xiao2016}, which essentially exploits binary search algorithm to find the optimal beam.
-This algorithm requires a high quantization level phase shifter  to implement, which leads to high cost.
+To reduce the overhead, hierarchical search was proposed in \cite{Xiao2016}, which essentially exploits binary search algorithm to find the optimal beam.
+This algorithm requires a high quantization level phase shifter and potentially multiple RF chains to implement, which leads to high cost.
 % * 在此基础上加以改进采用 EKF，并且只需要单次测量，更适用于在快速变换环境下的信道追踪。
 % Based on Zhang's work, \cite{Va2017} exploits extended Kalman filter and requires only a single measurement, making it more suitable for beam tracking in fast-changing environments.
 
@@ -110,7 +111,7 @@ However, it cannot predict CSI consecutively, and can only reduce the overhead b
 % 本文提出了一种基于 LSTM 网络的波束追踪方法，使用 LSTM 网络，通过对历史车辆穷尽扫描所获得的历史信道信息进行学习，根据当前车辆在一定时间步的信道信息，预测在下一时刻的 AoA 和 AoD，以达到减少系统开支的效果。
 In this paper, a fast consecutive beam tracking scheme based on LSTM is proposed, called FC-BET.
 The historical optimal beam angles, which were obtained from exhaustive beam search, are exploited to train a LSTM network. 
-By leveraging the LSTM network, current AoA and AoD between vehicles and the base station (BS) can be predicted simultaneously without additional beam training.
+By leveraging the LSTM network, current AoA and AoD between vehicles and the base station (BS) can be predicted simultaneously without beam training.
 % 仿真过程
 % In each round of tracking, the predicted beam angles will be used to select beamforming codeword and compose new feature, until the signal-to-noise ratio (SNR) of received signal less than or equal to a threshold.
 % 此外，为了获取信道数据用以训练神经网络，交通流仿真软件 SUMO 被用来生成时序车辆信息，结合统计信道模型与生成的时序车辆信息，生成了时序的信道信息。
@@ -156,7 +157,8 @@ Both of them are equipped with a single RF chain and uniform linear array (ULA) 
 Analog beamforming based on quantized phase shifter is adopted at both BS and vehicle. 
 
 % 信道模型
-The Saleh-Valenzuela channel model is taken as channel model in this paper, and the definition of channel parameters refer to \cite{Akdeniz2014}, which are derived by real experimental data measured in New York City.
+The Saleh-Valenzuela channel model is taken as channel model in this paper.
+The definition of channel parameters refers to $28$ GHz model \cite{Akdeniz2014}, which are derived by real experimental data measured in New York City.
 And only the case of single cluster under LOS condition is considered in this paper.
 The narrowband time-varying $L$ subpaths channel matrix between the vehicle and BS at $n$th time step is $\mathbf{H}_{n} \in \mathbb{C}^{M_{r} \times M_{t}}$, which is given as:
 \begin{equation}
@@ -210,7 +212,7 @@ So, there are $2M_r$ beam patterns for the vehicle, and $2M_t$ beam patterns for
 where $\mathbf{W} \in \mathbb{C}^{M_{r} \times 2M_r}$ is the codebook of vehicle, and $\mathbf{F} \in \mathbb{C}^{M_{t} \times 2M_t}$ is the codebook of BS. Each column vector of the codebook is codeword which represents a beam pattern, each entry in the column is phase rotation for corresponding antenna element to generate directional beam.
 
 % 接收信号
-At time step $n$, for transmitted signal $x_n$ from the BS, received signal $y_n$ at the vehicle is:
+At time step $n$, for transmitted signal $x_n$ from the BS, received signal $y_n$ at the vehicle is given by:
 \begin{equation}
     y_n = \mathbf{w}^H_n \mathbf{H}_n \mathbf{f}_n x_n + \mathbf{w}^H_n \mathbf{v}_n
     \label{rs}
@@ -240,7 +242,7 @@ Since the vehicle must travel in a particular direction on the road and the mmWa
 \end{figure}
 
 % 结构
-An artificial neural network named LSTM network is used to solve this regression problem.
+An artificial neural network  is used to solve this regression problem.
 Fig.~\ref{lstm} shows the structure of the network, which is a sequential model comprises two LSTM layers with 50 hidden units, two dropout layers with 0.2 probability and a fully connected layer with 2 nodes.
 The output of the first LSTM layer is a sequence of length $n_{LSTM}$, which is used as the input of the second LSTM layer.
 And two dropout layers are set to prevent overfitting. 
@@ -251,12 +253,7 @@ And two dropout layers are set to prevent overfitting.
 Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
 In \cite{Burghal2019}, considering the problem of angle ambiguity due to the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
 However, when using this loss function, the training process may be unstable due to the multiple global minima, and the responses may not converge in a reasonable interval.
-
-In addition, another problem is that the codewords whose beam angle near $0$ or $\pi$ have close gains at two different angles, resulting in unnecessary loss in some cases, as shown in Fig.~\ref{results_gain}.
-For instance, in the case of the codeword whose beam angle is $\pi$, there are same gains at $0$ and $\pi$. 
-The loss should be small, even zero, if estimated angle is $0$ and predicted angle is $\pi$, although the absolute difference of them is $\pi$.
-A straightforward idea is taking $1-|\mathbf{a}^{H}(M, \theta^e)\mathbf{a}(M, \theta^p)|$ as the loss.
-Calculating this loss, however, requires array response vectors of estimated angle and predicted angle at the corresponding time step, which will increase the computational cost when training network.
+So, to avoid the problem of angle ambiguity, the AoAs and AoDs are converted to angles in $(0, \pi]$ before training considering the symmetry of the cosine function around $\pi$.
 
 \begin{figure}[!t]
     \centering
@@ -265,16 +262,25 @@ Calculating this loss, however, requires array response vectors of estimated ang
     \label{results_gain}
 \end{figure}
 
-Hence, considering the symmetry of the cosine function around $\pi$, the AoAs and AoDs are converted to angles in $(0, \pi]$ before training to avoid the problem of angle ambiguity.
-And considering complexity of computation, a modified MSE is used as loss function, which is given as:
+In addition, another problem is that the codewords whose beam angle near $0$ or $\pi$ have close gains at two different angles, resulting in unnecessary loss in some cases, as shown in Fig.~\ref{results_gain}.
+For instance, in the case of the codeword whose beam angle is $\pi$, there are same gains at $0$ and $\pi$. 
+The loss should be small, even zero, if estimated angle is $0$ and predicted angle is $\pi$, although the absolute difference of them is $\pi$.
+A straightforward idea is taking $1-|\mathbf{a}^{H}(M, \theta^e)\mathbf{a}(M, \theta^p)|$ as the loss.
+Calculating this loss, however, requires array response vectors of estimated and predicted angles at the corresponding time step, which will increase the computational cost when training network.
+
+Besides, the loss introduced by angular error should be higher as the number of corresponding antennas gets bigger, because large number of antennas leads to a narrow beam.
+And the narrower the beam, the greater the effect on performance when the variations are same.
+So, for the AoA and AoD errors, each is multiply by a weight which depends on the number of antennas to balance this effect.
+
+A modified MSE is used as loss function, which is defined as:
 \begin{equation}
-    Loss = \frac{1}{N} \sum_{i=1}^{N}\left[(\phi^{p}_{i} - \phi^{e}_{i})^2 + (\theta^{p}_{i} - \theta^{e}_{i})^2\right]
+    L(\bm{\phi}, \bm{\theta}, \mathbf{M}) = \frac{\sum_{i=1}^{N}\left[M_r(\phi^{p}_{i} - \phi^{e}_{i})^2 + M_t (\theta^{p}_{i} - \theta^{e}_{i})^2\right]}{N(M_r + M_t)}
     \label{lf}
 \end{equation}
 where $N$ is the number of training samples, $\phi ^{e}_{i}$, $\theta ^{e}_{i}$, $\phi ^{p}_{i}$, $\theta ^{p}_{i}$, are the estimated AoA, estimated AoD, predicted AoA, and predicted AoD, respectively, for training sample $i$.
 
 % 预测过程
-\subsection{Procedure of Proposed Beam Tracking Scheme}
+\subsection{Procedure of FC-BET Scheme}
 
 \begin{figure}[!t]
     \centerline{\includegraphics[scale=0.6]{procedure.pdf}}
@@ -309,12 +315,12 @@ It makes more sense to take the SNR of received signal rather than the absolute 
 \end{figure}
 
 % 场景介绍
-A road traffic simulation software named ``SUMO'' \cite{SUMO2018} is used to generate time series information of the vehicle in the scenario mentioned in Section \ref{SM}, which including a BS and a vehicle driving on road as shown in Fig.~\ref{scene}.
+A road traffic simulation software named ``SUMO'' \cite{SUMO2018} is used to generate sequential information of the vehicle in the scenario mentioned in Section \ref{SM}, which including a BS and a vehicle traveling on the road as shown in Fig.~\ref{scene}.
 The vehicle departs from $(0, 100)$ at first time step, and arrives $(100, 0)$ at final time step.
 Note that the speed of vehicle is non-linear and it depends on the road conditions and behavior of the driver which is defined by SUMO.
 
 % 几何信息
-At $n$th time step, the generated vehicle time series information is composed of position $(x_{rn}, y_{rn})$, speed $v_n$ and directional angle $\beta_n$ of the vehicle, where $v_n$ is used to determine maximum Doppler shift in \eqref{ssfg}, and $\beta_n$ is used to determine $\phi_{ln}$ and $\omega_{ln}$.
+At $n$th time step, the generated vehicle sequential information is composed of position $(x_{rn}, y_{rn})$, speed $v_n$ and directional angle $\beta_n$ of the vehicle, where $v_n$ is used to determine maximum Doppler shift in \eqref{ssfg}, and $\beta_n$ is used to determine $\phi_{ln}$ and $\omega_{ln}$.
 
 Once the position of the vehicle and the BS are obtained, $\theta_n$ and $\phi_n$ can be calculated by simple geometric methods as following:
 \begin{equation}
@@ -325,8 +331,8 @@ Once the position of the vehicle and the BS are obtained, $\theta_n$ and $\phi_n
     \label{ba}
 \end{equation}
 where $\Gamma _{xn} =x_{rn} -x_{t}$, $\Gamma _{yn} =y_{rn} -y_{t} $, and $(x_{t}, y_{t})$ are coordinates of the BS. 
-Furthermore, the signal transmission time $t_n = d_n / c$ can be calculated, where the distance between the BS and the vehicle is $d_n = \sqrt{\Gamma_{xn}^2 + \Gamma_{yn}^2}$, and $c$ is light speed.
-Now the channel matrix at each time step can be obtained from \eqref{arv}, \eqref{cm}, \eqref{ssfg}, \eqref{pl} and \eqref{ba}.
+Furthermore, the signal transmission time $t_n = d_n / c$ can be calculated, where the distance between the BS and the vehicle is $d_n = \sqrt{\Gamma_{xn}^2 + \Gamma_{yn}^2}$, and $c$ is the light speed.
+Now the channel matrix at each time step can be obtained from \eqref{cm}, \eqref{ssfg}, \eqref{pl}, \eqref{arv} and \eqref{ba}.
 
 % 波束角度
 \subsection{Beam Search}
@@ -369,7 +375,7 @@ To reduce the fluctuations, a first order Savitzky-Golay filter with frame lengt
 
 \section{Simulation Results}\label{SR}
 
-In this section, performances of the proposed FC-BET beam tracking scheme are presented by analyzing the SNR of received signal, number of measurements and outage probability.
+In this section, performances of the proposed FC-BET beam tracking scheme are presented by analyzing the SNR of received signal, outage probability and number of measurements.
 The outage probability for a simulation is given by:
 \begin{equation}
     P_{o} =\frac{\sum ^{N}_{i=1}\mathbf{I}( {SNR}_{i} \leqslant {SNR}_{T})}{N}
@@ -408,7 +414,7 @@ In this paper, the sample period of channel is $20$ ms, which corresponds to the
 Table \ref{t_SP} shows the common simulation parameters.
 For each simulation, parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
 
-% 收敛性能？
+% 收敛性能
 \begin{figure}[!t]
     \centering
     \subfigure[RMSE of the LSTM Network]{
@@ -448,10 +454,10 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
     \renewcommand{\arraystretch}{1.3}
     \centering
     \begin{threeparttable}
-    \caption{\label{t_NM}Comparisons of the Number of Measurements}
+    \caption{\label{t_NM}Comparisons of the Measurement Overhead}
         \begin{tabular}{c c c}
             \hline
-            \bfseries Schemes & \bfseries Complexity & \bfseries Number of Measurements\\
+            \bfseries Schemes & \bfseries Complexity & \bfseries Measurement Overhead\\
             \hline
             FC-BET & $N_s + 4 N_f M_r M_t$\tnote{1} & $4324$\\
             Hierarchical \cite{Xiao2016} & $2 N log_2{4 M_r M_t}$ & $16144$\\ % $N (2 (\log_2{2 M_t} - \log_2{2 M_r}) + 4 \log_2{2 M_r})$
@@ -468,7 +474,7 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
 % Fig.~\ref{results_noise} shows that there is not any outages when the noise variance is lower than $-140$ dBW.
 % Therefore, the default noise variance of received signal is defined as $-140$ dBW for simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs in this scenario.
 % 
-Table \ref{t_NM} shows the comparison of the number of measurements in different schemes.
+Table \ref{t_NM} shows the comparison of the measurement overhead in different schemes.
 The proposed FC-BET scheme reduces the measurement overhead by about $98.3\%$ and $73.2\%$ compared with the exhaustive and hierarchical schemes, respectively.
 Considering the significant reduction in measurement overhead, the $8.1\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
 % It is noteworthy that the measurement overhead of FC-BET scheme is independent with $b$ when $N_f = 0$.
@@ -485,10 +491,8 @@ Considering the significant reduction in measurement overhead, the $8.1\%$ loss 
 \end{figure}
 
 Fig.~\ref{results_antenna} shows the performances of schemes versus antenna size $M_t \times M_r$.
-It illustrates that the difference of performances between FC-BET and exhaustive scheme is increasing with the antennas size.
-The reason is that the beamwidths of the vehicle and the BS become smaller when the antennas size become larger, thus reducing the error tolerance for prediction and making it difficult for the FC-BET scheme to accurately align with each other.
-% It is observed that the outage probability remains below about $5\%$ with the increasing of antenna size.
-% It is observed that there are fluctuations in both SNR and outages probability, due to the randomness of the channel which is caused by the statistical characteristics (e.g. angular spread, noise variance, etc.) of the channel and the vehicle movement.
+It illustrates that the difference of performances between FC-BET and exhaustive scheme is increasing with the number of antennas.
+The reason is that the beamwidths of the vehicle and the BS become smaller when the number of antennas become bigger, thus reducing the error tolerance for prediction and making it difficult for the FC-BET scheme to accurately align with each other.
 
 \section{Conclusions}\label{C}
 

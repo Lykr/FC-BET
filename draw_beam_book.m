@@ -67,18 +67,21 @@ end
 hold off;
 
 %% Close Gain
+clear;
 n_t = 32;
-[x, y] = meshgrid(0:0.001:pi);
+interval = 0.01;
+[x, y] = meshgrid(0:interval:pi);
 z = zeros(size(x, 1), size(x, 2));
 for i = 1 : size(x, 1)
     for j = 1 : size(x, 1)
         z(i,j) = abs(gen_eMatrix(n_t,x(i,j))'*gen_eMatrix(n_t,y(i,j)));
     end
 end
-mesh(x,y,z);
+mesh(x,y,z,'facecolor','flat');
+colorbar;
 xlabel('Estimated angles (rad)', 'Fontname','Times New Roman');
 ylabel('Predicted angles (rad)', 'Fontname','Times New Roman');
 grid off;
 box on;
-xlim([0 pi]);
-ylim([0 pi]);
+xlim([0 pi - interval]);
+ylim([0 pi - interval]);

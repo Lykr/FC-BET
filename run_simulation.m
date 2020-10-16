@@ -6,9 +6,9 @@ num_hidden_units = 50;
 num_responses = 2;% numel(categories(train_y));
 % info_vehs.num_antenna * info_bs.num_antenna;
 
-% crl = custom_regression_layer;
-% crl.bs_beam_info = param.bs.beam_info;
-% crl.veh_beam_info = param.veh.beam_info;
+cr = custom_regression;
+cr.Mt = param.bs.num_antenna;
+cr.Mr = param.veh.num_antenna;
 
 layers = [ ...
     sequenceInputLayer(input_size)
@@ -17,7 +17,7 @@ layers = [ ...
     lstmLayer(num_hidden_units, 'OutputMode', 'last')
     dropoutLayer(0.2)
     fullyConnectedLayer(num_responses)
-    regressionLayer]; % custom_regression / regressionLayer
+    cr]; % cr / regressionLayer
 
 max_epochs = 400;
 mini_batch_size = numel(x_train);
