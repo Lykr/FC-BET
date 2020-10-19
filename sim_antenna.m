@@ -12,7 +12,8 @@ for i = 1 : list_num_3
     param.bs.beam_info = gen_beam_info(param.bs.num_antenna, 2 * param.bs.num_antenna); % get beam codebook for bs
     param.veh.beam_info = gen_beam_info(param.veh.num_antenna, 2 * param.veh.num_antenna); % get beam codebook for veh
     
-    get_data;
+    get_raw_data;
+    get_learning_data;
     run_simulation;
     
     SNR_est_mean_list_3(i) = SNR_est_mean;

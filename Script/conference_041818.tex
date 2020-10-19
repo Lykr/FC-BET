@@ -368,11 +368,6 @@ The advantage of training with radian instead of the codeword indexes is that it
 % Note that due to the limited resolution of the beam codebook and the noise received at the vehicle, there will be some errors for the channel estimation, which are reflected in fluctuations in the estimated time series AoAs and AoDs.
 % To reduce the fluctuations, a first order Savitzky-Golay filter with frame length $51$ is used to smooth the estimated AoAs and AoDs for training the LSTM network better.
 
-%% 角度范围
-%\subsection{Range of AoAs and AoDs}
-
-%After getting the AoAs and AoDs for all time step, we use a time windows of 1 second to get the range of them for a total of 11 time steps, including the current time step and 10 future time steps.
-
 \section{Simulation Results}\label{SR}
 
 In this section, performances of the proposed FC-BET beam tracking scheme are presented by analyzing the SNR of received signal, outage probability and number of measurements.
@@ -415,7 +410,7 @@ Table \ref{t_SP} shows the common simulation parameters.
 For each simulation, parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
 
 % 收敛性能
-\begin{figure}[!t]
+\begin{figure}[!b]
     \centering
     \subfigure[RMSE of the LSTM Network]{
         \includegraphics[scale=0.65]{results_rmse}
@@ -437,7 +432,7 @@ It shows that the loss decreases sharply around $20$ epochs, and converges to a 
 
 % 16 * 4 天线，不同噪声方差下的平均 SNR，中断次数和观测次数
 % 随着噪声方差增大，平均 SNR 降低，中断次数和观测次数增多。
-\begin{figure}[!b]
+\begin{figure}[!t]
     \centering
     \includegraphics[scale=0.59]{results_noise}
     \caption{Average SNR and outages probability versus $\sigma_v^2$}
@@ -449,7 +444,7 @@ It illustrates that for both exhaustive and FC-BET scheme, the average SNR of re
 The difference in SNR between FC-BET scheme and exhaustive scheme is small, up to about $8$ dB.
 When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and the average SNR of received signal in exhaustive scheme is $57.16$ dB compared with $52.53$ dB in FC-BET scheme, with a loss of only $4.63$ dB in SNR, implying a loss of about $8.1\%$ in spectral efficiency.
 
-\begin{table}[!t]
+\begin{table}[!b]
     \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
     \renewcommand{\arraystretch}{1.3}
     \centering
@@ -477,11 +472,7 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
 Table \ref{t_NM} shows the comparison of the measurement overhead in different schemes.
 The proposed FC-BET scheme reduces the measurement overhead by about $98.3\%$ and $14.5\%$ compared with the exhaustive and hierarchical schemes, respectively.
 Considering the significant reduction in measurement overhead, the $8.1\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
-% It is noteworthy that the measurement overhead of FC-BET scheme is independent with $b$ when $N_f = 0$.
-Note that the proposed FC-BET scheme obtain initial beam angles for prediction by exhaustive search method in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search method.
-
-% 不同规格天线，10^(-14) 噪声方差的比较
-% 少天线效果好，中天线效果最佳，多天线效果回落。
+Note that the proposed FC-BET scheme obtain initial beam angles for prediction by exhaustive search approach in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search approach.
 
 \begin{figure}[!t]
     \centering
@@ -493,6 +484,26 @@ Note that the proposed FC-BET scheme obtain initial beam angles for prediction b
 Fig.~\ref{results_antenna} shows the performances of schemes versus antenna size $M_t \times M_r$.
 It illustrates that the difference of performances between FC-BET and exhaustive scheme is increasing with the number of antennas.
 The reason is that the beamwidths of the vehicle and the BS become smaller when the number of antennas become bigger, thus reducing the error tolerance for prediction and making it difficult for the FC-BET scheme to accurately align with each other.
+And it also implies that it is possible for the FC-BET scheme to apply in massive MIMO with improved beam search approach and more .
+
+\begin{table}[!t]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Performance Comparison with Different $n_L$}
+    \label{t_LBC}
+    \centering
+    \begin{tabular}{c c c}
+        \hline
+        \bfseries Lookback & \bfseries Outage probability & \bfseries Complexity\\
+        \hline
+        1 & 0.03 & \\
+        3 & 0.021 & \\
+        5 & 0.012 & \\
+        7 & 0.011 & \\
+        9 & 0.009 & \\
+        11 & 0.014 & \\
+        \hline
+    \end{tabular}
+\end{table}
 
 \section{Conclusions}\label{C}
 

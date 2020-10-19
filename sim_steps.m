@@ -4,10 +4,11 @@ SNR_est_mean_list_4 = zeros(1, list_num_4);
 SNR_pred_mean_list_4 = zeros(1, list_num_4);
 n_o_e_list_4 = zeros(1, list_num_4);
 n_o_l_list_4 = zeros(1, list_num_4);
+get_raw_data;
 for i = 1 : list_num_4
     lstm_step = lstm_step_list(i);
     
-    get_data;
+    get_learning_data;
     run_simulation;
     
     SNR_est_mean_list_4(i) = SNR_est_mean;

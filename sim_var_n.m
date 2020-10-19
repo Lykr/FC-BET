@@ -7,7 +7,8 @@ n_o_l_list_1 = zeros(1, list_num_1);
 for i = 1 : list_num_1
     param.channel.var_n = var_n_list_1(i);
     
-    get_data;
+    get_raw_data;
+    get_learning_data;
     run_simulation;
     
     SNR_est_mean_list_1(i) = SNR_est_mean;
