@@ -362,8 +362,8 @@ A simple nested loop algorithm can be exploited to solve this problem. Then, at 
 The advantage of training with radian instead of the codeword indexes is that it allows the proposed beam tracking scheme to be generalized under terminals with different antenna configuration and beamforming techniques, without additional computation and transmitted data.
 
 % 数据平滑
-% Note that due to the limited resolution of the beam codebook and the noise received at the vehicle, there will be some errors for the channel estimation, which are reflected in fluctuations in the estimated time series AoAs and AoDs.
-% To reduce the fluctuations, a first order Savitzky-Golay filter with frame length $51$ is used to smooth the estimated AoAs and AoDs for training the LSTM network better.
+Note that due to the limited resolution of the beam codebook and the noise received at the vehicle, there will be some errors for beam training, which are reflected in fluctuations of the estimated time series AoAs and AoDs.
+To reduce the fluctuations, a first order Savitzky-Golay filter with frame length $51$ is used to smooth the estimated AoAs and AoDs for training the LSTM network better.
 
 \section{Simulation Results}\label{SR}
 
@@ -446,7 +446,7 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
     \renewcommand{\arraystretch}{1.3}
     \centering
     \begin{threeparttable}
-    \caption{\label{t_NM}Comparisons of the Measurement Overhead}
+    \caption{\label{t_NM}Comparisons of Measurement Overhead in Different Scheme}
         \begin{tabular}{c c c}
             \hline
             \bfseries Schemes & \bfseries Complexity & \bfseries Measurement Overhead\\
@@ -466,7 +466,7 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
 % Fig.~\ref{results_noise} shows that there is not any outages when the noise variance is lower than $-140$ dBW.
 % Therefore, the default noise variance of received signal is defined as $-140$ dBW for simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs in this scenario.
 % 
-Table \ref{t_NM} shows the comparison of the measurement overhead in different schemes.
+Table \ref{t_NM} shows the comparison of measurement overhead in different schemes.
 The proposed FC-BET scheme reduces the measurement overhead by about $98.3\%$ and $14.5\%$ compared with the exhaustive and hierarchical schemes, respectively.
 Considering the significant reduction in measurement overhead, the $8.1\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
 Note that the proposed FC-BET scheme obtain initial beam angles for prediction by exhaustive search approach in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search approach.
@@ -485,19 +485,14 @@ And it also implies that it is possible for the FC-BET scheme to apply in massiv
 
 \begin{table}[!t]
     \renewcommand{\arraystretch}{1.3}
-    \caption{Performance Comparison with Different $n_L$}
+    \caption{Comparisons of Performance with Different $n_L$}
     \label{t_LBC}
     \centering
-    \begin{tabular}{c c c}
+    \begin{tabular}{c | c c c c c c}
         \hline
-        \bfseries Lookback & \bfseries Outage probability & \bfseries Complexity\\
+        \bfseries Lookback $n_L$ & 1 & 3 & 5 & 7 & 9 & 11\\
         \hline
-        1 & 0.03 & \\
-        3 & 0.021 & \\
-        5 & 0.012 & \\
-        7 & 0.011 & \\
-        9 & 0.009 & \\
-        11 & 0.014 & \\
+        \bfseries Outage probability & 0.03 & 0.021 & 0.012 & 0.011 & 0.009 & 0.014\\
         \hline
     \end{tabular}
 \end{table}
