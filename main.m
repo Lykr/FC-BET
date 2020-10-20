@@ -28,7 +28,8 @@ simulation_switch = 4; %-1-normal 0-all, 1-var_n, 2-measurements, 3-anttenna, 4-
 
 % Normal
 if simulation_switch == 0 || simulation_switch == -1
-    get_data;
+    get_raw_data;
+    get_learning_data;
     run_simulation; 
 end
 
@@ -39,7 +40,8 @@ end
 
 % Number of measurement
 if simulation_switch == 0 || simulation_switch == 2
-    get_data;
+    get_raw_data;
+    get_learning_data;
     run_simulation;
     n_m_2 = n_m;
 end

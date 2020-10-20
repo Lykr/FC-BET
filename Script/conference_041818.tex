@@ -256,7 +256,7 @@ And two dropout layers are set to prevent overfitting.
 Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
 In \cite{Burghal2019}, considering the problem of angle ambiguity due to the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
 However, when using this loss function, the training process may be unstable due to the multiple global minima, and the responses may not converge in a reasonable interval.
-So, to avoid the problem of angle ambiguity, the AoAs and AoDs are converted to angles in $(0, \pi]$ before training considering the symmetry of the cosine function around $\pi$.
+So, to avoid the problem of angle ambiguity, the AoAs and AoDs are converted to angles in $(0, \pi]$ before training, considering the symmetry of the cosine function around $\pi$.
 
 % \begin{figure}[!t]
 %     \centering
@@ -290,9 +290,9 @@ Before exploiting the LSTM network for beam tracking, the BS demands to collect 
 The dataset is consisted of time series AoAs and AoDs of the vehicle from initial access to disconnection.
 At time step $k$, the network takes the AoAs and AoDs from time step $k - n_L$ to $k - 1$ as features and the AoA and AoD at time step $k$ as responses.
 
-After the LSTM network has been trained, the vehicle takes exhaustive beam searches in consecutive $n_L$ time steps to obtain initial estimated AoAs and AoDs at the beginning of a round of beam tracking. 
+After the LSTM network has been trained, the vehicle takes exhaustive beam search in consecutive $n_L$ time steps to obtain initial estimated AoAs and AoDs at the beginning of a round of beam tracking. 
 The network will take the initial estimated AoAs and AoDs to predict AoA and AoD at next time step. 
-Then, the predicted AoA and AoD will be used to compose new features with the last $n_L - 1$ AoAs and AoDs in last feature.
+Then, the predicted AoA and AoD will be used to compose new feature with the last $n_L - 1$ AoAs and AoDs in last feature.
 
 Once the predicted AoA and AoD are obtained, the codewords whose steering angle closest to the predicted beam angles will be taken as beamforming and combining vectors.
 For every time step, signal-to-noise ratio (SNR) under current prediction will be calculated and compared with a threshold ${SNR}_T$.
@@ -425,7 +425,7 @@ Fig.~\ref{results_convergence} demonstrates the convergence of the LSTM network.
 The root-mean-square error (RMSE) of the LSTM network is shown in Fig.~\ref{results_rmse}.
 It is observed that the RMSE rapidly converges to about $0.4$ around $50$th epoch, and finally converges to about $0.2$ after $400$ epochs.
 And the loss of the LSTM network is shown in Fig.~\ref{results_loss}.
-It shows that the loss decreases sharply around $20$ epochs, and converges to a small value about $0.01$ after $400$ epochs.
+It shows that the loss decreases sharply around $20$ epochs, and finally converges to a small value about $0.01$ after $400$ epochs.
 
 % 16 * 4 天线，不同噪声方差下的平均 SNR，中断次数和观测次数
 % 随着噪声方差增大，平均 SNR 降低，中断次数和观测次数增多。
@@ -451,7 +451,7 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
             \hline
             \bfseries Schemes & \bfseries Complexity & \bfseries Measurement Overhead\\
             \hline
-            FC-BET & $N_s + 4 n_L N_f M_r M_t$\tnote{1} & $13799$\\
+            FC-BET & $N_s + n_L 4 N_f M_r M_t$\tnote{1} & $13799$\\
             Hierarchical & $2 N log_2{4 M_r M_t}$ & $16144$\\ % $N (2 (\log_2{2 M_t} - \log_2{2 M_r}) + 4 \log_2{2 M_r})$
             Exhaustive & $4 N M_r M_t$ & $258304$\\
             \hline
@@ -467,9 +467,36 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
 % Therefore, the default noise variance of received signal is defined as $-140$ dBW for simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs in this scenario.
 % 
 Table \ref{t_NM} shows the comparison of measurement overhead in different schemes.
-The proposed FC-BET scheme reduces the measurement overhead by about $98.3\%$ and $14.5\%$ compared with the exhaustive and hierarchical schemes, respectively.
+The proposed FC-BET scheme reduces the measurement overhead by about $98.3\%$ and $14.5\%$ compared with exhaustive and hierarchical schemes, respectively.
 Considering the significant reduction in measurement overhead, the $8.1\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
-Note that the proposed FC-BET scheme obtain initial beam angles for prediction by exhaustive search approach in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search approach.
+Note that FC-BET scheme obtain initial beam angles for prediction by exhaustive search approach in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search approach.
+
+\begin{table}[!t]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Comparisons of Performance with Different $n_L$}
+    \label{t_LBC}
+    \centering
+    \begin{tabular}{c | c c c c c}
+        \hline
+        \bfseries Lookback $n_L$ & 1 & 3 & 5 & 7 & 9\\
+        \hline
+        \bfseries Average SNR (dB) & 0.03 & 0.021 & 0.012 & 0.011 & 0.009\\
+        \hline
+        \bfseries Outage probability & 0.03 & 0.021 & 0.012 & 0.011 & 0.009\\
+        \hline
+    \end{tabular}
+\end{table}
+
+% https://medium.com/@iamvarman/how-to-calculate-the-number-of-parameters-in-the-cnn-5bd55364d7ca
+% https://stackoverflow.com/questions/38080035/how-to-calculate-the-number-of-parameters-of-an-lstm-network
+% LSTM: num_params = [(num_units + input_dim + 1) * num_units] * 4
+% Dropout: 0 
+% Fully connected: (input_dim + 1) * output_dim
+
+
+$n_L$ determine the number of initial estimation and the length of feature, which effect the performance of FC-BET scheme.
+The comparisons of performance with different $n_L$ are shown in Table \ref{t_LBC}.
+It is observed that the outage probability and average SNR increase with $n_L$.
 
 \begin{figure}[!t]
     \centering
@@ -481,21 +508,7 @@ Note that the proposed FC-BET scheme obtain initial beam angles for prediction b
 Fig.~\ref{results_antenna} shows the performances of schemes versus antenna size $M_t \times M_r$.
 It illustrates that the difference of performances between FC-BET and exhaustive scheme is increasing with the number of antennas.
 The reason is that the beamwidths of the vehicle and the BS become smaller when the number of antennas become bigger, thus reducing the error tolerance for prediction and making it difficult for the FC-BET scheme to accurately align with each other.
-And it also implies that it is possible for the FC-BET scheme to apply in massive MIMO with improved beam search approach and more .
-
-\begin{table}[!t]
-    \renewcommand{\arraystretch}{1.3}
-    \caption{Comparisons of Performance with Different $n_L$}
-    \label{t_LBC}
-    \centering
-    \begin{tabular}{c | c c c c c c}
-        \hline
-        \bfseries Lookback $n_L$ & 1 & 3 & 5 & 7 & 9 & 11\\
-        \hline
-        \bfseries Outage probability & 0.03 & 0.021 & 0.012 & 0.011 & 0.009 & 0.014\\
-        \hline
-    \end{tabular}
-\end{table}
+And the slow-growing probability of outage implies that it is possible for the FC-BET scheme to apply in massive MIMO with improved beam search approach.
 
 \section{Conclusions}\label{C}
 
