@@ -256,7 +256,7 @@ And two dropout layers are set to prevent overfitting.
 Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
 In \cite{Burghal2019}, considering the problem of angle ambiguity due to the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
 However, when using this loss function, the training process may be unstable due to the multiple global minima, and the responses may not converge in a reasonable interval.
-So, to avoid the problem of angle ambiguity, the AoAs and AoDs are converted to angles in $(0, \pi]$ before training, considering the symmetry of the cosine function around $\pi$.
+So, to avoid the problem of angle ambiguity, the AoAs and AoDs are converted to interval $(0, \pi]$ before training, considering the symmetry of the cosine function around $\pi$.
 
 % \begin{figure}[!t]
 %     \centering
@@ -435,18 +435,17 @@ It shows that the loss decreases sharply around $20$ epochs, and finally converg
     \caption{Average SNR and outages probability versus $\sigma_v^2$}
     \label{results_noise}
 \end{figure}
-Fig.~\ref{results_noise} shows the performances of schemes versus noise variance of received signal.
-% The vehicle which adopts exhaustive scheme uses exhaustive search method to find the optimal beam angles at each time step.
-It illustrates that for both exhaustive and FC-BET scheme, the average SNR of received signal is decreasing and the probability of outages is increasing with the increasing of $\sigma_v^2$.
-The difference in SNR between FC-BET scheme and exhaustive scheme is small, up to about $8$ dB.
-When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and the average SNR of received signal in exhaustive scheme is $57.16$ dB compared with $52.53$ dB in FC-BET scheme, with a loss of only $4.63$ dB in SNR, implying a loss of about $8.1\%$ in spectral efficiency.
+Fig.~\ref{results_noise} shows the performances of schemes versus $\sigma_v^2$.
+It is observed that for both exhaustive and FC-BET scheme, the average SNR of received signal decreases and the probability of outages increases with the increase of $\sigma_v^2$.
+The difference in the average SNR between FC-BET scheme and exhaustive scheme is small, up to about $8$ dB.
+When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and the average SNR of received signal in exhaustive scheme is $57.16$ dB compared with $52.53$ dB in FC-BET scheme, with a loss of only $4.63$ dB in SNR, indicating a loss of about $8.1\%$ in spectral efficiency.
 
 \begin{table}[!b]
     \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
     \renewcommand{\arraystretch}{1.3}
     \centering
     \begin{threeparttable}
-    \caption{\label{t_NM}Comparisons of Measurement Overhead in Different Scheme}
+    \caption{\label{t_NM}Measurement Overhead Comparisons of Various Schemes}
         \begin{tabular}{c c c}
             \hline
             \bfseries Schemes & \bfseries Complexity & \bfseries Measurement Overhead\\
@@ -462,10 +461,6 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
     \end{threeparttable}
 \end{table}
 
-% Since the SNR performance of exhaustive search is considered to be the best, there is a high probability that if there are outages when using exhaustive search, there will also be outages when using other schemes at the same time.
-% Fig.~\ref{results_noise} shows that there is not any outages when the noise variance is lower than $-140$ dBW.
-% Therefore, the default noise variance of received signal is defined as $-140$ dBW for simulations to ensure that there are not any outages when using exhaustive search to acquire AoAs and AoDs in this scenario.
-% 
 Table \ref{t_NM} shows the comparison of measurement overhead in different schemes.
 The proposed FC-BET scheme reduces the measurement overhead by about $98.3\%$ and $14.5\%$ compared with exhaustive and hierarchical schemes, respectively.
 Considering the significant reduction in measurement overhead, the $8.1\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
@@ -473,7 +468,7 @@ Note that FC-BET scheme obtain initial beam angles for prediction by exhaustive 
 
 \begin{table}[!t]
     \renewcommand{\arraystretch}{1.3}
-    \caption{Comparisons of Performance with Different $n_L$}
+    \caption{Performance and Overhead Comparisons of Different $n_L$}
     \label{t_LBC}
     \centering
     \begin{tabular}{c | c c c c c}
@@ -484,19 +479,20 @@ Note that FC-BET scheme obtain initial beam angles for prediction by exhaustive 
         \hline
         \bfseries Outage probability & 0.03 & 0.021 & 0.012 & 0.011 & 0.009\\
         \hline
+        \bfseries Measurement Overhead & 11111 & 11111 & 11111 & 11111 & 11111\\
+        \hline
     \end{tabular}
 \end{table}
-
 % https://medium.com/@iamvarman/how-to-calculate-the-number-of-parameters-in-the-cnn-5bd55364d7ca
 % https://stackoverflow.com/questions/38080035/how-to-calculate-the-number-of-parameters-of-an-lstm-network
 % LSTM: num_params = [(num_units + input_dim + 1) * num_units] * 4
 % Dropout: 0 
 % Fully connected: (input_dim + 1) * output_dim
 
-
-$n_L$ determine the number of initial estimation and the length of feature, which effect the performance of FC-BET scheme.
-The comparisons of performance with different $n_L$ are shown in Table \ref{t_LBC}.
-It is observed that the outage probability and average SNR increase with $n_L$.
+In FC-BET scheme, $n_L$ determine the number of initial estimation and the length of feature, which effect the performance.
+The comparisons of performances with different $n_L$ are shown in Table \ref{t_LBC}.
+It is observed that with the increase of $n_L$, the average SNR increases and outage probability decreases.
+However, larger $n_L$ may bring more measurements due to longer initial estimation, therefore the trade-off between performances and overhead should be considered.
 
 \begin{figure}[!t]
     \centering
@@ -505,10 +501,9 @@ It is observed that the outage probability and average SNR increase with $n_L$.
     \label{results_antenna}
 \end{figure}
 
-Fig.~\ref{results_antenna} shows the performances of schemes versus antenna size $M_t \times M_r$.
-It illustrates that the difference of performances between FC-BET and exhaustive scheme is increasing with the number of antennas.
-The reason is that the beamwidths of the vehicle and the BS become smaller when the number of antennas become bigger, thus reducing the error tolerance for prediction and making it difficult for the FC-BET scheme to accurately align with each other.
-And the slow-growing probability of outage implies that it is possible for the FC-BET scheme to apply in massive MIMO with improved beam search approach.
+Fig.~\ref{results_antenna} shows that the difference of performances between FC-BET and exhaustive scheme increase with the number of antennas.
+The reason is that the beam widths of the vehicle and the BS become smaller when the number of antennas become bigger, thus reducing tolerance for beam deflection.
+And the slow increase in outage probability implies that it is possible for FC-BET scheme to be applied in massive MIMO with further improvements.
 
 \section{Conclusions}\label{C}
 
