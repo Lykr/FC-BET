@@ -1,4 +1,4 @@
-lstm_step_list = [1 3 5 7 9 11 13 15];
+lstm_step_list = [1 3 5 10];
 list_num_4 = length(lstm_step_list);
 SNR_est_mean_list_4 = zeros(1, list_num_4);
 SNR_pred_mean_list_4 = zeros(1, list_num_4);
@@ -34,4 +34,3 @@ ylim([-0.01, 1.01]);
 plot(lstm_step_list, n_o_l_list_4./length(y_test), '--^', 'LineWidth', 1);
 ylabel('Probability of outages', 'Fontname', 'Times New Roman');
 hold off;
-set(legend_1, 'Fontname', 'Times New Roman');
