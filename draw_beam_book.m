@@ -1,8 +1,9 @@
 clear;
 
 theta = [0: 0.001 * pi: pi];
-n_a = 1;
-n_p = n_a * 2;
+n_a = 8;
+aa = 8;
+n_p = aa;
 beam_list = [pi / n_p / 2: pi / n_p: pi];% acos([1 - 2/n_p : -2/n_p : -1]);
 n = numel(theta);
 e_l = zeros(n, 1);
@@ -10,7 +11,7 @@ e_l = zeros(n, 1);
 % w = 1i.^((([0:n_a-1]' * [0:n_p-1])-n_p/2) / (n_p/4));
 
 for j = 1:n_p
-    e_t = gen_eMatrix(n_a, beam_list(j));
+    e_t = [gen_eMatrix(aa, beam_list(j)); zeros(n_a - aa,1)];
     for i = 1 : n
         e_l_i = gen_eMatrix(n_a, theta(i));
         e_x = e_t' * e_l_i;

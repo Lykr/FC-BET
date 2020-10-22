@@ -111,12 +111,12 @@ However, it cannot predict CSI consecutively, and can only reduce the overhead b
 % 本文提出了一种基于 LSTM 网络的波束追踪方法，使用 LSTM 网络，通过对历史车辆穷尽扫描所获得的历史信道信息进行学习，根据当前车辆在一定时间步的信道信息，预测在下一时刻的 AoA 和 AoD，以达到减少系统开支的效果。
 In this paper, a fast consecutive beam tracking scheme based on LSTM is proposed, called FC-BET.
 The historical optimal beam angles, which were obtained from exhaustive beam search, are exploited to train a LSTM network. 
-By leveraging the LSTM network, current AoA and AoD between vehicles and the base station (BS) can be predicted simultaneously without beam training.
+By leveraging the LSTM network, current AoA and AoD between vehicles and the base station (BS) can be predicted simultaneously with less beam training.
 % 仿真过程
 % In each round of tracking, the predicted beam angles will be used to select beamforming codeword and compose new feature, until the signal-to-noise ratio (SNR) of received signal less than or equal to a threshold.
 % 此外，为了获取信道数据用以训练神经网络，交通流仿真软件 SUMO 被用来生成时序车辆信息，结合统计信道模型与生成的时序车辆信息，生成了时序的信道信息。
 In addition, a road traffic simulation software is used to generate sequential vehicle information to set up time series channel data with a statistical channel model which is modeled by real experimental data for evaluating the scheme.
-Simulation results show that compared with conventional schemes, the proposed scheme requires less measurement while maintaining high spectral efficiency.
+Simulation results show that compared with conventional schemes, FC-BET scheme requires less measurements while maintaining high spectral efficiency.
 
 % 论文结构
 % The rest of the paper is organized as follows.
@@ -200,7 +200,7 @@ The candidate beam angles vector $\mathbf{b}_{M}$ for the terminal is given by:
 \begin{equation}
     \mathbf{b}_{M} = \left[\frac{1}{2M}\pi, \frac{2}{2M}\pi, ..., \frac{2M-1}{2M}\pi, \pi\right]^T
 \end{equation}
-So, there are $2M_r$ beam patterns for the vehicle, and $2M_t$ beam patterns for the BS, and the beam codebooks of the vehicle and the BS are:
+Thus, there are $2M_r$ beam patterns for the vehicle, and $2M_t$ beam patterns for the BS, and the beam codebooks of the vehicle and the BS are:
 % Note that another codebook which achieves uniform maximum gain in all direction is not used for this scheme, due to its low spatial resolution near $0$ and $\pi$ resulting in network underfitting.
 % The beam codebooks of the vehicle and the BS are:
 \begin{gather}
@@ -256,7 +256,7 @@ And two dropout layers are set to prevent overfitting.
 Mean Square Error (MSE) is the most commonly used regression loss function for quantifying the error of prediction.
 In \cite{Burghal2019}, considering the problem of angle ambiguity due to the periodicity of the beam angle results in unnecessary loss for large difference of beam angle when used MSE, D. Burghal et al. proposed to use a shifted cosine function as the loss function. 
 However, when using this loss function, the training process may be unstable due to the multiple global minima, and the responses may not converge in a reasonable interval.
-So, to avoid the problem of angle ambiguity, the AoAs and AoDs are converted to interval $(0, \pi]$ before training, considering the symmetry of the cosine function around $\pi$.
+Therefore, to avoid the problem of angle ambiguity, the AoAs and AoDs are converted to interval $(0, \pi]$ before training, considering the symmetry of the cosine function around $\pi$.
 
 % \begin{figure}[!t]
 %     \centering
@@ -273,7 +273,7 @@ So, to avoid the problem of angle ambiguity, the AoAs and AoDs are converted to 
 
 Besides, the loss introduced by angular error should be higher as the number of corresponding antennas gets bigger, because large number of antennas leads to a narrow beam.
 And the narrower the beam, the greater the effect on performance when the beam deflects.
-So, for the AoA and AoD errors, each is multiply by a weight which depends on the number of antennas to balance this effect.
+Hence, for the AoA and AoD errors, each is multiply by a weight which depends on the number of antennas to balance this effect.
 
 A modified MSE is used as loss function, which is defined as:
 \begin{equation}
@@ -286,9 +286,9 @@ where $N$ is the number of training samples, $\phi ^{e}_{i}$, $\theta ^{e}_{i}$,
 \subsection{Procedure of FC-BET Scheme}
 
 Fig.~\ref{procedure} demonstrates the procedure of FC-BET scheme.
-Before exploiting the LSTM network for beam tracking, the BS demands to collect historical optimal AoAs and AoDs, which are estimated by the vehicle using exhaustive beam search, to build a dataset for training the LSTM network.
+Before exploiting the LSTM network for beam tracking, processor at the BS demands to collect historical optimal AoAs and AoDs, which are estimated by the vehicle using exhaustive beam search, to build a dataset for training the LSTM network.
 The dataset is consisted of time series AoAs and AoDs of the vehicle from initial access to disconnection.
-At time step $k$, the network takes the AoAs and AoDs from time step $k - n_L$ to $k - 1$ as features and the AoA and AoD at time step $k$ as responses.
+During training, the network takes the AoAs and AoDs from time step $k - n_L$ to $k - 1$ as features and the AoA and AoD at time step $k$ as responses.
 
 After the LSTM network has been trained, the vehicle takes exhaustive beam search in consecutive $n_L$ time steps to obtain initial estimated AoAs and AoDs at the beginning of a round of beam tracking. 
 The network will take the initial estimated AoAs and AoDs to predict AoA and AoD at next time step. 
@@ -328,7 +328,7 @@ Once the position of the vehicle and the BS are obtained, $\theta_n$ and $\phi_n
     \label{ba}
 \end{equation}
 where $\Gamma _{xn} =x_{rn} -x_{t}$, $\Gamma _{yn} =y_{rn} -y_{t} $, and $(x_{t}, y_{t})$ are coordinates of the BS. 
-Furthermore, the signal transmission time $t_n = d_n / c$ can be calculated, where the distance between the BS and the vehicle is $d_n = \sqrt{\Gamma_{xn}^2 + \Gamma_{yn}^2}$, and $c$ is the light speed.
+Furthermore, the signal transmission time $t_n = d_n / c$ can be determined, where the distance between the BS and the vehicle is $d_n = \sqrt{\Gamma_{xn}^2 + \Gamma_{yn}^2}$, and $c$ is the light speed.
 Now the channel matrix at each time step can be obtained from \eqref{cm}, \eqref{ssfg}, \eqref{pl}, \eqref{arv} and \eqref{ba}.
 
 % 波束角度
@@ -367,7 +367,7 @@ To reduce the fluctuations, a first order Savitzky-Golay filter with frame lengt
 
 \section{Simulation Results}\label{SR}
 
-In this section, performances of the proposed FC-BET beam tracking scheme are presented by analyzing SNR of received signal, outage probability and number of measurements.
+In this section, performances of the proposed FC-BET scheme are presented by analyzing SNR of received signal, outage probability and number of measurements.
 The outage probability for a simulation is given by:
 \begin{equation}
     P_{o} =\frac{\sum ^{N}_{i=1}\mathbf{I}( {SNR}_{i} \leqslant {SNR}_{T})}{N}
@@ -463,8 +463,8 @@ When $\sigma_v^2=-120$ dBW, there is not any outage in exhaustive scheme, and th
 
 Table \ref{t_NM} shows the comparison of measurement overhead in different schemes.
 The proposed FC-BET scheme reduces the measurement overhead by about $98.3\%$ and $14.5\%$ compared with exhaustive and hierarchical schemes, respectively.
-Considering the significant reduction in measurement overhead, the $8.1\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems to be acceptable.
-Note that FC-BET scheme obtain initial beam angles for prediction by exhaustive search approach in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smart beam search approach.
+Considering the significant reduction in measurement overhead, the $8.1\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems acceptable.
+Note that FC-BET scheme performs initial estimation for prediction by exhaustive search approach in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smarter beam search approach.
 
 \begin{table}[!t]
     \renewcommand{\arraystretch}{1.3}
@@ -489,12 +489,12 @@ Note that FC-BET scheme obtain initial beam angles for prediction by exhaustive 
 % Dropout: 0 
 % Fully connected: (input_dim + 1) * output_dim
 
-In FC-BET scheme, $n_L$ determines the number of beam searches in initial estimation and the length of feature.
+In FC-BET scheme, $n_L$ determines the number of beam searches in initial estimation and the length of feature in LSTM network.
 The comparisons of performance with different $n_L$ are shown in Table \ref{t_LBC}.
 It is observed that with the increase of $n_L$, the outage probability decreases.
 However, counterintuitively, it seems that the SNR is independent with $n_L$.
 A reasonable guess is that larger $n_L$ reduce the outage probability but increase the uncertainty in beam angles, which leads to fluctuations in SNR.
-On the other hand, larger $n_L$ leads longer initial estimation which may result in more measurements, therefore trade-off between performance and overhead should be considered.
+On the other hand, larger $n_L$ introduces longer initial estimation which may result in more measurements, therefore trade-off between performance and overhead should be considered.
 
 \begin{figure}[!t]
     \centering
@@ -505,7 +505,7 @@ On the other hand, larger $n_L$ leads longer initial estimation which may result
 
 Fig.~\ref{results_antenna} shows that the difference of performance between FC-BET and exhaustive scheme increase with the number of antennas.
 The reason is that the beam widths of the vehicle and the BS become smaller when the number of antennas become bigger, thus reducing tolerance for beam deflection.
-And the slow increase in outage probability implies that it is possible for FC-BET scheme to be applied in massive MIMO with further improvements.
+It is noteworthy that the slow increase in outage probability implies that it is possible for FC-BET scheme to be applied in massive MIMO with further improvements.
 
 \section{Conclusions}\label{C}
 
