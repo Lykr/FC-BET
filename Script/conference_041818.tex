@@ -98,6 +98,7 @@ Frequent beam training is required to ensure that the vehicles are always covere
 This will further increase system overhead, especially when high resolution codebooks are used.
 % 幸运的是，由于毫米波信道的稀疏性 *，且毫米波信道的 AoA、AoD 与收发端位置的具有一定的相关性 *，在 LOS 信号下沿固定道路行驶的车辆的 AoA 和 AoD 应该能被很好的预测出来。
 Fortunately, owing to the sparsity of mmWave channel \cite{Lee2014} and the correlation between the angles of arrival/departure (AoAs/AoDs) of the channel and the positions of the receiver and transmitter \cite{Aviles2016}, the optimal beam angles of a vehicle traveling along a road under line-of-sight (LOS) condition can be well predicted.
+
 % 提出了一种基于卡尔曼滤波器使用穷尽扫描进行波束追踪的方案，以减少系统的开支，然而穷尽扫描所需要的测量次数和协议开支会随着天线数的增加而增加。
 A Kalman filter based beam tracking scheme was proposed for mobile mmWave channels, whose beam training overheads increase with the number of elements in antenna \cite{Zhang2016}.
 % 机器学习方法 1
@@ -494,7 +495,7 @@ The comparisons of performance with different $n_L$ are shown in Table \ref{t_LB
 It is observed that with the increase of $n_L$, the outage probability decreases.
 However, counterintuitively, it seems that the SNR is independent with $n_L$.
 A reasonable guess is that larger $n_L$ reduce the outage probability but increase the uncertainty of predictions, which leads to fluctuations in SNR.
-On the other hand, larger $n_L$ introduces longer initial estimation which may result in more measurements, therefore trade-off between performance and overhead should be considered.
+On the other hand, larger $n_L$ introduces longer initial estimation which may result in more measurements, therefore trade-off between the performance and the overhead should be considered.
 
 \begin{figure}[!t]
     \centering
