@@ -1,6 +1,6 @@
 # FC-BET
 
-A Fast Consecutive Beam Tracking Scheme for MmWave Vehicular Communications
+## A Fast Consecutive Beam Tracking Scheme for MmWave Vehicular Communications
 
 Millimeter wave (mmWave) communication is a promising technique to meet the demands of data-rate hungry applications in vehicular networks.
 Multiple-input multiple-output (MIMO) and beamforming technique are usually adopted in mmWave communications to overcome the high path and penetration losses.
