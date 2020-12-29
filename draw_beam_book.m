@@ -4,7 +4,7 @@ theta = [0: 0.001 * pi: pi];
 n_a = 8;
 aa = 8;
 n_p = aa;
-beam_list = [pi / n_p / 2: pi / n_p: pi];% acos([1 - 2/n_p : -2/n_p : -1]);
+beam_list = [pi/4];% acos([1 - 2/n_p : -2/n_p : -1]);
 n = numel(theta);
 e_l = zeros(n, 1);
 
