@@ -195,22 +195,22 @@ Beam management procedure is as follows. The reference signals are sent to the v
 % 码本设计
 A discrete resolution $b$-bit codebook is adopted to perform beam search, where $b$ is the number of bits for quantized phase shifters.
 For a $b$-bit codebook, it is consisted of $2^b$ beam patterns.
-In this paper, $b$ is assumed to be $log_2{2M}$ for a terminal with $M$ antennas.
+In this paper, $b$ is assumed to be $log_2{M}$ for a terminal with $M$ antennas.
 The candidate beam angles vector $\mathbf{b}_{M}$ for the terminal is given by:
 % $b$ is assumed to be $2log_2 M$ for a $M$-element antenna terminal, and the candidate beam angles vector $\mathbf{b}_M$ is given by:
 \begin{equation}
-    \mathbf{b}_{M} = \left[\frac{1}{2M}\pi, \frac{2}{2M}\pi, ..., \frac{2M-1}{2M}\pi, \pi\right]^T
+    \mathbf{b}_{M} = \left[\frac{1}{M}\pi, \frac{2}{M}\pi, ..., \frac{M-1}{M}\pi, \pi\right]^T
 \end{equation}
-Thus, there are $2M_r$ beam patterns for the vehicle, and $2M_t$ beam patterns for the BS, and the beam codebooks of the vehicle and the BS are:
+Thus, there are $M_r$ beam patterns for the vehicle, and $M_t$ beam patterns for the BS, and the beam codebooks of the vehicle and the BS are:
 % Note that another codebook which achieves uniform maximum gain in all direction is not used for this scheme, due to its low spatial resolution near $0$ and $\pi$ resulting in network underfitting.
 % The beam codebooks of the vehicle and the BS are:
 \begin{gather}
     \begin{aligned}
-        \mathbf{W} =&\left[\mathbf{a}_{r}([\mathbf{b}_{M_r}]_1) ,\mathbf{a}_{r}\left([\mathbf{b}_{M_r}]_2 \right) ,...,\mathbf{a}_{r}\left([\mathbf{b}_{M_r}]_{2M_r} \right)\right] \\
-        \mathbf{F} =&\left[\mathbf{a}_{t}([\mathbf{b}_{M_t}]_1) ,\mathbf{a}_{t}\left([\mathbf{b}_{M_t}]_2 \right) ,...,\mathbf{a}_{t}\left([\mathbf{b}_{M_t}]_{2M_t} \right)\right]
+        \mathbf{W} =&\left[\mathbf{a}_{r}([\mathbf{b}_{M_r}]_1) ,\mathbf{a}_{r}\left([\mathbf{b}_{M_r}]_2 \right) ,...,\mathbf{a}_{r}\left([\mathbf{b}_{M_r}]_{M_r} \right)\right] \\
+        \mathbf{F} =&\left[\mathbf{a}_{t}([\mathbf{b}_{M_t}]_1) ,\mathbf{a}_{t}\left([\mathbf{b}_{M_t}]_2 \right) ,...,\mathbf{a}_{t}\left([\mathbf{b}_{M_t}]_{M_t} \right)\right]
     \end{aligned}
 \end{gather}
-where $\mathbf{W} \in \mathbb{C}^{M_{r} \times 2M_r}$ is the codebook of vehicle, and $\mathbf{F} \in \mathbb{C}^{M_{t} \times 2M_t}$ is the codebook of BS. Each column vector of the codebook is codeword which represents a beam pattern, each entry in the column is phase rotation for corresponding antenna element to generate directional beam.
+where $\mathbf{W} \in \mathbb{C}^{M_{r} \times M_r}$ is the codebook of vehicle, and $\mathbf{F} \in \mathbb{C}^{M_{t} \times M_t}$ is the codebook of BS. Each column vector of the codebook is codeword which represents a beam pattern, each entry in the column is phase rotation for corresponding antenna element to generate directional beam.
 
 % 接收信号
 At time step $n$, for transmitted signal $x_n$ from the BS, received signal $y_n$ at the vehicle is given by:
@@ -341,7 +341,7 @@ Assume $x_n = 1$ is sent as reference signal, the observation matrix comprises a
 \begin{equation}
     \mathbf{Y}_{n} =\mathbf{W}^{H}\mathbf{H}_{n}\mathbf{F} +\mathbf{V}_{n}
 \end{equation}
-where $\mathbf{V}_n \in \mathbb{C}^{2M_r \times 2M_t}$ is Gaussian noise matrix composed of independent identically distribution (i.i.d.) elements, which are the noise part of \eqref{rs}. $\mathbf{Y}_n \in \mathbb{C}^{2M_r \times 2M_t}$, $[\mathbf{Y}_n]_{i,j}$ is the received signal used $[\mathbf{W}]_{:,i}$ as combining vector and $[\mathbf{F}]_{:,j}$ as beamforming vector.
+where $\mathbf{V}_n \in \mathbb{C}^{M_r \times M_t}$ is Gaussian noise matrix composed of independent identically distribution (i.i.d.) elements, which are the noise part of \eqref{rs}. $\mathbf{Y}_n \in \mathbb{C}^{M_r \times M_t}$, $[\mathbf{Y}_n]_{i,j}$ is the received signal used $[\mathbf{W}]_{:,i}$ as combining vector and $[\mathbf{F}]_{:,j}$ as beamforming vector.
 
 % 最优波束
 For each time step, both of the vehicle and the BS use their codebook to perform exhaustive beam search to find the optimal beam pair.
@@ -349,15 +349,15 @@ The indexes of optimal beam pair can be obtained by solving an optimization prob
 \begin{equation}
     \begin{aligned}
         ( i_{n}^* ,j_{n}^*) =~&\underset{i_{n} ,j_{n}}{\operatorname{argmax}}\Vert [\mathbf{Y}_{n}]_{i_{n} ,j_{n}}\Vert _{2} \\
-        s.t.~&i_{n} \in [ 1, 2M_r], \\
-        &j_{n} \in [ 1, 2M_t]
+        s.t.~&i_{n} \in [ 1, M_r], \\
+        &j_{n} \in [ 1, M_t]
     \end{aligned}
 \end{equation}
 A simple nested loop algorithm can be exploited to solve this problem. Then, at $n$th time step, the optimal combining vector $\mathbf{w}^{*}_{n}$ and the optimal beamforming vector $\mathbf{f}^{*}_{n}$ are $\mathbf{w}^{*}_{n}=[\mathbf{W}]_{:,i_{n}^*}$ and $\mathbf{f}^{*}_{n}=[\mathbf{F}]_{:,j_{n}^*}$, respectively. And the estimated AoA $\phi ^{e}_{n}$ and AoD $\theta ^{e}_{n}$ used for training are given by:
 \begin{equation}
     \begin{cases}
-        \phi ^{e}_{n} = \frac{i_{n}^* \pi}{2M_r}\\
-        \theta ^{e}_{n} = \frac{j_{n}^* \pi}{2M_t}
+        \phi ^{e}_{n} = \frac{i_{n}^* \pi}{M_r}\\
+        \theta ^{e}_{n} = \frac{j_{n}^* \pi}{M_t}
     \end{cases}
 \end{equation}
 The advantage of training with radian instead of the codeword indexes is that it allows the proposed beam tracking scheme to be generalized under terminals with different antenna configuration and beamforming techniques, without additional computation and transmitted data.
@@ -403,7 +403,7 @@ where ${SNR}_i$ is the SNR of received signal for the $i$th sample and $\mathbf{
     \end{tabular}
 \end{table}
 
-In this paper, the sample period of channel is $20$ ms, which corresponds to the synchronization signal burst period in \cite{3gpp38213}, and there are total $1540$ samples for training and $1009$ samples for testing. 
+In this paper, the sample period of channel is $20$ ms, which corresponds to the synchronization signal burst period in \cite{3gpp38213}, and there are total $1540$ samples for training and $1014$ samples for testing. 
 Table \ref{t_SP} shows the common simulation parameters.
 For each simulation, parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
 

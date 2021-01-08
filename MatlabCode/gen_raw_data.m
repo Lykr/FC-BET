@@ -24,8 +24,11 @@ for i = 1 : timesteps_num
         data.(rec_timestep).(veh_name).beam_pair = CSI.beam_pair;
         data.(rec_timestep).(veh_name).angles_est = CSI.angles_est;
         data.(rec_timestep).(veh_name).h_siso_est = CSI.h_siso_est;
-        data.(rec_timestep).(veh_name).SNR_act = CSI.SNR_est;
+        data.(rec_timestep).(veh_name).SNR_est = CSI.SNR_est;
         data.(rec_timestep).(veh_name).noise = CSI.noise;
+        
+        data.(rec_timestep).(veh_name).angles_est_h = CSI.angles_est_h;
+        data.(rec_timestep).(veh_name).SNR_est_h = CSI.SNR_est_h;
     end
 end
 end

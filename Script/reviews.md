@@ -2,12 +2,12 @@
 ## Weak Aspects
 ### Review 1
 - [x] 图 1 描述不清晰：The description of the channel geometry is not clear enough in Figure 1. For example, there is no driving direction of the vehicle, so the meaning of the angles in the figure cannot be clearly understood.
-- [ ] 增加更多对比方法：Figures 6 and 7 only show the results of the comparison between the scheme proposed in this article and the enumeration scheme. It is recommended to compare with traditional schemes or schemes proposed by others.
+- [x] 增加更多对比方法：Figures 6 and 7 only show the results of the comparison between the scheme proposed in this article and the enumeration scheme. It is recommended to compare with traditional schemes or schemes proposed by others.
 - [ ] 测试集太小或测试太少：The data analysis in Table III mentioned that the SNR is independent with $n_L$. However, it can be seen from the data in figure 7 that as the number of antennas increases, the average SNR of received signal tends to increase slowly. I think it may be that the amount of test data is not large enough or the number of tests is not enough, which has caused this contradiction. The instability of the two curves transformation trends of the average SNR of received signal in figure 7 may be the same reason. If this is the reason, you can try it and give the simulation results again.
 
 ### Review 2
 - [ ] 系统模型不够复杂：The considered system model is limited. This paper considers that TX/RX have a single RF chain only, and the case of LOS channel condition is covered.
-- [ ] 应该增加分层算法作为对比算法：In the simulation results, the hierarchical measurement scheme should be compared in terms of average SNR and outage prob, since it also has very low measurement overhead as the proposed FC-BET scheme.
+- [x] 应该增加分层算法作为对比算法：In the simulation results, the hierarchical measurement scheme should be compared in terms of average SNR and outage prob, since it also has very low measurement overhead as the proposed FC-BET scheme.
 - [ ] 穷尽算法的性能不应该是最好的：The simulation result is somewhat inadequate. If the exhaustive search algorithm requires long beam training time, it shows poor performance compared to the proposed scheme due to the high speed of vehicles (beam changes fast). I'm wondering that why the exhaustive search algorithm shows the best performance, and the proposed scheme can only reduce the measurement overhead, while achieving poor performance.
 
 ### Review 3
@@ -27,7 +27,7 @@
 Same as Weak Aspects.
 
 ### Review 2
-- [ ] 加入分层算法：It is better to compare the proposed scheme with the hierarchical measurement scheme.
+- [x] 加入分层算法：It is better to compare the proposed scheme with the hierarchical measurement scheme.
 - [ ] 加入更多在高速车辆场景下的仿真结果：The reviewer would like to recommend adding more simulation results under the very high speed vehicle scenario.
 - [ ] 应该考虑多个 RF 的模型：If possible, it would be better to include multiple-input multiple-output scenario (MIMO), which considers multiple RF chains at Tx and Rx.
   
