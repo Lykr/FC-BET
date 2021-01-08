@@ -42,4 +42,7 @@ CSI.h_siso_est = Y(i, j);
 % SNR
 CSI.SNR_est = abs(S(i, j))^2 / abs(N(i, j))^2;
 
+% hierachical sweep
+
+
 end

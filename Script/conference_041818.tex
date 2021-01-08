@@ -296,8 +296,8 @@ The network will take the initial estimated AoAs and AoDs to predict AoA and AoD
 Then, the predicted AoA and AoD will be used to compose new feature with the last $n_L - 1$ AoAs and AoDs in last feature.
 
 Once the predicted AoA and AoD are obtained, the codewords whose steering angle closest to the predicted beam angles will be taken as beamforming and combining vectors.
-For every time step, signal-to-noise ratio (SNR) under current prediction will be calculated and compared with a threshold ${SNR}_T$.
-The network will repeat to use predicted result to compose new features to predict AoA and AoD at next time step, when the calculated SNR is greater than ${SNR}_T$.
+For every time step, signal-to-noise ratio (SNR) of received signal under current beam pair will be calculated and compared with a threshold ${SNR}_T$.
+The network will repeat to use the beam pair to compose new features to predict AoA and AoD at next time step, when the calculated SNR is greater than ${SNR}_T$.
 Otherwise, a new round of estimation and prediction will be executed.
 % It makes more sense to take the SNR of received signal rather than the absolute difference between predicted and estimated angles as a threshold, because there is no way to obtain a precise beam angle for judgment until it is accurately measured or predicted.
 
