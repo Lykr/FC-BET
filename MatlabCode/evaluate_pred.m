@@ -8,6 +8,7 @@ h_list = others_test.h_list;
 noise_list = others_test.noise_list;
 angles_est_list = others_test.angles_est_list;
 angles_est_h_list = others_test.angles_est_h_list;
+SNR_est_list = others_test.SNR_est_list;
 
 n = length(h_list);
 lstm_step = param.lstm_step;
@@ -19,9 +20,11 @@ n_m_l_e = 0;
 cur_feature = zeros(2, lstm_step);
 cur_feature_size = 0;
 
+consecutive_pred = 0;
+
 % Predict by exhaustive
 for i = 1 : n
-    % prediction
+%     prediction
     if cur_feature_size < lstm_step
         y_e(i, :) = angles_est_list(i, :);
         cur_feature_size = cur_feature_size + 1;
@@ -29,6 +32,22 @@ for i = 1 : n
     else
         y_e(i, :) = predict(net, num2cell(cur_feature, [1, 2]));
     end
+    
+%     % prediction
+%     if cur_feature_size < lstm_step
+%         y_e(i, :) = angles_est_list(i, :);
+%         cur_feature_size = cur_feature_size + 1;
+%         n_m_l_e = n_m_l_e + 1;
+%     else
+%         if consecutive_pred >= lstm_step
+%             y_e(i, :) = angles_est_list(i, :);
+%             n_m_l_e = n_m_l_e + 1;
+%             consecutive_pred = 0;
+%         else
+%             y_e(i, :) = predict(net, num2cell(cur_feature, [1, 2]));
+%             consecutive_pred = consecutive_pred + 1;
+%         end
+%     end
     
     % combine new feature
     cur_feature = [cur_feature(:, 2:end), y_e(i, :)'];
@@ -61,6 +80,8 @@ n_m_l_h = 0;
 cur_feature = zeros(2, lstm_step);
 cur_feature_size = 0;
 
+consecutive_pred = 0;
+
 for i = 1 : n
     % prediction
     if cur_feature_size < lstm_step
@@ -70,6 +91,22 @@ for i = 1 : n
     else
         y_h(i, :) = predict(net, num2cell(cur_feature, [1, 2]));
     end
+    
+%     % prediction
+%     if cur_feature_size < lstm_step
+%         y_h(i, :) = angles_est_h_list(i, :);
+%         cur_feature_size = cur_feature_size + 1;
+%         n_m_l_h = n_m_l_h + 1;
+%     else
+%         if consecutive_pred >= lstm_step
+%             y_h(i, :) = angles_est_h_list(i, :);
+%             n_m_l_h = n_m_l_h + 1;
+%             consecutive_pred = 0;
+%         else
+%             y_h(i, :) = predict(net, num2cell(cur_feature, [1, 2]));
+%             consecutive_pred = consecutive_pred + 1;
+%         end
+%     end
     
     % combine new feature
     cur_feature = [cur_feature(:, 2:end), y_h(i, :)'];
