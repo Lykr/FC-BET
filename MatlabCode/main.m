@@ -22,8 +22,20 @@ param.channel.var_n = 1e-12;
 param.SNR_threshold = 5; % in dB
 
 param.lstm_step = 5;
+param.n_adj = 2;
 
-new_sim_var;
+%%
+run_option = 1;
+
+if run_option == 1
+    get_raw_data;
+    get_learning_data;
+    run_simulation;
+elseif run_option == 2
+    new_sim_var;
+elseif run_option == 3
+    sim_steps;
+end
 
 % %% Run simulation
 % simulation_switch = -1; %-1-normal 0-all, 1-var_n, 2-measurements, 3-anttenna, 4-steps

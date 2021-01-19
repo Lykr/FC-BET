@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{makecell}
 
 % For fig
 \usepackage{physics}
@@ -222,7 +223,7 @@ where $\mathbf{w}_n$ and $\mathbf{f}_n$ are combining and beamforming vector, wh
 $\mathbf{v}_n$ is Gaussian noise and $\mathbf{v}_n \sim \mathcal{CN}(0, \sigma^2_v \mathbf{I}_{M_r})$. 
 
 \begin{figure*}[ht]
-    \centerline{\includegraphics[scale=1]{procedure.pdf}}
+    \centerline{\includegraphics[scale=1]{new_procedure.pdf}}
     \caption{Procedure of FC-BET scheme}
     \label{procedure}
 \end{figure*}
@@ -289,15 +290,15 @@ where $N$ is the number of training samples, $\phi ^{e}_{i}$, $\theta ^{e}_{i}$,
 Fig.~\ref{procedure} demonstrates the procedure of FC-BET scheme.
 Before exploiting the LSTM network for beam tracking, processor at the BS demands to collect historical optimal AoAs and AoDs, which are estimated by the vehicle using exhaustive beam search, to build a dataset for training the LSTM network.
 The dataset is consisted of time series AoAs and AoDs of the vehicle from initial access to disconnection.
-During training, the network takes the AoAs and AoDs from time step $k - n_L$ to $k - 1$ as features and the AoA and AoD at time step $k$ as responses.
+During training, the network takes the AoAs and AoDs from time step $k - n_L$ to $k - 1$ as \emph{feature} and the AoA and AoD at time step $k$ as \emph{response}.
 
-After the LSTM network has been trained, the vehicle takes exhaustive beam search in consecutive $n_L$ time steps to obtain initial estimated AoAs and AoDs at the beginning of a round of beam tracking. 
-The network will take the initial estimated AoAs and AoDs to predict AoA and AoD at next time step. 
-Then, the predicted AoA and AoD will be used to compose new feature with the last $n_L - 1$ AoAs and AoDs in last feature.
-
-Once the predicted AoA and AoD are obtained, the codewords whose steering angle closest to the predicted beam angles will be taken as beamforming and combining vectors.
-For every time step, signal-to-noise ratio (SNR) of received signal under current beam pair will be calculated and compared with a threshold ${SNR}_T$.
-The network will repeat to use the beam pair to compose new features to predict AoA and AoD at next time step, when the calculated SNR is greater than ${SNR}_T$.
+After the LSTM network has been trained, the vehicle takes exhaustive or hierarchical beam search in consecutive $n_L$ time steps to obtain optimal AoAs and AoDs as \emph{initial estimation} at the beginning of a round of beam tracking. 
+The network will take the initial estimation as feature to predict AoA and AoD at next time step.
+Once the predicted AoA and AoD are obtained, $n_c$ codeword pairs whose steering angle closest to the predicted beam angles will be taken as candidate beamforming and combining vectors.
+Then, $n_c$ measurements will be taken to find the best codeword pair \emph{fast} from the candidates without full beam search.
+Finally, the best codeword will be used for data transmission, and the steering angles of the best codeword will be used to compose new feature with the last $n_L - 1$ AoAs and AoDs in previous feature.
+For every time step, signal-to-noise ratio (SNR) of received signal under current beam pair will be estimated and compared with a threshold ${SNR}_T$.
+The network will repeat to use the beam pair to compose new feature to predict AoA and AoD at next time step \emph{consecutively}, when the measured SNR is greater than ${SNR}_T$.
 Otherwise, a new round of estimation and prediction will be executed.
 % It makes more sense to take the SNR of received signal rather than the absolute difference between predicted and estimated angles as a threshold, because there is no way to obtain a precise beam angle for judgment until it is accurately measured or predicted.
 
@@ -363,8 +364,9 @@ A simple nested loop algorithm can be exploited to solve this problem. Then, at 
 The advantage of training with radian instead of the codeword indexes is that it allows the proposed beam tracking scheme to be generalized under terminals with different antenna configuration and beamforming techniques, without additional computation and transmitted data.
 
 % 数据平滑
-Note that due to the limited resolution of the beam codebook and the noise received at the vehicle, there will be some errors for beam training, which are reflected in fluctuations of the estimated time series AoAs and AoDs.
-To reduce the fluctuations, a first order Savitzky-Golay filter with frame length $51$ is used to smooth the estimated AoAs and AoDs for training the LSTM network better.
+% Note that due to the limited resolution of the beam codebook and the noise received at the vehicle, there will be some errors for beam training, which are reflected in fluctuations of the estimated time series AoAs and AoDs.
+% To reduce the fluctuations, a first order Savitzky-Golay filter with frame length $51$ is used to smooth the estimated AoAs and AoDs for training the LSTM network better.
+Note that a first order Savitzky-Golay filter with frame length $51$ is used to smooth the estimated AoAs and AoDs to reduce the fluctuations introduced by the limited resolution of the beam codebook and the noise received at the vehicle, for training the LSTM network better.
 
 \section{Simulation Results}\label{SR}
 
@@ -395,16 +397,19 @@ where ${SNR}_i$ is the SNR of received signal for the $i$th sample and $\mathbf{
         Path loss standard deviation $\sigma_p$ & $5.8$ dB\\
         Noise variance of received signal $\sigma_v^2$ & $-120$ dBW\\
         Threshold of SNR ${SNR}_T$ & $5$ dB\\
+        Candidate codeword pairs size $n_c$ & 2\\
         Lookback of LSTM $n_L$ & $5$\\
-        Optimizer of LSTM & Adam\\
-        Training epochs & 400\\
+        % Optimizer of LSTM & Adam\\
+        % Training epochs & 400\\
         Learning rate & 0.05\\
         \hline
     \end{tabular}
 \end{table}
 
-In this paper, the sample period of channel is $20$ ms, which corresponds to the synchronization signal burst period in \cite{3gpp38213}, and there are total $1540$ samples for training and $1014$ samples for testing. 
-Table \ref{t_SP} shows the common simulation parameters.
+In this paper, the sample period of channel data is $20$ ms, which corresponds to the synchronization signal burst period in \cite{3gpp38213}.
+The training and testing data were conducted by truck and car motion profiles.
+And there are $1540$ training samples and $1014$ testing samples.
+Table \ref{t_SP} shows the simulation parameters.
 For each simulation, parameters default to the values in Table \ref{t_SP}, except for those mentioned specifically.
 
 % 收敛性能
@@ -432,14 +437,15 @@ It shows that the loss decreases sharply around $20$ epochs, and finally converg
 % 随着噪声方差增大，平均 SNR 降低，中断次数和观测次数增多。
 \begin{figure}[!t]
     \centering
-    \includegraphics[scale=0.54]{results_noise}
-    \caption{Average SNR and outages probability versus $\sigma_v^2$}
+    \includegraphics[scale=0.40]{new_sim_var_n.eps}
+    \caption{Average SNR and outage probability versus $\sigma_v^2$}
     \label{results_noise}
 \end{figure}
 Fig.~\ref{results_noise} shows the performance of schemes versus $\sigma_v^2$.
-It is observed that for both exhaustive and FC-BET scheme, the average SNR of received signal decreases and the probability of outages increases with the increase of $\sigma_v^2$.
-The difference in the average SNR between FC-BET scheme and exhaustive scheme is up to about $8$ dB.
-When $\sigma_v^2$ is less than or equal to $-120$ dBW, there is not any outage caused by channel fading in exhaustive scheme, and the average SNR of received signal in exhaustive scheme is $57.16$ dB compared with $52.53$ dB in FC-BET scheme, with a loss of only $4.63$ dB in SNR, indicating a loss of about $8.1\%$ in spectral efficiency.
+It is observed that for all schemes, the average SNR of received signal decrease and the outage probability increase with the increase of $\sigma_v^2$.
+FC-BET-E and FC-BET-H take exhaustive and hierarchical beam search, respectively, to handle initial estimation.
+% The difference in average SNR between FC-BET scheme and exhaustive scheme is up to about $8$ dB.
+When $\sigma_v^2$ is $-120$ dBW, the outage probability in all schemes are lower than $1\%$, and the average SNR in exhaustive scheme is $40.98$ dB compared with $34.82$ dB in FC-BET-H scheme, with a loss of about $6.16$ dB in SNR.
 
 \begin{table}[!b]
     \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
@@ -451,21 +457,24 @@ When $\sigma_v^2$ is less than or equal to $-120$ dBW, there is not any outage c
             \hline
             \bfseries Schemes & \bfseries Complexity & \bfseries Measurement Overhead\\
             \hline
-            FC-BET & $N_s + n_L 4 N_f M_r M_t$\tnote{1} & $13799$\\
-            Hierarchical & $2 N log_2{4 M_r M_t}$ & $16144$\\ % $N (2 (\log_2{2 M_t} - \log_2{2 M_r}) + 4 \log_2{2 M_r})$
-            Exhaustive & $4 N M_r M_t$ & $258304$\\
+            FC-BET-H & $n_c N_p + 2 N_m log_2{M_r M_t}$\tnote{1} & $2411$\\
+            FC-BET-E & $n_c N_p + N_m M_r M_t$ & $4111$\\
+            Hierarchical & $2 N log_2{M_r M_t}$ & $12168$\\ % $N (2 (\log_2{2 M_t} - \log_2{2 M_r}) + 4 \log_2{2 M_r})$
+            Exhaustive & $N M_r M_t$ & $64896$\\
             \hline
         \end{tabular}
         \begin{tablenotes}
-            \item[1] $N_s$ is the number of successful prediction and $N_f = N - N_s$.
+            \item[1] $N_p$: number of predictions, $N_m$: number of full measurements.
         \end{tablenotes}
     \end{threeparttable}
 \end{table}
 
 Table \ref{t_NM} shows the comparison of measurement overhead in different schemes.
-The proposed FC-BET scheme reduces the measurement overhead by about $94.7\%$ and $14.5\%$ compared with exhaustive and hierarchical schemes, respectively.
-Considering the significant reduction in measurement overhead, the $8.1\%$ loss of spectral efficiency in Fig.~\ref{results_noise} seems acceptable.
-Note that FC-BET scheme performs initial estimation for prediction by exhaustive search approach in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smarter beam search approach.
+Compared with exhaustive and hierarchical schemes, FC-BET-E reduces the measurement overhead by about $93.67\%$ and $66.21\%$, and FC-BET-H reduces the measurements overhead by about $96.28\%$ and $80.19\%$, respectively.
+Considering the significant reduction in measurement overhead would reduce beam training time and pilot contamination, the $6.16$ dB loss of SNR in Fig.~\ref{results_noise} seems acceptable.
+Note that FC-BET-E and FC-BET-H have almost the same performances when $\sigma_v^2 = -120$ dBW, while the measurement overhead of FC-BET-H is lower than FC-BET-E, which is a good reason for FC-BET to use hierarchical beam search in initial estimation.
+% Note that FC-BET scheme performs initial estimation for prediction by exhaustive search approach in this paper, and it is obvious that the measurement overhead can be further reduced by utilizing a smarter beam search approach.
+
 
 \begin{table}[!t]
     \renewcommand{\arraystretch}{1.3}
@@ -474,13 +483,13 @@ Note that FC-BET scheme performs initial estimation for prediction by exhaustive
     \centering
     \begin{tabular}{c | c c c c c}
         \hline
-        \bfseries Lookback $n_L$ & 1 & 3 & 5 & 10\\
+        \bfseries Lookback $n_L$ & $1$ & $3$ & $5$ & $10$\\
         \hline
-        \bfseries Average SNR (dB) & 52.98 & 49.56 & \bfseries 53.74 & 50.91\\
+        \bfseries Average SNR (dB) & $30.99$ & $33.40$ & $34.90$ & $34.51$\\
         \hline
-        \bfseries Outage probability & 0.032 & 0.020 & 0.010 & \bfseries 0.009\\
+        \bfseries Outage probability & $0.0257$ & $0.0126$ & $0.0088$ & $\bm{0.0051}$\\
         \hline
-        \bfseries Measurement Overhead & \bfseries 9169 & 16349 & 13799 & 24040\\
+        \bfseries Measurement Overhead & $\bm{2299}$ & $2436$ & $2510$ & $2627$\\
         \hline
     \end{tabular}
 \end{table}
@@ -494,26 +503,26 @@ In FC-BET scheme, $n_L$ determines the number of beam searches in initial estima
 The comparisons of performance with different $n_L$ are shown in Table \ref{t_LBC}.
 It is observed that with the increase of $n_L$, the outage probability decreases.
 However, counterintuitively, it seems that the SNR is independent with $n_L$.
-A reasonable guess is that larger $n_L$ reduce the outage probability but increase the uncertainty of predictions, which leads to fluctuations in SNR.
-On the other hand, larger $n_L$ introduces longer initial estimation which may result in more measurements, therefore trade-off between the performance and the overhead should be considered.
+A reasonable guess is that larger $n_L$ reduce the outage probability but increase the uncertainty of predictions, which leads to fluctuation in SNR.
+On the other hand, larger $n_L$ introduces longer initial estimation, therefore trade-off between the performance and the overhead should be considered for $n_L$.
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[scale=0.54]{results_antenna}
+    \includegraphics[scale=0.40]{new_sim_antenna}
     \caption{Average SNR and outages probability versus $M_t \times M_r$}
     \label{results_antenna}
 \end{figure}
 
 Fig.~\ref{results_antenna} shows that the difference of performance between FC-BET and exhaustive scheme increase with the number of antennas.
-The reason is that the beam widths of the vehicle and the BS become smaller when the number of antennas become bigger, thus reducing tolerance for beam deflection.
-It is noteworthy that the slow increase in outage probability implies that it is possible for FC-BET scheme to be applied in massive MIMO with further improvements.
+The reason is that the beam widths of terminals become smaller when the number of antennas become bigger, thus reducing tolerance for beam deflection.
+On the other hand, it is noteworthy that the outage probability lower than $3\%$ for all antenna size which implies that the FC-BET scheme can be potentially applied in massive MIMO after further improvements.
 
 \section{Conclusions}\label{C}
 
 This paper studies the beam tracking problem in mmWave vehicular communications with ULA.
 A fast consecutive beam tracking scheme based on LSTM, called FC-BET, is proposed to reduce the beam training overhead in a common vehicular scenario.
 In order to evaluate the proposed scheme, a time series channel dataset is built by statistical channel model using sequential vehicle information generated from SUMO.
-Simulation results have verified the FC-BET scheme can reduce the measurement overhead by $94.7\%$ and $14.5\%$ compared with the exhaustive and hierarchical schemes, respectively, with a loss of about $8.1\%$ in spectral efficiency.
+Simulation results have verified the FC-BET scheme can reduce the measurement overhead by up to $96.28\%$ and $80.19\%$ compared with the exhaustive and hierarchical schemes, respectively, with a loss of about $6.16$ dB in SNR.
 
 \section*{Acknowledgment}
 

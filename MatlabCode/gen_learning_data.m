@@ -12,6 +12,7 @@ others.angles_list = zeros(data_size, 2);
 others.angles_est_list = zeros(data_size, 2);
 others.SNR_est_list = zeros(data_size, 1);
 others.noise_list = cell(data_size, 1);
+others.noise_list_h = cell(data_size, 1);
 others.angles_est_h_list = zeros(data_size, 2);
 others.SNR_est_h_list = zeros(data_size, 1);
 others.outage = 0;
@@ -31,6 +32,7 @@ for i = 1 : timesteps_num
         speed = raw_data.(timestep_name).(veh_name).speed;
         SNR_est = raw_data.(timestep_name).(veh_name).SNR_est;
         noise = raw_data.(timestep_name).(veh_name).noise;
+        noise_h = raw_data.(timestep_name).(veh_name).noise_h;
         angles_est_h = raw_data.(timestep_name).(veh_name).angles_est_h;
         SNR_est_h = raw_data.(timestep_name).(veh_name).SNR_est_h;
         
@@ -41,6 +43,7 @@ for i = 1 : timesteps_num
         others.angles_est_list(i, :) = angles_est;
         others.SNR_est_list(i, :) = SNR_est;
         others.noise_list{i} = noise;
+        others.noise_list_h{i} = noise_h;
         others.angles_est_h_list(i, :) = angles_est_h;
         others.SNR_est_h_list(i, :) = SNR_est_h;
         
