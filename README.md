@@ -11,3 +11,7 @@ To evaluate the proposed scheme, a time series channel dataset is built by using
 Simulation results show that the FC-BET scheme can significantly reduce overhead with an acceptable loss in spectral efficiency compared with conventional beam training schemes.
 
 **This paper has been accepted by WCNC 2021**
+
+## License
+
+This program is licenced under the MIT License. See the [LICENSE](https://github.com/Lykr/FC-BET/blob/master/LICENSE) file for details.
